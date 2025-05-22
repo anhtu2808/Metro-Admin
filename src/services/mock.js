@@ -12,8 +12,12 @@ mock.onPost("/auth/login").reply((config) => {
     return [
       200,
       {
-        accessToken: "mock-access-token-123",
-        refreshToken: "mock-refresh-token-456",
+        code: 200,
+        message: "Login successfully",
+        result: {
+          accessToken: "mock-access-token-123",
+          refreshToken: "mock-refresh-token-456",
+        },
       },
     ];
   }

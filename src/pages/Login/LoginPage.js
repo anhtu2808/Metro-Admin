@@ -2,17 +2,17 @@ import { Button, Divider, Form, Input, Row, Col, notification } from "antd";
 import "./Login.css";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { postLogin } from "../apis";
+import { loginAPI } from "../../apis";
 
 const LoginPage = () => {
   const login = async (values) => {
     const { email, password } = values;
 
     try {
-      const res = await postLogin(email, password);
-
-      if (res) {
-        localStorage.setItem("accessToken", res.data.accessToken);
+      const res = await loginAPI(email, password);
+      console.log(res);
+      if (res.code === 200) {
+        localStorage.setItem("accessToken", res.result.accessToken);
         notification.success({
           message: "LOGIN USER",
           description: "Đăng nhập thành công",
@@ -20,6 +20,7 @@ const LoginPage = () => {
       }
     } catch (error) {
       if (error.response?.status === 401) {
+        console.log(">>> check res: ", error);
         notification.error({
           message: "LOGIN USER",
           description: "Tài khoản hoặc mật khẩu không đúng",
