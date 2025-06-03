@@ -4,7 +4,7 @@ import { FaBars } from "react-icons/fa";
 import { useState } from "react";
 import "./AdminPage.css";
 import { Outlet } from "react-router-dom";
-import { Avatar, Col, Row } from "antd";
+import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 const AdminPage = (props) => {
   const [collapsed, setCollapsed] = useState(false);

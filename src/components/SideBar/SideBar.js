@@ -48,23 +48,23 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
           <Menu iconShape="circle">
             <MenuItem icon={<MdOutlineAnalytics />}>
               Dashboard
-              <Link to={"/admins"} />
+              <Link to={"/"} />
             </MenuItem>
             <MenuItem icon={<FaUser />}>
               User
-              <Link to={"/admins/manage-users"} />
+              <Link to={"/manage-users"} />
             </MenuItem>
             <MenuItem icon={<FaTrain />}>
               Metro Route
-              <Link to={"/admins/metro-routes"} />
+              <Link to={"/metro-routes"} />
             </MenuItem>
             <MenuItem icon={<FaBus />}>
               Bus Route
-              <Link to={"/admins/bus-routes"} />
+              <Link to={"/bus-routes"} />
             </MenuItem>
             <MenuItem icon={<FaTicketAlt />}>
               Ticket Price
-              <Link to={"/admins/ticket-price"} />
+              <Link to={"/ticket-price"} />
             </MenuItem>
           </Menu>
           <Menu iconShape="circle"></Menu>

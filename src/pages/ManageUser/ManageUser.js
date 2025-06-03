@@ -5,7 +5,6 @@ import "./ManageUser.css";
 import { useState } from "react";
 import TableUser from "./TableUser";
 import { FaUser } from "react-icons/fa";
-import LoginPage from "../../../Login/LoginPage";
 
 const onChange = (key) => {
   console.log(key);

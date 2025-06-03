@@ -1,5 +1,4 @@
-import { Form, Input, notification, Select } from "antd";
-import { Modal } from "antd";
+import { Form, Input, notification, Select, Modal } from "antd";
 
 const formItemLayout = {
   labelCol: {
