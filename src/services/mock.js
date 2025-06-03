@@ -24,7 +24,9 @@ mock.onPost("/auth/login").reply((config) => {
 
   return [401, { message: "Unvalid email or password" }];
 });
+
 console.log("✅ Mocking is running");
+
 // Mock thêm các API khác nếu cần sau này
 // mock.onGet('/users').reply(200, [...]);
 

@@ -1,0 +1,32 @@
+.admin-container{
+   display: flex;
+}
+
+.admin-container .admin-sidebar .pro-sidebar {
+   height: 100vh !important;
+}
+
+.admin-container .admin-content {
+   width: 100%;
+}
+
+.admin-container .admin-content .admin-header{
+   height: 60px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 10 20px 10 10px;
+   border-bottom: 1px solid #ccc;
+}
+
+
+ .admin-container .admin-content .admin-header .left-side{
+   cursor: pointer;
+   font-size: 20px;
+   color: #666666;
+}
+
+.admin-container .admin-content .admin-header .right-side {
+   display: flex;
+   gap: 15px;
+} 
