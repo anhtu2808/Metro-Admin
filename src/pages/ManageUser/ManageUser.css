@@ -1,0 +1,14 @@
+.manage-user-container {
+    padding: 10px;
+}
+.manage-user-container .title {
+    font-weight: 600;
+    font-size: 20px;
+}
+.manage-user-container .tabs {
+    margin: 10px 55px;
+}
+.manage-user-container .users-content .btn-add-new button{
+    border: none;
+    margin: 15px 0px;
+}
