@@ -1,10 +1,16 @@
 .manage-user-container {
     padding: 10px;
 }
-.manage-user-container .title {
-    font-weight: 600;
-    font-size: 20px;
+.manage-user-container .user-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 20px 40px;
+    color: #1890ff;
 }
+
 .manage-user-container .tabs {
     margin: 10px 55px;
 }
