@@ -3,14 +3,16 @@ import "./BusRoutes.css";
 import TableBus from "./TableBus";
 import { useState } from "react";
 import ModalAddBus from "./ModalAddBus";
-
+import { FaTrainSubway } from "react-icons/fa6";
 const BusRoutes = () => {
   const [showModalAddBus, setShowModalAddBus] = useState(false);
 
   return (
     <div className="bus-container">
-      <div className="bus-title">Bus Routes</div>
-      <Divider></Divider>
+      <div className="bus-title">
+        <FaTrainSubway />
+        Bus Routes
+      </div>
       <div className="bus-content">
         <div className="bus-routes-search">
           <Input placeholder="Search Line" className="bus-search-input" />

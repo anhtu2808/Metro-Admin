@@ -16,8 +16,12 @@
 .table-bus {
   margin: 10px 55px;
 }
-
-/* .bus-search-input:focus {
-  border-color: #1890ff;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-} */
+.bus-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 20px 40px;
+    color: #1890ff;
+}
