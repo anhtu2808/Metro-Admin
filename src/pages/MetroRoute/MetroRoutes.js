@@ -8,6 +8,7 @@ import {
   Typography,
   Menu,
   Dropdown,
+  Divider,
 } from "antd";
 import {
   PlusOutlined,
@@ -95,6 +96,7 @@ const MetroRoutes = () => {
         <FaTrain />
         Metro Routes
       </div>
+      <Divider></Divider>
       <div className="metro-content">
         <Layout>
           <Content>
