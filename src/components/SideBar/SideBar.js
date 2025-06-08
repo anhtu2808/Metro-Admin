@@ -3,9 +3,8 @@ import {
   ProSidebar,
   Menu,
   MenuItem,
-  SubMenu,
   SidebarHeader,
-  SidebarFooter,
+
   SidebarContent,
 } from "react-pro-sidebar";
 import { Link, useNavigate } from "react-router-dom";
