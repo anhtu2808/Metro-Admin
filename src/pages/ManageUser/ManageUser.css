@@ -1,7 +1,7 @@
 .manage-user-container {
     padding: 10px;
 }
-.manage-user-container .user-title {
+.user-title {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -11,7 +11,7 @@
     color: #1890ff;
 }
 
-.manage-user-container .tabs {
+.table-user {
     margin: 10px 55px;
 }
 .manage-user-container .users-content .btn-add-new button{

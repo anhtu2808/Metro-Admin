@@ -1,0 +1,23 @@
+.bus-routes-search {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.bus-search-input {
+  width: 400px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+.table-bus {
+  margin: 10px 55px;
+}
+
+/* .bus-search-input:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+} */

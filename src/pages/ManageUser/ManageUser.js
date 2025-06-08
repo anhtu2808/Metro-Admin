@@ -55,7 +55,7 @@ const ManageUser = () => {
             </Button>
           </Col>
         </Row>
-        <div class="tabs">
+        <div class="table-user">
           <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
         </div>
         <ModalCreateUser
