@@ -27,12 +27,11 @@ const ManageUser = () => {
 
   return (
     <div className="manage-user-container">
-      <div className="title">
+      <div className="user-title">
         {" "}
         <FaUser />
         Manage User
       </div>
-      <Divider></Divider>
       <div className="users-content">
         <Row>
           <Col md={18}>
