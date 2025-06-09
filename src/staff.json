@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "title": "Tuyến Metro số 1 sẽ khai trương vào tháng 12/2023",
+    "date": "2023-11-15T08:00:00Z",
+    "content": "Tuyến Metro số 1 (Bến Thành - Suối Tiên) dự kiến sẽ chính thức khai trương vào ngày 15/12/2023. Đây là tuyến metro đầu tiên của thành phố, kết nối trung tâm với khu vực phía Đông với tổng chiều dài 19.7km."
+  },
+  {
+    "id": 2,
+    "title": "Điều chỉnh giá vé tuyến buýt nhanh BRT từ 01/01/2024",
+    "date": "2023-11-20T10:30:00Z",
+    "content": "Từ ngày 01/01/2024, giá vé tuyến buýt nhanh BRT sẽ được điều chỉnh tăng 10% nhằm đảm bảo chất lượng dịch vụ và bù đắp chi phí vận hành. Hành khách thường xuyên có thể đăng ký thẻ tháng để được hưởng ưu đãi 20%."
+  },
+  {
+    "id": 3,
+    "title": "Mở rộng hệ thống vé điện tử cho toàn bộ mạng lưới giao thông công cộng",
+    "date": "2023-11-25T14:15:00Z",
+    "content": "Sở Giao thông Vận tải thông báo sẽ triển khai hệ thống vé điện tử thống nhất cho toàn bộ mạng lưới giao thông công cộng từ quý 2/2024. Hệ thống mới sẽ hỗ trợ thanh toán qua thẻ thông minh, ứng dụng di động và mã QR, giúp hành khách dễ dàng chuyển tuyến."
+  },
+  {
+    "id": 4,
+    "title": "Tuyển dụng nhân viên vận hành cho tuyến Metro số 2",
+    "date": "2023-12-01T09:45:00Z",
+    "content": "Ban Quản lý Đường sắt Đô thị thông báo tuyển dụng 150 nhân viên vận hành cho tuyến Metro số 2 (Bến Thành - Tham Lương). Ứng viên sẽ được đào tạo chuyên sâu tại Nhật Bản trong thời gian 6 tháng. Hạn nộp hồ sơ: 31/12/2023."
+  },
+  {
+    "id": 5,
+    "title": "Thí điểm xe buýt điện trên 3 tuyến nội đô",
+    "date": "2023-12-05T11:20:00Z",
+    "content": "Từ 15/12/2023, thành phố sẽ thí điểm đưa vào hoạt động 30 xe buýt điện trên 3 tuyến nội đô. Dự án nhằm giảm khí thải và tiếng ồn, hướng tới mục tiêu phát triển giao thông xanh. Các xe buýt điện được trang bị WiFi miễn phí và cổng sạc USB cho hành khách."
+  }
+]
