@@ -13,6 +13,7 @@ import {
 import { SearchOutlined, QrcodeOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
+
 const FareAdjustment = () => {
   const [code, setCode] = useState("");
   const [ticket, setTicket] = useState(null);
@@ -37,9 +38,11 @@ const FareAdjustment = () => {
   };
 
   const handleScanQR = () => {
-    // Giả lập quét QR, có thể tích hợp camera hoặc WebQR sau này
-    
-    
+    // Giả lập dữ liệu từ mã QR
+    const scannedCode = "123456";
+    setCode(scannedCode);
+    setTicket(mockData);
+    message.success("Đã quét mã QR thành công!");
   };
 
   return (
@@ -47,8 +50,8 @@ const FareAdjustment = () => {
       <Card className="staff-header-card">
         <Row justify="space-between" align="middle">
           <Col>
-            <Title level={2} style={{ margin: 0, color: '#1677ff' }}>
-      🎫 Quản lý vé
+            <Title level={2} style={{ margin: 0, color: "#1677ff" }}>
+              🎫 Quản lý vé
             </Title>
           </Col>
           <Col>
@@ -62,7 +65,7 @@ const FareAdjustment = () => {
             <Button
               type="primary"
               icon={<SearchOutlined />}
-              onClick={handleSearch}titi
+              onClick={handleSearch}
               style={{ marginRight: 8 }}
             >
               Tra cứu
@@ -82,16 +85,15 @@ const FareAdjustment = () => {
         <Row justify="center" style={{ marginTop: 24 }}>
           <Col xs={24} sm={20} md={16} lg={12}>
             <Card
-  title={<Text strong>Mã vé: {ticket.code}</Text>}
-  bordered={true}
-  className="ticket-card"
-  style={{
-    borderColor: "#1677ff", // màu xanh Ant Design
-    boxShadow: "0 4px 12px rgba(28, 93, 184, 0.2)", // đổ bóng nhẹ xanh
-    borderWidth: 2,
-  }}
->
-
+              title={<Text strong>Mã vé: {ticket.code}</Text>}
+              bordered={true}
+              className="ticket-card"
+              style={{
+                borderColor: "#1677ff",
+                boxShadow: "0 4px 12px rgba(28, 93, 184, 0.2)",
+                borderWidth: 2,
+              }}
+            >
               <Space direction="vertical" size="middle">
                 <Text>
                   <strong>ID:</strong> {ticket.id}
@@ -125,4 +127,6 @@ const FareAdjustment = () => {
     </div>
   );
 };
+
 export default FareAdjustment;
+  
