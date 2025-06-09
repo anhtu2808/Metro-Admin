@@ -1,0 +1,20 @@
+.price-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  padding: 20px 40px;
+  color: #1890ff;
+}
+.price-table{
+    margin: 10px 55px;
+}
+.price-dropdown {
+    margin: 10px 55px;
+}
+.price-label{
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
