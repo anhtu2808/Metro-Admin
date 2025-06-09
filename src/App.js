@@ -6,38 +6,27 @@ import MetroRoutes from "./pages/MetroRoute/MetroRoutes";
 import BusRoutes from "./pages/BusRoute/BusRoutes";
 import TicketPrice from "./pages/TicketPrice/TicketPrice";
 import LoginPage from "./pages/Login/LoginPage";
+
+import NewsPage from "./pages/StaffPage/NewsPage";
+import FareAdjustment from "./pages/StaffPage/FareAdjustment";
+
 const route = createBrowserRouter([
   {
     path: "/",
     element: <AdminPage />,
     children: [
-      {
-        index: true,
-        element: <Dashboard />,
-      },
-      {
-        path: "manage-users",
-        element: <ManageUser />,
-      },
-      {
-        path: "metro-routes",
-        element: <MetroRoutes />,
-      },
-      {
-        path: "bus-routes",
-        element: <BusRoutes />,
-      },
-      {
-        path: "ticket-price",
-        element: <TicketPrice />,
-      },
+      { index: true, element: <Dashboard /> },
+      { path: "manage-users", element: <ManageUser /> },
+      { path: "metro-routes", element: <MetroRoutes /> },
+      { path: "bus-routes", element: <BusRoutes /> },
+      { path: "ticket-price", element: <TicketPrice /> },
+
+      // ✅ Thêm route cho Staff
+      { path: "staff/news", element: <NewsPage /> },
+      { path: "staff/fare-adjustment", element: <FareAdjustment /> },
     ],
   },
-
-  {
-    path: "/login",
-    element: <LoginPage />,
-  },
+  { path: "/login", element: <LoginPage /> },
 ]);
 
 const App = () => {
