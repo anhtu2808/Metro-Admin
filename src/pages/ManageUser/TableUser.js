@@ -24,6 +24,7 @@ const data = [
     createdDate: "21/09/2023",
   },
 ];
+
 const TableUser = () => {
   const handleDelete = () => {
     Modal.confirm({
