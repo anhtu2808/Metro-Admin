@@ -6,10 +6,8 @@ import MetroRoutes from "./pages/MetroRoute/MetroRoutes";
 import BusRoutes from "./pages/BusRoute/BusRoutes";
 import TicketPrice from "./pages/TicketPrice/TicketPrice";
 import LoginPage from "./pages/Login/LoginPage";
-
-import NewsPage from './pages/NewsPage/NewsPage';
-import FareAdjustment from './pages/FareAdjustment/FareAdjustment';
-
+import NewsPage from "./pages/NewsPage/NewsPage";
+import FareAdjustment from "./pages/FareAdjustment/FareAdjustment";
 
 const route = createBrowserRouter([
   {
