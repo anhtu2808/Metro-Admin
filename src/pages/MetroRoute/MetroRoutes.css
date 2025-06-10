@@ -1,0 +1,66 @@
+.metro-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  padding: 20px 40px;
+  color: #1890ff;
+}
+.metro-layout {
+  height: calc(100vh - 64px); 
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.metro-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden; 
+}
+
+.card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.input-search {
+  margin-bottom: 16px;
+  /* border-radius: 6px; */
+}
+.ant-layout-content {
+  background-color: #ffffff;
+  padding: 32px;
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+}
+.ant-list-item {
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 6px !important;
+  margin-bottom: 10px !important;
+  padding: 8px 12px !important;
+}
+
+.ant-list-item:hover {
+  background-color: #f4f3f3;
+}
+
+.card-title button:hover {
+    background-color: #f4f3f3;
+}
+
+.ant-card {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  max-height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.ant-card .ant-input,
+.ant-card .ant-list {
+  flex: 1;
+  overflow-y: auto;
+}

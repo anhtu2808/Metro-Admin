@@ -1,0 +1,20 @@
+.manage-user-container {
+    padding: 10px;
+}
+.user-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 20px 40px;
+    color: #1890ff;
+}
+
+.table-user {
+    margin: 10px 55px;
+}
+.manage-user-container .users-content .btn-add-new button{
+    border: none;
+    margin: 15px 0px;
+}
