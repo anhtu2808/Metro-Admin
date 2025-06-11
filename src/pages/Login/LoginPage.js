@@ -1,30 +1,40 @@
-import { Button, Divider, Form, Input, Row, Col, notification } from "antd";
+import { Button, Divider, Form, Input, Row, Col, message } from "antd";
 import "./Login.css";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginAPI } from "../../apis";
+import { useDispatch } from "react-redux";
+import { setIsAuthorized, resetUser } from "../../redux/userSlice";
+import { useEffect } from "react";
 
 const LoginPage = () => {
-  const login = async (values) => {
-    const { email, password } = values;
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    localStorage.removeItem("accessToken");
+    dispatch(resetUser());
+    dispatch(setIsAuthorized(false));
+  }, [dispatch]);
+
+  const handleLogin = async () => {
     try {
-      const res = await loginAPI(email, password);
-      console.log(res);
+      const values = await form.validateFields();
+      const { username, password } = values;
+
+      const res = await loginAPI(username, password);
       if (res.code === 200) {
-        localStorage.setItem("accessToken", res.result.accessToken);
-        notification.success({
-          message: "LOGIN USER",
-          description: "Đăng nhập thành công",
-        });
+        localStorage.setItem("accessToken", res.result.token);
+        dispatch(setIsAuthorized(true));
+        message.success("Đăng nhập thành công");
+        navigate("/");
       }
     } catch (error) {
       if (error.response?.status === 401) {
-        console.log(">>> check res: ", error);
-        notification.error({
-          message: "LOGIN USER",
-          description: "Tài khoản hoặc mật khẩu không đúng",
-        });
+        message.error("Tài khoản hoặc mật khẩu không đúng");
+      } else if (error.errorFields) {
+        // Form validation errors
       }
     }
   };
@@ -35,19 +45,18 @@ const LoginPage = () => {
         <fieldset className="login-fieldset">
           <legend className="login-legend">Login</legend>
           <Form
+            form={form}
             name="basic"
-            onFinish={login}
             autoComplete="off"
             layout="vertical"
           >
             <Form.Item
-              label="Email"
-              name="email"
+              label="Username"
+              name="username"
               rules={[
                 {
                   required: true,
-                  type: "email",
-                  message: "Please input your email!",
+                  message: "Please input your username!",
                 },
               ]}
             >
@@ -66,7 +75,7 @@ const LoginPage = () => {
               <Input.Password />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" onClick={handleLogin}>
                 Login
               </Button>
             </Form.Item>

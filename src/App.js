@@ -6,8 +6,13 @@ import MetroRoutes from "./pages/MetroRoute/MetroRoutes";
 import BusRoutes from "./pages/BusRoute/BusRoutes";
 import TicketPrice from "./pages/TicketPrice/TicketPrice";
 import LoginPage from "./pages/Login/LoginPage";
-import NewsPage from "./pages/NewsPage/NewsPage";
-import FareAdjustment from "./pages/FareAdjustment/FareAdjustment";
+
+import NewsPage from './pages/NewsPage/NewsPage';
+import FareAdjustment from './pages/FareAdjustment/FareAdjustment';
+
+import  { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { getMyInfo } from './redux/userSlice';
 
 const route = createBrowserRouter([
   {
@@ -29,6 +34,15 @@ const route = createBrowserRouter([
 ]);
 
 const App = () => {
+  const dispatch = useDispatch();
+  const isAuthorized = useSelector((state) => state.user.isAuthorized);
+
+  useEffect(() => {
+    if (isAuthorized) {
+      dispatch(getMyInfo());
+    }
+  }, [isAuthorized, dispatch]);
+
   return <RouterProvider router={route} />;
 };
 

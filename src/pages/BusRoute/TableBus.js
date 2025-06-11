@@ -1,5 +1,4 @@
 import { Button, Space, Table } from "antd";
-import BusRoutes from "./BusRoutes";
 
 const TableBus = () => {
   const columns = [
