@@ -3,7 +3,7 @@ name: CI/CD Metro-Admin
 on:
   push:
     branches:
-      - Develop
+      - develop
       - feature/FE-0006
   workflow_dispatch:
 
