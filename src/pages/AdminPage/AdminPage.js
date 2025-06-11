@@ -1,5 +1,5 @@
 import React from "react";
-import SideBar from "../../components/SideBar/SideBar";
+import Sidebar from "../../components/Sidebar/Sidebar";
 import { FaBars } from "react-icons/fa";
 import { useState } from "react";
 import "./AdminPage.css";
@@ -13,7 +13,7 @@ const AdminPage = (props) => {
   return (
     <div className="admin-container">
       <div className="admin-sidebar">
-        <SideBar collapsed={collapsed} />
+        <Sidebar collapsed={collapsed} />
       </div>
       <div className="admin-content">
         <div className="admin-header">

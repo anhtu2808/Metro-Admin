@@ -10,12 +10,24 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaTrain, FaBus, FaTicketAlt } from "react-icons/fa";
 import { MdOutlineAnalytics } from "react-icons/md";
-import { FaTrainSubway } from "react-icons/fa6";
 import { BiSolidNews } from "react-icons/bi";
-import { DollarOutlined } from "@ant-design/icons";
+import { DollarOutlined, LogoutOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsAuthorized, resetUser } from "../../redux/userSlice";
+import { Button, message } from "antd";
 
-const SideBar = ({ collapsed, toggled, handleToggleSidebar }) => {
+const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isAuthorized = useSelector((state) => state.user.isAuthorized);
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    dispatch(resetUser());
+    dispatch(setIsAuthorized(false));
+    message.success("Đã đăng xuất");
+    navigate("/login");
+  };
 
   return (
     <ProSidebar
@@ -40,7 +52,16 @@ const SideBar = ({ collapsed, toggled, handleToggleSidebar }) => {
             gap: 10,
           }}
         >
-          <FaTrainSubway size={"2em"} color={"#00bfff"} />
+          <img
+            src="/Metro_logo.png"
+            alt="Metro Logo"
+            style={{
+              width: "2em",
+              height: "2em",
+              objectFit: "contain",
+              display: "block"
+            }}
+          />
           <span style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
             Metro HCM
           </span>
@@ -81,10 +102,17 @@ const SideBar = ({ collapsed, toggled, handleToggleSidebar }) => {
               <Link to={"/staff/fare-adjustment"} />
             </MenuItem>
           </SubMenu>
+          {isAuthorized && (
+            <MenuItem icon={<LogoutOutlined />}>
+              <Button type="primary" danger onClick={handleLogout}>
+                Logout
+              </Button>
+            </MenuItem>
+          )}
         </Menu>
       </SidebarContent>
     </ProSidebar>
   );
 };
 
-export default SideBar;
+export default Sidebar;
