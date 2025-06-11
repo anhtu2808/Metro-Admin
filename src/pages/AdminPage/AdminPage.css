@@ -2,15 +2,17 @@
    display: flex;
 }
 
-.admin-container .admin-sidebar .pro-sidebar {
+.admin-sidebar .pro-sidebar {
    height: 100vh !important;
 }
 
-.admin-container .admin-content {
+.admin-content {
    width: 100%;
 }
-
-.admin-container .admin-content .admin-header{
+.admin-main{
+   height: calc(100vh - 60px);
+}
+.admin-header{
    height: 60px;
    display: flex;
    justify-content: space-between;
@@ -20,13 +22,13 @@
 }
 
 
- .admin-container .admin-content .admin-header .left-side{
+.left-side{
    cursor: pointer;
    font-size: 20px;
    color: #666666;
 }
 
-.admin-container .admin-content .admin-header .right-side {
+.right-side {
    display: flex;
    gap: 15px;
 } 

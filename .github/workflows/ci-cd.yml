@@ -1,0 +1,73 @@
+name: CI/CD Metro-Admin
+
+on:
+  push:
+    branches:
+      - Develop
+      - feature/FE-0006
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Metro-Admin
+    runs-on: ubuntu-latest
+    environment: TEST
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install Dependencies
+      run: npm ci
+
+    - name: Build React
+      env:
+        REACT_APP_API_ROOT: ${{ vars.DOMAIN }}/api/
+      run: |
+        echo "Building with API Root: $REACT_APP_API_ROOT"
+        CI=false npm run build
+
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: react-build
+        path: build/
+        retention-days: 1
+
+  deploy:
+    name: Deploy to TEST Server
+    runs-on: ubuntu-latest
+    environment: TEST
+    needs: build
+
+    steps:
+    - name: Download Build Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: react-build
+        path: build
+
+    - name: Copy Build Files to Server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ vars.HOST_IP }}
+        username: root
+        key: ${{ secrets.SECRET_KEY }}
+        source: "build/*"
+        target: "/var/www/metro-admin/build"
+        strip_components: 1
+
+    - name: Finalize Deployment
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ vars.HOST_IP }}
+        username: root
+        key: ${{ secrets.SECRET_KEY }}
+        script: |
+          chown -R www-data:www-data /var/www/metro-admin/build
+          echo "Deploy frontend to TEST environment successfully!"

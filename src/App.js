@@ -10,7 +10,7 @@ import LoginPage from "./pages/Login/LoginPage";
 import NewsPage from './pages/NewsPage/NewsPage';
 import FareAdjustment from './pages/FareAdjustment/FareAdjustment';
 
-import React, { useEffect } from 'react';
+import  { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getMyInfo } from './redux/userSlice';
 

@@ -6,6 +6,8 @@ import "./AdminPage.css";
 import { Outlet } from "react-router-dom";
 import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import PerfectScrollbar from "react-perfect-scrollbar";
+
 const AdminPage = (props) => {
   const [collapsed, setCollapsed] = useState(false);
   return (
@@ -24,9 +26,11 @@ const AdminPage = (props) => {
             Le Hoang Quy
           </div>
         </div>
-        <div className="admin-main">
-          <Outlet />
-        </div>
+        <PerfectScrollbar>
+          <div className="admin-main">
+            <Outlet />
+          </div>
+        </PerfectScrollbar>
       </div>
     </div>
   );
