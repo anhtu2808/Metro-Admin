@@ -8,13 +8,14 @@ import {
   SidebarContent,
 } from "react-pro-sidebar";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUser, FaTrain, FaBus, FaTicketAlt } from "react-icons/fa";
+import { FaUser, FaTrain, FaBus, FaTicketAlt, FaLock } from "react-icons/fa";
 import { MdOutlineAnalytics } from "react-icons/md";
 import { BiSolidNews } from "react-icons/bi";
 import { DollarOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsAuthorized, resetUser } from "../../redux/userSlice";
 import { Button, message } from "antd";
+import "./Sidebar.css";
 
 const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
   const navigate = useNavigate();
@@ -37,73 +38,55 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
       onToggle={handleToggleSidebar}
     >
       <SidebarHeader>
-        <div
-          style={{
-            padding: "24px",
-            textTransform: "uppercase",
-            fontWeight: "bold",
-            fontSize: 14,
-            letterSpacing: "1px",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-          }}
-        >
+        <div className="sidebar-header" onClick={() => navigate("/")}>
           <img
             src="/Metro_logo.png"
             alt="Metro Logo"
-            style={{
-              width: "2em",
-              height: "2em",
-              objectFit: "contain",
-              display: "block"
-            }}
+            className="sidebar-logo"
           />
-          <span style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
-            Metro HCM
-          </span>
         </div>
       </SidebarHeader>
 
       <SidebarContent>
         <Menu iconShape="circle">
-          <MenuItem icon={<MdOutlineAnalytics />}>
+          <MenuItem icon={<MdOutlineAnalytics />} className="pro-menu-item">
             Dashboard
             <Link to={"/"} />
           </MenuItem>
-          <MenuItem icon={<FaUser />}>
+          <MenuItem icon={<FaUser />} className="pro-menu-item">
             User
             <Link to={"/manage-users"} />
           </MenuItem>
-          <MenuItem icon={<FaTrain />}>
+          <MenuItem icon={<FaTrain />} className="pro-menu-item">
             Metro Route
             <Link to={"/metro-routes"} />
           </MenuItem>
-          <MenuItem icon={<FaBus />}>
+          <MenuItem icon={<FaBus />} className="pro-menu-item">
             Bus Route
             <Link to={"/bus-routes"} />
           </MenuItem>
-          <MenuItem icon={<FaTicketAlt />}>
+          <MenuItem icon={<FaTicketAlt />} className="pro-menu-item">
             Ticket Price
             <Link to={"/ticket-price"} />
           </MenuItem>
+          <MenuItem icon={<FaLock />} className="pro-menu-item">
+            Role Management
+            <Link to={"/role-management"} />
+          </MenuItem>
 
           {/* ✅ STAFF SECTION */}
-          <SubMenu title="Staff" icon={<FaUser />}>
-            <MenuItem icon={<BiSolidNews />}>
+          <SubMenu title="Staff" icon={<FaUser />} className="pro-menu-item">
+            <MenuItem icon={<BiSolidNews />} className="pro-menu-item">
               News
               <Link to={"/staff/news"} />
             </MenuItem>
-            <MenuItem icon={<DollarOutlined />}>
+            <MenuItem icon={<DollarOutlined />} className="pro-menu-item">
               Fare Adjustment
               <Link to={"/staff/fare-adjustment"} />
             </MenuItem>
           </SubMenu>
           {isAuthorized && (
-            <MenuItem icon={<LogoutOutlined />}>
+            <MenuItem icon={<LogoutOutlined />} className="pro-menu-item">
               <Button type="primary" danger onClick={handleLogout}>
                 Logout
               </Button>

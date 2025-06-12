@@ -23,11 +23,11 @@ const AdminPage = (props) => {
 
           <div className="right-side">
             <Avatar size="default" icon={<UserOutlined />}></Avatar>
-            Le Hoang Quy
+            <span className="admin-header-title">Admin</span>
           </div>
         </div>
         <PerfectScrollbar>
-          <div className="admin-main">
+          <div className="admin-main-scrollable">
             <Outlet />
           </div>
         </PerfectScrollbar>
