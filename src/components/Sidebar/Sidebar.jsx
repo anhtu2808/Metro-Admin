@@ -40,7 +40,7 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
       <SidebarHeader>
         <div className="sidebar-header" onClick={() => navigate("/")}>
           <img
-            src="/Metro_logo.png"
+            src="/Metro_Logo.png"
             alt="Metro Logo"
             className="sidebar-logo"
           />
