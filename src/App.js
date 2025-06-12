@@ -5,6 +5,7 @@ import ManageUser from "./pages/ManageUser/ManageUser";
 import MetroRoutes from "./pages/MetroRoute/MetroRoutes";
 import BusRoutes from "./pages/BusRoute/BusRoutes";
 import TicketPrice from "./pages/TicketPrice/TicketPrice";
+import RoleManagement from "./pages/RoleManagement/RoleManagement";
 import LoginPage from "./pages/Login/LoginPage";
 
 import NewsPage from './pages/NewsPage/NewsPage';
@@ -24,6 +25,7 @@ const route = createBrowserRouter([
       { path: "metro-routes", element: <MetroRoutes /> },
       { path: "bus-routes", element: <BusRoutes /> },
       { path: "ticket-price", element: <TicketPrice /> },
+      { path: "role-management", element: <RoleManagement /> },
 
       // ✅ Thêm route cho Staff
       { path: "staff/news", element: <NewsPage /> },

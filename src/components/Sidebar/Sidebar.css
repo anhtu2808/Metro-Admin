@@ -1,0 +1,68 @@
+.sidebar-header {
+  padding: 32px 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #111;
+  border-bottom: 1px solid #222;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.sidebar-header:hover {
+  background: #181818;
+}
+
+.sidebar-logo {
+  height: 25px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.sidebar-title {
+  cursor: pointer;
+  color: #fff;
+  font-size: 1.2em;
+  font-weight: 700;
+  transition: color 0.2s;
+}
+.sidebar-title:hover {
+  color: #40a9ff;
+}
+
+.pro-sidebar {
+  /* border-radius: 16px; */
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  background: #111;
+}
+
+.pro-menu-item {
+  border-radius: 8px;
+  margin: 4px 8px;
+  transition: background 0.2s, color 0.2s;
+  color: #fff !important;
+}
+.pro-menu-item:hover {
+  background: #222 !important;
+  color: #40a9ff !important;
+}
+
+.pro-menu-item .ant-btn-danger {
+  background: linear-gradient(90deg, #ff4d4f 0%, #ff7875 100%);
+  border: none;
+  font-weight: 600;
+}
+
+.pro-menu-item .ant-btn-danger:hover {
+  background: linear-gradient(90deg, #ff7875 0%, #ff4d4f 100%);
+}
+
+.pro-sidebar .pro-sidebar-inner {
+  background: #111;
+  border-radius: 16px;
+}
+
+.pro-sidebar .pro-menu {
+  padding-top: 8px;
+}

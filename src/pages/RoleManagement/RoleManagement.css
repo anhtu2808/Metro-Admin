@@ -1,0 +1,76 @@
+.role-container {
+  padding: 32px 24px;
+  background: #f7f9fb;
+  min-height: 100vh;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.role-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  background: #fff;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.role-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #1890ff;
+}
+
+.ant-table {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.ant-table-thead > tr > th {
+  background: #e6f7ff;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.ant-table-tbody > tr > td {
+  font-size: 15px;
+}
+
+.ant-btn-primary {
+  background: linear-gradient(90deg, #1890ff 0%, #40a9ff 100%);
+  border: none;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.ant-btn-primary:hover {
+  background: linear-gradient(90deg, #40a9ff 0%, #1890ff 100%);
+}
+
+.mt-3 {
+  margin-top: 24px;
+}
+
+.mt-4 {
+  margin-top: 36px;
+}
+
+.ant-modal-content {
+  border-radius: 12px;
+}
+
+.ant-modal-title {
+  font-size: 22px !important;
+  color: #1890ff !important;
+  font-weight: bold;
+}
+
+.ant-form-item-label > label {
+  font-weight: 500;
+}
