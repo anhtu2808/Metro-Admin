@@ -1,17 +1,26 @@
-import { Button, Divider, Form, Input, Row, Col, message } from "antd";
-import "./Login.css";
-import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Form,
+  Input,
+  Row,
+  Col,
+  message,
+  Typography,
+} from "antd";
+
+import { useNavigate } from "react-router-dom";
 import { loginAPI } from "../../apis";
 import { useDispatch } from "react-redux";
 import { setIsAuthorized, resetUser } from "../../redux/userSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import "./Login.css";
+import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
+import Preloader from "../../components/Preloader/Preloader";
 
 const Login = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     localStorage.removeItem("accessToken");
     dispatch(resetUser());
@@ -20,6 +29,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
+      setIsLoading(true);
       const values = await form.validateFields();
       const { username, password } = values;
 
@@ -34,62 +44,51 @@ const Login = () => {
       if (error.response?.status === 401) {
         message.error("Tài khoản hoặc mật khẩu không đúng");
       } else if (error.errorFields) {
-        // Form validation errors
+        // Form validation error
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <Row justify="center" className="login-row">
-      <Col xs={24} md={16} lg={8}>
-        <fieldset className="login-fieldset">
-          <legend className="login-legend">Login</legend>
-          <Form
-            form={form}
-            name="basic"
-            autoComplete="off"
-            layout="vertical"
-          >
-            <Form.Item
-              label="Username"
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your username!",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your password!",
-                },
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" onClick={handleLogin}>
-                Login
-              </Button>
-            </Form.Item>
-          </Form>
-          <Link to="/">
-            <ArrowLeftOutlined /> Back HomePage
-          </Link>
-          <Divider />
-          <div className="login-register">
-            No account yet? <Link to="/register">Register</Link>
+    <>
+      {isLoading && <Preloader fullscreen={true} />}
+
+      <Row className="login-page">
+        <Col xs={0} md={12} className="login-left">
+          <img
+            className="login-image"
+            src="/Metro_Login.gif"
+            alt="Metro Login"
+          />
+        </Col>
+        <Col xs={24} md={12} className="login-right">
+          <div className="login-form-wrapper">
+            <img src="/Metro_Logo.png" alt="Metro Logo" className="login-logo" />
+            <Form form={form} layout="vertical" className="login-form" validateTrigger="onSubmit">
+              <Form.Item
+                name="username"
+                className="username-input"
+                rules={[{ required: true, message: "Vui lòng nhập tên đăng nhập!" }]}
+              >
+                <Input size="large" placeholder="Tên đăng nhập" />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                className="password-input"
+                rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
+              >
+                <Input.Password size="large" placeholder="Mật khẩu" />
+              </Form.Item>
+              <Form.Item>
+                <PrimaryButton className="login-button" onClick={handleLogin} size="login">Đăng nhập</PrimaryButton>
+              </Form.Item>
+            </Form>
           </div>
-        </fieldset>
-      </Col>
-    </Row>
+        </Col>
+      </Row>
+    </>
   );
 };
 

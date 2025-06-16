@@ -1,0 +1,38 @@
+.custom-primary-button {
+  background-color: #01589e;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* === SIZE CLASSES === */
+.btn-small {
+  font-size: 13px;
+  padding: 6px 12px;
+  min-width: 100px;
+}
+
+.btn-medium {
+  font-size: 14px;
+  padding: 8px 16px;
+  min-width: 120px;
+}
+
+.btn-large {
+  font-size: 16px;
+  padding: 12px 20px;
+  min-width: 140px;
+}
+
+.btn-login {
+  padding: 12px;
+  width: 100%;
+}
+
+/* Hover style */
+.custom-primary-button:hover {
+  background-color: #01457e;
+}
