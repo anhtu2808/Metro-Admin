@@ -1,0 +1,12 @@
+.manage-user-container {
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.user-title {
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  color: #1890ff;
+}
