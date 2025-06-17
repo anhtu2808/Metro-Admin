@@ -4,7 +4,6 @@ import {
   Row,
   Col,
   message,
-  Typography,
 } from "antd";
 
 import { useNavigate } from "react-router-dom";

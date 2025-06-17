@@ -15,6 +15,9 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { FaTrain } from "react-icons/fa";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setLayoutData } from "../../redux/layoutSlice";
 
 const { Content } = Layout;
 const { Text } = Typography;
@@ -79,6 +82,7 @@ const ListCard = ({ title, data, onAdd, onMenuClick }) => (
 );
 
 const LineManagement = () => {
+  const dispatch = useDispatch();
   const handleAddItem = () => {
     alert("me");
   };
@@ -89,13 +93,15 @@ const LineManagement = () => {
       alert(`me`);
     }
   };
+  // Set title và icon cho trang
+  useEffect(() => {
+    dispatch(setLayoutData({
+      title: "Quản lý tuyến tàu",
+      icon: <FaTrain />,
+    }));
+  }, [dispatch]);
   return (
     <div className="metro-layout">
-      <div className="metro-title">
-        <FaTrain />
-        Metro Routes
-      </div>
-      <Divider></Divider>
       <div className="metro-content">
         <Layout>
           <Content>

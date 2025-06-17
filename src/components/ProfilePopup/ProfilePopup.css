@@ -1,0 +1,159 @@
+/* Profile Popup Overlay */
+.profile-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  z-index: 1000;
+}
+
+/* Profile Popup Card */
+.profile-popup-card {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  width: 320px;
+  z-index: 1001;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border: 1px solid #f0f0f0;
+  animation: profilePopupSlideIn 0.2s ease-out;
+  background: white;
+}
+
+@keyframes profilePopupSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Profile Popup Header */
+.profile-popup-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.profile-popup-avatar {
+  flex-shrink: 0;
+  border: 2px solid #f0f0f0;
+}
+
+.profile-popup-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-popup-name {
+  margin: 0 !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: #1a1a1a !important;
+  line-height: 1.2 !important;
+}
+
+.profile-popup-role {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #1890ff !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.profile-popup-email {
+  font-size: 13px !important;
+  color: #8c8c8c !important;
+}
+
+/* Profile Popup Divider */
+.profile-popup-divider {
+  margin: 16px 0 !important;
+  border-color: #f0f0f0;
+}
+
+/* Profile Popup Actions */
+.profile-popup-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-popup-action-btn {
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding: 0 16px !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+  color: #595959 !important;
+  font-weight: 500 !important;
+}
+
+.profile-popup-action-btn:hover {
+  background-color: #f5f5f5 !important;
+  color: #1890ff !important;
+}
+
+.profile-popup-action-btn .anticon {
+  margin-right: 12px !important;
+  font-size: 16px !important;
+}
+
+.profile-popup-logout-btn {
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding: 0 16px !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+  color: #ff4d4f !important;
+  font-weight: 500 !important;
+}
+
+.profile-popup-logout-btn:hover {
+  background-color: #fff2f0 !important;
+  color: #ff4d4f !important;
+}
+
+.profile-popup-logout-btn .anticon {
+  margin-right: 12px !important;
+  font-size: 16px !important;
+}
+
+/* Remove default card padding and styling */
+.profile-popup-card .ant-card-body {
+  padding: 20px !important;
+}
+
+.profile-popup-card .ant-card {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-popup-card {
+    right: 10px;
+    width: 300px;
+  }
+  
+  .profile-popup-header {
+    gap: 12px;
+  }
+  
+  .profile-popup-avatar {
+    /* Smaller avatar on mobile */
+  }
+} 

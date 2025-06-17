@@ -1,0 +1,41 @@
+.ticket-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 28px;
+  font-weight: 600;
+  padding: 16px 24px;
+  color: #1677ff;
+  background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+  border-radius: 12px;
+  border: 1px solid #d6e9ff;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.1);
+}
+
+.ticket-title .fa-ticket-alt {
+  background: #1677ff;
+  color: white;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 20px;
+}
+
+.manage-ticket-container {
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.price-table{
+    margin: 10px 55px;
+}
+.price-dropdown {
+    margin: 10px 55px;
+}
+.price-label{
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}

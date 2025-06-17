@@ -1,7 +1,7 @@
 import React from "react";
-import "./PrimaryButton.css";
+import "./DangerButton.css";
 
-const PrimaryButton = ({ 
+const DangerButton = ({ 
   children, 
   onClick, 
   type = "button", 
@@ -14,16 +14,16 @@ const PrimaryButton = ({
 }) => {
   const renderIcon = () => {
     if (loading) {
-      return <span className="primary-btn-loading-icon">⟳</span>;
+      return <span className="danger-btn-loading-icon">⟳</span>;
     }
     if (icon) {
-      return <span className="primary-btn-icon">{icon}</span>;
+      return <span className="danger-btn-icon">{icon}</span>;
     }
     return null;
   };
 
   const hasText = children && children.toString().trim().length > 0;
-  const buttonClass = `custom-primary-button btn-${size}${className ? ` ${className}` : ''}${
+  const buttonClass = `custom-danger-button btn-${size}${className ? ` ${className}` : ''}${
     icon && !hasText ? ' btn-icon-only' : ''
   }${loading ? ' btn-loading' : ''}`;
 
@@ -37,7 +37,7 @@ const PrimaryButton = ({
     >
       {iconPosition === 'left' && renderIcon()}
       {hasText && (
-        <span className={`primary-btn-text${icon ? ' primary-btn-text-with-icon' : ''}`}>
+        <span className={`danger-btn-text${icon ? ' danger-btn-text-with-icon' : ''}`}>
           {children}
         </span>
       )}
@@ -46,4 +46,4 @@ const PrimaryButton = ({
   );
 };
 
-export default PrimaryButton;
+export default DangerButton; 

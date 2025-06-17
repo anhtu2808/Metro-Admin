@@ -39,7 +39,7 @@
 
 .pro-menu-item {
   border-radius: 8px;
-  margin: 4px 8px;
+  /* margin: 4px 8px; */
   transition: background 0.2s, color 0.2s;
   color: #fff !important;
 }
@@ -62,7 +62,23 @@
   background: #111;
   border-radius: 16px;
 }
-
 .pro-sidebar .pro-menu {
   padding-top: 8px;
+}
+
+.sidebar-toggle-button {
+  position: absolute;
+  z-index: 1;
+  top: 6px;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #313030;
+  border: 0;
+  width: 24px;
+  color: #fff;
+  height: 13px;
+  border-radius: 15px 0 0 15px;
+  outline: none;
 }
