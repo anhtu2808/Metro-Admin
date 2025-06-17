@@ -35,6 +35,8 @@
   /* border-radius: 16px; */
   box-shadow: 0 2px 12px rgba(0,0,0,0.07);
   background: #111;
+  width: 245px;
+  min-width: 245px;
 }
 
 .pro-menu-item {
