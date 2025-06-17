@@ -1,0 +1,321 @@
+.station-management {
+  padding: 24px;
+  background: #f5f5f5;
+  min-height: calc(100vh - 64px);
+}
+
+/* Statistics Cards */
+.statistics-row {
+  margin-bottom: 24px;
+}
+
+.statistics-row .ant-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.statistics-row .ant-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.statistics-row .ant-statistic {
+  text-align: center;
+}
+
+.statistics-row .ant-statistic-title {
+  font-size: 14px;
+  color: #8c8c8c;
+  margin-bottom: 8px;
+}
+
+.statistics-row .ant-statistic-content {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* Main Card */
+.main-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
+}
+
+.main-card .ant-card-body {
+  padding: 24px;
+}
+
+/* Header Actions */
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.header-actions .filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.header-actions .actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+}
+
+/* Search and Select Styles */
+.header-actions .ant-input-search {
+  width: 250px;
+}
+
+.header-actions .ant-input-search .ant-input-affix-wrapper {
+  border-radius: 8px;
+  height: 40px;
+}
+
+.header-actions .ant-input-search .ant-input {
+  height: 38px;
+}
+
+.header-actions .ant-select {
+  min-width: 150px;
+}
+
+.header-actions .ant-select .ant-select-selector {
+  border-radius: 8px;
+  height: 40px;
+}
+
+.header-actions .ant-select .ant-select-selection-item,
+.header-actions .ant-select .ant-select-selection-placeholder {
+  line-height: 38px;
+}
+
+/* Button Styles */
+.header-actions .ant-btn {
+  border-radius: 8px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  padding: 0 16px;
+}
+
+.header-actions .ant-btn-primary {
+  background: linear-gradient(135deg, #1890ff, #40a9ff);
+  border: none;
+}
+
+.header-actions .ant-btn-primary:hover {
+  background: linear-gradient(135deg, #40a9ff, #1890ff);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+/* Table Styles */
+.ant-table {
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+}
+
+.ant-table-thead > tr > th {
+  background: #fafafa;
+  border-bottom: 2px solid #f0f0f0;
+  font-weight: 600;
+  color: #1a1a1a;
+  padding: 16px;
+}
+
+.ant-table-tbody > tr > td {
+  padding: 16px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: #f0f7ff;
+}
+
+/* Table Content */
+.ant-tag {
+  border-radius: 6px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border: none;
+}
+
+.ant-badge {
+  font-size: 13px;
+}
+
+/* Action Buttons */
+.ant-table .ant-btn {
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ant-table .ant-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Modal Styles */
+.ant-modal {
+  border-radius: 12px;
+}
+
+.ant-modal-header {
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+  border-radius: 12px 12px 0 0;
+}
+
+.ant-modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.ant-modal-body {
+  padding: 24px;
+}
+
+/* Form Styles */
+.ant-form-item-label > label {
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.ant-input,
+.ant-input-number,
+.ant-select-selector,
+.ant-input-affix-wrapper {
+  border-radius: 8px;
+}
+
+.ant-select-multiple .ant-select-selection-item {
+  border-radius: 6px;
+  background: #f0f7ff;
+  border: 1px solid #bae7ff;
+  color: #1890ff;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-actions .filters {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .header-actions .actions {
+    justify-content: flex-end;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .station-management {
+    padding: 16px;
+  }
+
+  .statistics-row {
+    margin-bottom: 16px;
+  }
+
+  .main-card .ant-card-body {
+    padding: 16px;
+  }
+
+  .header-actions {
+    margin-bottom: 16px;
+  }
+
+  .header-actions .filters {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .header-actions .filters .ant-input-search,
+  .header-actions .filters .ant-select {
+    width: 100%;
+  }
+
+  .header-actions .actions {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .header-actions .actions .ant-btn {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .ant-table {
+    font-size: 13px;
+  }
+
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td {
+    padding: 12px 8px;
+  }
+
+  .ant-modal {
+    margin: 16px;
+    max-width: calc(100vw - 32px);
+  }
+}
+
+@media (max-width: 480px) {
+  .statistics-row .ant-col {
+    margin-bottom: 12px;
+  }
+
+  .statistics-row .ant-statistic-content {
+    font-size: 24px;
+  }
+
+  .ant-table-tbody > tr > td {
+    padding: 8px 4px;
+  }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.station-management .ant-card {
+  animation: fadeInUp 0.6s ease;
+}
+
+.station-management .ant-table {
+  animation: fadeInUp 0.8s ease;
+} 

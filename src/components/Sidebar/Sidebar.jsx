@@ -3,31 +3,21 @@ import {
   ProSidebar,
   Menu,
   MenuItem,
-  SubMenu,
   SidebarHeader,
   SidebarContent,
 } from "react-pro-sidebar";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUser, FaTrain, FaBus, FaTicketAlt } from "react-icons/fa";
+import { FaUser, FaTrain, FaBus, FaTicketAlt, FaLock, FaSubway } from "react-icons/fa";
 import { MdOutlineAnalytics } from "react-icons/md";
 import { BiSolidNews } from "react-icons/bi";
-import { DollarOutlined, LogoutOutlined } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
-import { setIsAuthorized, resetUser } from "../../redux/userSlice";
-import { Button, message } from "antd";
+import { DollarOutlined } from "@ant-design/icons";
+import "./Sidebar.css";
+import { usePermission } from "../../hooks/usePermission";
 
 const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const isAuthorized = useSelector((state) => state.user.isAuthorized);
 
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    dispatch(resetUser());
-    dispatch(setIsAuthorized(false));
-    message.success("Đã đăng xuất");
-    navigate("/login");
-  };
+
 
   return (
     <ProSidebar
@@ -37,78 +27,56 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
       onToggle={handleToggleSidebar}
     >
       <SidebarHeader>
-        <div
-          style={{
-            padding: "24px",
-            textTransform: "uppercase",
-            fontWeight: "bold",
-            fontSize: 14,
-            letterSpacing: "1px",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-          }}
-        >
+        <div className="sidebar-header" onClick={() => navigate("/")}>
           <img
-            src="/Metro_logo.png"
+            src="/Metro_Logo.png"
             alt="Metro Logo"
-            style={{
-              width: "2em",
-              height: "2em",
-              objectFit: "contain",
-              display: "block"
-            }}
+            className="sidebar-logo"
           />
-          <span style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
-            Metro HCM
-          </span>
         </div>
       </SidebarHeader>
+      <button className="sidebar-toggle-button" onClick={() => handleToggleSidebar()}>
+        {collapsed ? ">>" : "<<" }
+      </button>
 
       <SidebarContent>
         <Menu iconShape="circle">
-          <MenuItem icon={<MdOutlineAnalytics />}>
+          <MenuItem icon={<MdOutlineAnalytics />} className="pro-menu-item">
             Dashboard
             <Link to={"/"} />
           </MenuItem>
-          <MenuItem icon={<FaUser />}>
+          <MenuItem icon={<FaUser />} className="pro-menu-item">
             User
             <Link to={"/manage-users"} />
           </MenuItem>
-          <MenuItem icon={<FaTrain />}>
-            Metro Route
-            <Link to={"/metro-routes"} />
+          <MenuItem icon={<FaTrain />} className="pro-menu-item">
+            Metro Line
+            <Link to={"/metro-line"} />
           </MenuItem>
-          <MenuItem icon={<FaBus />}>
+          {usePermission("station:manage") && <MenuItem icon={<FaSubway />} className="pro-menu-item">
+            Station
+            <Link to={"/stations"} />
+          </MenuItem>}
+          <MenuItem icon={<FaBus />} className="pro-menu-item">
             Bus Route
             <Link to={"/bus-routes"} />
           </MenuItem>
-          <MenuItem icon={<FaTicketAlt />}>
+          <MenuItem icon={<FaTicketAlt />} className="pro-menu-item">
             Ticket Price
             <Link to={"/ticket-price"} />
           </MenuItem>
-
-          {/* ✅ STAFF SECTION */}
-          <SubMenu title="Staff" icon={<FaUser />}>
-            <MenuItem icon={<BiSolidNews />}>
-              News
-              <Link to={"/staff/news"} />
-            </MenuItem>
-            <MenuItem icon={<DollarOutlined />}>
-              Fare Adjustment
-              <Link to={"/staff/fare-adjustment"} />
-            </MenuItem>
-          </SubMenu>
-          {isAuthorized && (
-            <MenuItem icon={<LogoutOutlined />}>
-              <Button type="primary" danger onClick={handleLogout}>
-                Logout
-              </Button>
-            </MenuItem>
-          )}
+          <MenuItem icon={<FaLock />} className="pro-menu-item">
+            Role Management
+            <Link to={"/role-management"} />
+          </MenuItem>
+          <MenuItem icon={<BiSolidNews />} className="pro-menu-item">
+            News
+            <Link to={"/staff/news"} />
+          </MenuItem>
+          <MenuItem icon={<DollarOutlined />} className="pro-menu-item">
+            Fare Adjustment
+            <Link to={"/staff/fare-adjustment"} />
+          </MenuItem>
         </Menu>
       </SidebarContent>
     </ProSidebar>
