@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Table, Checkbox, message, Modal, Form, Input, Button } from "antd";
 import { ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { useDispatch } from "react-redux";
+import { setLayoutData } from "../../redux/layoutSlice";
+import { FaLock } from "react-icons/fa";
 import {
   createPermissionAPI,
   fetchPermissionsAPI,
@@ -11,6 +14,7 @@ import {
 import "./RoleManagement.css";
 
 const RoleManagement = () => {
+  const dispatch = useDispatch();
   const [permissionsData, setPermissionsData] = useState([]);
   const [rolesData, setRolesData] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -18,6 +22,16 @@ const RoleManagement = () => {
   const [form] = Form.useForm();
   const [editingPermission, setEditingPermission] = useState(null);
   const [editForm] = Form.useForm();
+
+  // Set title và icon cho trang
+  useEffect(() => {
+    dispatch(
+      setLayoutData({
+        title: "Role Management",
+        icon: <FaLock />,
+      })
+    );
+  }, [dispatch]);
 
   const handleOk = () => {
     form
@@ -238,9 +252,6 @@ const RoleManagement = () => {
   return (
     <div className="role-container">
       <div className="role-header">
-        <div className="role-header-left">
-          <h1>Role Management</h1>
-        </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <Input
             placeholder="Search permissions"

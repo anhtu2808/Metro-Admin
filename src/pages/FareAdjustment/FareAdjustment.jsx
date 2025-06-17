@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Input,
   Button,
@@ -13,17 +13,30 @@ import {
   Form,
   Select,
 } from "antd";
-import { SearchOutlined, QrcodeOutlined } from "@ant-design/icons";
+import { SearchOutlined, QrcodeOutlined, DollarOutlined } from "@ant-design/icons";
+import { useDispatch } from "react-redux";
+import { setLayoutData } from "../../redux/layoutSlice";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
 const FareAdjustment = () => {
+  const dispatch = useDispatch();
   const [code, setCode] = useState("");
   const [ticket, setTicket] = useState(null);
   const [openDetail, setOpenDetail] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [form] = Form.useForm();
+
+  // Set title và icon cho trang
+  useEffect(() => {
+    dispatch(
+      setLayoutData({
+        title: "Quản lý vé",
+        icon: <DollarOutlined />,
+      })
+    );
+  }, [dispatch]);
 
   const mockData = {
     code: "123456",
@@ -80,11 +93,6 @@ const FareAdjustment = () => {
     <div className="staff-container">
       <Card className="staff-header-card">
         <Row justify="space-between" align="middle">
-          <Col>
-            <Title level={2} style={{ margin: 0, color: "#1677ff" }}>
-              🎫 Quản lý vé
-            </Title>
-          </Col>
           <Col>
             <Input
               placeholder="Nhập mã vé..."

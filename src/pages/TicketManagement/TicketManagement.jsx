@@ -4,8 +4,22 @@ import { FaTicketAlt } from "react-icons/fa";
 import FixPriceTab from "./FixPriceTab/FixPriceTab";
 import DynamicPriceTab from "./DynamicPriceTab/DynamicPriceTab";
 import TripPriceTableTab from "./DynamicPriceTab/DynamicPriceTab";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setLayoutData } from "../../redux/layoutSlice";
 
 const TicketManagement = () => {
+  const dispatch = useDispatch();
+  // Set title và icon cho trang
+  useEffect(() => {
+    dispatch(
+      setLayoutData({
+        title: "Giá vé",
+        icon: <FaTicketAlt />,
+      })
+    );
+  }, [dispatch]);
+
   // Tab items configuration
   const tabItems = [
     {
@@ -27,10 +41,6 @@ const TicketManagement = () => {
 
   return (
     <div className="manage-ticket-container">
-      <div className="ticket-title">
-        <FaTicketAlt style={{ marginRight: "8px" }} />
-        Giá vé
-      </div>
 
       <Tabs 
         defaultActiveKey="1" 

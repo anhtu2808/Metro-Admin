@@ -10,7 +10,7 @@ import ProfilePopup from "../ProfilePopup/ProfilePopup";
 import { useSelector } from "react-redux";
 
 const MainLayout = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [showProfilePopup, setShowProfilePopup] = useState(false);
   const user = useSelector((state) => state.user);
   const layout = useSelector((state) => state.layout);
