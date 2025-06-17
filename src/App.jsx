@@ -14,6 +14,7 @@ import UserManagement from "./pages/UserManagement/UserManagement";
 import NewsManagement from "./pages/NewsManagement/NewsManagement";
 import BusRouteManagement from "./pages/BusRouteManagement/BusRouteManagement";
 import TicketManagement from "./pages/TicketManagement/TicketManagement";
+import StationManagement from "./pages/StationManagement/StationManagement";
 
 
 const route = createBrowserRouter([
@@ -28,6 +29,7 @@ const route = createBrowserRouter([
       { index: true, element: <Dashboard /> },
       { path: "manage-users", element: <UserManagement /> },
       { path: "metro-line", element: <LineManagement /> },
+      { path: "stations", element: <StationManagement /> },
       { path: "bus-routes", element: <BusRouteManagement /> },
       { path: "ticket-price", element: <TicketManagement /> },
       { path: "role-management", element: <RoleManagement /> },

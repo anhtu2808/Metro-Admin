@@ -42,3 +42,35 @@ export const updatePermissionAPI = async (id, data) => {
   const res = await api.put(`/v1/permissions/${id}`, data);
   return res.data;
 };
+
+//  - Station API -
+export const getAllStationsAPI = async () => {
+  const res = await api.get("/v1/stations");
+  return res.data;
+};
+
+export const getStationByIdAPI = async (id) => {
+  const res = await api.get(`/v1/stations/${id}`);
+  return res.data;
+};
+
+export const createStationAPI = async (payload) => {
+  const res = await api.post("/v1/stations", payload);
+  return res.data;
+};
+
+export const updateStationAPI = async (id, payload) => {
+  const res = await api.put(`/v1/stations/${id}`, payload);
+  return res.data;
+};
+
+export const deleteStationAPI = async (id) => {
+  const res = await api.delete(`/v1/stations/${id}`);
+  return res.data;
+};
+
+//  - Line API -
+export const getAllLinesAPI = async () => {
+  const res = await api.get("/v1/lines");
+  return res.data;
+};
