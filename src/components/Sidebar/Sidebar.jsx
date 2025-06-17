@@ -3,7 +3,6 @@ import {
   ProSidebar,
   Menu,
   MenuItem,
-  SubMenu,
   SidebarHeader,
   SidebarContent,
 } from "react-pro-sidebar";
@@ -11,24 +10,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaTrain, FaBus, FaTicketAlt, FaLock } from "react-icons/fa";
 import { MdOutlineAnalytics } from "react-icons/md";
 import { BiSolidNews } from "react-icons/bi";
-import { DollarOutlined, LogoutOutlined } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
-import { setIsAuthorized, resetUser } from "../../redux/userSlice";
-import { Button, message } from "antd";
+import { DollarOutlined } from "@ant-design/icons";
 import "./Sidebar.css";
 
 const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const isAuthorized = useSelector((state) => state.user.isAuthorized);
 
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    dispatch(resetUser());
-    dispatch(setIsAuthorized(false));
-    message.success("Đã đăng xuất");
-    navigate("/login");
-  };
+
 
   return (
     <ProSidebar
@@ -46,6 +34,9 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
           />
         </div>
       </SidebarHeader>
+      <button className="sidebar-toggle-button" onClick={() => handleToggleSidebar()}>
+        {collapsed ? ">>" : "<<" }
+      </button>
 
       <SidebarContent>
         <Menu iconShape="circle">
@@ -58,8 +49,8 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
             <Link to={"/manage-users"} />
           </MenuItem>
           <MenuItem icon={<FaTrain />} className="pro-menu-item">
-            Metro Route
-            <Link to={"/metro-routes"} />
+            Metro Line
+            <Link to={"/metro-line"} />
           </MenuItem>
           <MenuItem icon={<FaBus />} className="pro-menu-item">
             Bus Route
@@ -73,25 +64,14 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
             Role Management
             <Link to={"/role-management"} />
           </MenuItem>
-
-          {/* ✅ STAFF SECTION */}
-          <SubMenu title="Staff" icon={<FaUser />} className="pro-menu-item">
-            <MenuItem icon={<BiSolidNews />} className="pro-menu-item">
-              News
-              <Link to={"/staff/news"} />
-            </MenuItem>
-            <MenuItem icon={<DollarOutlined />} className="pro-menu-item">
-              Fare Adjustment
-              <Link to={"/staff/fare-adjustment"} />
-            </MenuItem>
-          </SubMenu>
-          {isAuthorized && (
-            <MenuItem icon={<LogoutOutlined />} className="pro-menu-item">
-              <Button type="primary" danger onClick={handleLogout}>
-                Logout
-              </Button>
-            </MenuItem>
-          )}
+          <MenuItem icon={<BiSolidNews />} className="pro-menu-item">
+            News
+            <Link to={"/staff/news"} />
+          </MenuItem>
+          <MenuItem icon={<DollarOutlined />} className="pro-menu-item">
+            Fare Adjustment
+            <Link to={"/staff/fare-adjustment"} />
+          </MenuItem>
         </Menu>
       </SidebarContent>
     </ProSidebar>

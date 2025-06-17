@@ -10,6 +10,7 @@ const data = [
     key: "1",
     firstName: "John",
     lastName: "Brown",
+    username: "john_brown",
     email: "hao@gmail.com",
     createdDate: "21/09/2023",
   },
@@ -17,6 +18,7 @@ const data = [
     key: "2",
     firstName: "Jim",
     lastName: "Green",
+    username: "jim_green",
     email: "hao@gmail.com",
     createdDate: "21/09/2023",
   },
@@ -24,6 +26,7 @@ const data = [
     key: "3",
     firstName: "Joe",
     lastName: "Black",
+    username: "joe_black",
     email: "hao@gmail.com",
     createdDate: "21/09/2023",
   },
@@ -56,6 +59,7 @@ const TableUser = () => {
     key="fullName"
     render={(_, record) => `${record.firstName} ${record.lastName}`}
   />
+  <Column title="Tên đăng nhập" dataIndex="username" key="username" />
   <Column title="Email" dataIndex="email" key="email" />
   <Column title="Ngày tạo" dataIndex="createdDate" key="createdDate" />
   <Column

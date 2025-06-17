@@ -1,13 +1,16 @@
-import { Col, Form, Input, Row, Tabs, Button } from "antd";
-import { useState } from "react";
-import { FaUser, FaUserPlus } from "react-icons/fa";
+import { Col, Form, Input, Row, Tabs } from "antd";
+import { useEffect, useState } from "react";
+import { FaUser, FaUserPlus, FaSearch } from "react-icons/fa";
 import ModalCreateUser from "./ModalCreateUser";
 import TableUser from "./TableUser";
+import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
 import "./UserManagement.css";
+import { useDispatch } from "react-redux";
+import { setLayoutData } from "../../redux/layoutSlice";
 
 const UserManagement = () => {
   const [showModalCreateUser, setShowModalCreateUser] = useState(false);
-
+  const dispatch = useDispatch();
   const onChange = (key) => {
     console.log("Đã chọn tab:", key);
   };
@@ -24,13 +27,16 @@ const UserManagement = () => {
       children: "Nội dung tab Nhân viên (đang cập nhật...)",
     },
   ];
+  // Set title và icon cho trang
+  useEffect(() => {
+    dispatch(setLayoutData({
+      title: "Quản lý người dùng",
+      icon: <FaUser />,
+    }));
+  }, [dispatch]);
 
   return (
     <div className="manage-user-container">
-      <div className="user-title">
-        <FaUser style={{ marginRight: "8px" }} />
-        Quản lý người dùng
-      </div>
 
       <div className="users-content" style={{ marginTop: "20px" }}>
         <Row justify="space-between" align="middle" gutter={[16, 16]}>
@@ -43,16 +49,19 @@ const UserManagement = () => {
                 />
               </Form.Item>
               <Form.Item>
-                <Button type="primary" htmlType="submit">
+                <PrimaryButton 
+                  htmlType="submit" 
+                  icon={<FaSearch />}
+                  size="medium"
+                >
                   Tìm kiếm
-                </Button>
+                </PrimaryButton>
               </Form.Item>
             </Form>
           </Col>
 
           <Col xs={24} md={8} style={{ textAlign: "right" }}>
-            <Button
-              type="primary"
+            <PrimaryButton
               icon={<FaUserPlus />}
               style={{
                 borderRadius: 8,
@@ -66,7 +75,7 @@ const UserManagement = () => {
               onClick={() => setShowModalCreateUser(true)}
             >
               Tạo tài khoản
-            </Button>
+            </PrimaryButton>
           </Col>
         </Row>
 

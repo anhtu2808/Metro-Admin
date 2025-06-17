@@ -12,6 +12,8 @@ import {
 import { BiSolidNews } from "react-icons/bi";
 import moment from "moment";
 import "./NewsManagement.css";
+import { useDispatch } from "react-redux";
+import { setLayoutData } from "../../redux/layoutSlice";
 
 const { Title, Paragraph, Text } = Typography;
 const { TextArea } = Input;
@@ -51,6 +53,7 @@ const news = [
 ];
 
 const NewsManagement = () => {
+  const dispatch = useDispatch();
   const [newsList, setNewsList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -60,6 +63,16 @@ const NewsManagement = () => {
   const [form] = Form.useForm();
   const [viewModalVisible, setViewModalVisible] = useState(false);
   const [viewingNews, setViewingNews] = useState(null);
+
+  // Set title và icon cho trang
+  useEffect(() => {
+    dispatch(
+      setLayoutData({
+        title: "Quản lý tin tức",
+        icon: <BiSolidNews />,
+      })
+    );
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -142,12 +155,6 @@ const NewsManagement = () => {
     <div className="news-container">
       <Card className="news-header-card">
         <Row justify="space-between" align="middle">
-          <Col>
-            <Title level={2} className="news-title">
-              <BiSolidNews size={28} />
-              Quản lý tin tức
-            </Title>
-          </Col>
           <Col>
             <Space>
               <Input 

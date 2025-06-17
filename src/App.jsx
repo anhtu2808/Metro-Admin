@@ -2,7 +2,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Dashboard from "./pages/Dashboard/Dashboard";
 import LineManagement from "./pages/LineManagement/LineManagement";
-import TicketPrice from "./pages/TicketPrice/TicketPrice";
 import RoleManagement from "./pages/RoleManagement/RoleManagement";
 import Login from "./pages/Login/Login";
 import FareAdjustment from './pages/FareAdjustment/FareAdjustment';
@@ -14,6 +13,7 @@ import PrivateRoute from './components/PrivateRoute';
 import UserManagement from "./pages/UserManagement/UserManagement";
 import NewsManagement from "./pages/NewsManagement/NewsManagement";
 import BusRouteManagement from "./pages/BusRouteManagement/BusRouteManagement";
+import TicketManagement from "./pages/TicketManagement/TicketManagement";
 
 
 const route = createBrowserRouter([
@@ -27,9 +27,9 @@ const route = createBrowserRouter([
     children: [
       { index: true, element: <Dashboard /> },
       { path: "manage-users", element: <UserManagement /> },
-      { path: "metro-routes", element: <LineManagement /> },
+      { path: "metro-line", element: <LineManagement /> },
       { path: "bus-routes", element: <BusRouteManagement /> },
-      { path: "ticket-price", element: <TicketPrice /> },
+      { path: "ticket-price", element: <TicketManagement /> },
       { path: "role-management", element: <RoleManagement /> },
 
       // ✅ Thêm route cho Staff

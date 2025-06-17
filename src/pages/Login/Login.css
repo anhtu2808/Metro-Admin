@@ -1,25 +1,59 @@
-
-.login-container {
-  padding: 20px;
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  background-color: #fff;
 }
 
-.login-row {
-  margin-top: 30px;
+.login-left {
+  background-color: #ffffff;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  align-items: start;
+  overflow: hidden;
 }
 
-.login-fieldset {
-  padding: 15px;
-  margin: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.login-image {
+  height: 100vh;
+  width: auto;
+  object-fit: cover; /* hoặc contain nếu bạn không muốn cắt ảnh */
 }
 
-.login-legend {
-  font-size: 25px;
-  padding: 0 10px;
+
+
+.login-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  padding: 40px 24px;
+  height: 100vh;
 }
 
-.login-register {
-  margin-top: 10px;
+.login-form-wrapper {
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-logo {
+  width: 160px;
+  height: auto;
+  margin: 0 auto 24px;
+  display: block;
+}
+
+.login-title {
+  font-weight: bold;
   text-align: center;
+  margin-bottom: 12px;
 }
+
+.login-button {
+  margin-top: 10px;
+}
+.password-input {
+  margin-top: 10px;
+}
+
+

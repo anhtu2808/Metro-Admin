@@ -4,9 +4,9 @@
 }
 
 .user-title {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 18px;
+  font-weight: 550;
   display: flex;
   align-items: center;
-  color: #1890ff;
+  color: var(--primary-color);
 }
