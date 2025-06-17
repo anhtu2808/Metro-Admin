@@ -84,3 +84,27 @@
   border-radius: 15px 0 0 15px;
   outline: none;
 }
+
+/* Tooltip styles for collapsed sidebar */
+.pro-sidebar.collapsed .pro-menu-item .ant-tooltip {
+  z-index: 1000;
+}
+
+.pro-sidebar.collapsed .pro-menu-item .ant-tooltip-inner {
+  background: #1f1f1f;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 6px;
+  font-size: 12px;
+  padding: 6px 8px;
+}
+
+.pro-sidebar.collapsed .pro-menu-item .ant-tooltip-arrow::before {
+  background: #1f1f1f;
+  border: 1px solid #333;
+}
+
+/* Ensure tooltip appears on the right side */
+.pro-sidebar .pro-menu-item .ant-tooltip-placement-right {
+  margin-left: 8px;
+}
