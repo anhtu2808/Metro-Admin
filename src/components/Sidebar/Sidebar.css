@@ -1,0 +1,110 @@
+.sidebar-header {
+  padding: 32px 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #111;
+  border-bottom: 1px solid #222;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.sidebar-header:hover {
+  background: #181818;
+}
+
+.sidebar-logo {
+  height: 25px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.sidebar-title {
+  cursor: pointer;
+  color: #fff;
+  font-size: 1.2em;
+  font-weight: 700;
+  transition: color 0.2s;
+}
+.sidebar-title:hover {
+  color: #40a9ff;
+}
+
+.pro-sidebar {
+  /* border-radius: 16px; */
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  background: #111;
+  width: 245px;
+  min-width: 245px;
+}
+
+.pro-menu-item {
+  border-radius: 8px;
+  /* margin: 4px 8px; */
+  transition: background 0.2s, color 0.2s;
+  color: #fff !important;
+}
+.pro-menu-item:hover {
+  background: #222 !important;
+  color: #40a9ff !important;
+}
+
+.pro-menu-item .ant-btn-danger {
+  background: linear-gradient(90deg, #ff4d4f 0%, #ff7875 100%);
+  border: none;
+  font-weight: 600;
+}
+
+.pro-menu-item .ant-btn-danger:hover {
+  background: linear-gradient(90deg, #ff7875 0%, #ff4d4f 100%);
+}
+
+.pro-sidebar .pro-sidebar-inner {
+  background: #111;
+  border-radius: 16px;
+}
+.pro-sidebar .pro-menu {
+  padding-top: 8px;
+}
+
+.sidebar-toggle-button {
+  position: absolute;
+  z-index: 1;
+  top: 6px;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #313030;
+  border: 0;
+  width: 24px;
+  color: #fff;
+  height: 13px;
+  border-radius: 15px 0 0 15px;
+  outline: none;
+}
+
+/* Tooltip styles for collapsed sidebar */
+.pro-sidebar.collapsed .pro-menu-item .ant-tooltip {
+  z-index: 1000;
+}
+
+.pro-sidebar.collapsed .pro-menu-item .ant-tooltip-inner {
+  background: #1f1f1f;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 6px;
+  font-size: 12px;
+  padding: 6px 8px;
+}
+
+.pro-sidebar.collapsed .pro-menu-item .ant-tooltip-arrow::before {
+  background: #1f1f1f;
+  border: 1px solid #333;
+}
+
+/* Ensure tooltip appears on the right side */
+.pro-sidebar .pro-menu-item .ant-tooltip-placement-right {
+  margin-left: 8px;
+}

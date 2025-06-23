@@ -1,0 +1,332 @@
+.map-view-container {
+  height: 100% !important;
+  min-height: 500px !important;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.map-view-main {
+  height: 100% !important;
+  min-height: 500px !important;
+  width: 100%;
+  position: relative;
+}
+
+.map-container {
+  height: 100% !important;
+  width: 100% !important;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.map-container .leaflet-container {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.map-view-empty {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fafafa;
+    border-radius: 8px;
+}
+
+.map-view-empty-content {
+    text-align: center;
+    padding: 40px;
+}
+
+/* Station popup styles */
+.station-popup {
+    min-width: 200px;
+}
+
+.station-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.station-popup-content {
+    font-size: 12px;
+}
+
+/* Segment info panel */
+.segment-info-panel {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 300px;
+  z-index: 1000;
+  max-height: calc(100% - 40px);
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.segment-info-panel.collapsed {
+  width: auto;
+  min-width: 200px;
+}
+
+.segment-info-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.segment-info-card .ant-card-head {
+  padding: 12px 16px;
+  min-height: auto;
+}
+
+.segment-info-card .ant-card-head .ant-card-extra {
+  margin: 0;
+}
+
+.segment-info-card .ant-card-head .ant-card-extra .ant-btn {
+  padding: 4px;
+  height: 24px;
+  width: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.segment-info-card .ant-card-head .ant-card-extra .ant-btn:hover {
+  background: #f0f0f0;
+}
+
+.segment-info-card .ant-card-body {
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.segment-info-panel.collapsed .segment-info-card .ant-card-body {
+  padding: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.segment-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.segment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.segment-item:hover {
+    background: #f0f7ff;
+}
+
+.segment-item:last-child {
+    border-bottom: none;
+}
+
+.segment-name {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.segment-item .ant-btn {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.segment-item:hover .ant-btn {
+    opacity: 1;
+}
+
+/* Leaflet map customizations */
+.map-container .leaflet-container {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.map-container .leaflet-container.leaflet-touch.leaflet-retina.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom {
+  height: 100% !important;
+  width: 100% !important;
+  position: relative !important;
+}
+
+.leaflet-container,
+.leaflet-container.leaflet-touch,
+.leaflet-container.leaflet-retina,
+.leaflet-container.leaflet-fade-anim,
+.leaflet-container.leaflet-grab,
+.leaflet-container.leaflet-touch-drag,
+.leaflet-container.leaflet-touch-zoom {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.map-container .leaflet-popup-content-wrapper {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.map-container .leaflet-popup-content {
+    margin: 12px 16px;
+    line-height: 1.4;
+}
+
+.map-container .leaflet-popup-tip {
+    background: white;
+}
+
+/* Custom marker styles */
+.map-container .leaflet-marker-icon {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Polyline styles */
+.map-container .leaflet-interactive {
+  cursor: pointer;
+}
+
+/* Leaflet tiles and controls */
+.leaflet-tile-pane {
+  z-index: 1;
+}
+
+.leaflet-objects-pane {
+  z-index: 2;
+}
+
+.leaflet-control-container {
+  z-index: 1000;
+}
+
+.leaflet-tile {
+  pointer-events: auto;
+}
+
+/* Fix for leaflet controls */
+.leaflet-control-zoom {
+  margin: 10px;
+}
+
+.leaflet-control-attribution {
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* Scrollbar for segment list */
+.segment-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.segment-list::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 2px;
+}
+
+.segment-list::-webkit-scrollbar-thumb {
+    background: #d9d9d9;
+    border-radius: 2px;
+}
+
+.segment-list::-webkit-scrollbar-thumb:hover {
+    background: #bfbfbf;
+}
+
+.map-view-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fafafa;
+}
+
+.map-view-line-selector {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.map-view-line-selector .ant-btn {
+    min-width: 60px;
+    height: 36px;
+    font-weight: 500;
+}
+
+.map-view-content {
+  flex: 1;
+  height: 100%;
+  min-height: 500px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.map-view-content .map-view-card {
+    height: 100%;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.map-view-content .map-view-card .ant-card-body {
+    height: 100%;
+    padding: 24px;
+}
+
+/* Modal form styles */
+.ant-modal .ant-form-item-label>label {
+    font-weight: 500;
+}
+
+.ant-modal .ant-input[disabled] {
+    background: #f5f5f5;
+    color: #8c8c8c;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .segment-info-panel {
+        width: 280px;
+        top: 10px;
+        right: 10px;
+        max-height: calc(100% - 20px);
+    }
+
+    .segment-info-card .ant-card-head {
+        padding: 10px 12px;
+    }
+
+    .segment-item {
+        padding: 10px 12px;
+    }
+
+    .segment-name {
+        font-size: 12px;
+    }
+
+    .station-popup {
+        min-width: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    .segment-info-panel {
+        width: calc(100% - 20px);
+        right: 10px;
+        left: 10px;
+        top: 10px;
+    }
+
+    .segment-list {
+        max-height: 250px;
+    }
+}
