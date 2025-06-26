@@ -74,3 +74,24 @@ export const getAllLinesAPI = async () => {
   const res = await api.get("/v1/lines");
   return res.data;
 };
+
+// - Content API -
+export const getAllContentAPI = async () => {
+  const res = await api.get("/v1/contents");
+  return res.data;
+};
+
+export const createContentAPI = async (payload) => {
+  const res = await api.post("/v1/contents", payload);
+  return res.data;
+};
+
+export const updateContentAPI = async (id, payload) => {
+  const res = await api.put(`/v1/contents/${id}`, payload);
+  return res.data;
+};
+
+export const deleteContentAPI = async (id) => {
+  const res = await api.delete(`/v1/contents/${id}`);
+  return res.data;
+};
