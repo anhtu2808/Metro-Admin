@@ -13,10 +13,10 @@ import {
   Card,
   Row,
   Col,
-  Statistic,
   Tooltip,
-  Badge,
-  Skeleton
+  Skeleton,
+  Upload,
+  Avatar
 } from 'antd';
 import {
   PlusOutlined,
@@ -24,7 +24,8 @@ import {
   DeleteOutlined,
   EnvironmentOutlined,
   ReloadOutlined,
-  ExportOutlined
+  ExportOutlined,
+  CameraOutlined,
 } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { setLayoutData } from '../../redux/layoutSlice';
@@ -34,7 +35,8 @@ import {
   getAllStationsAPI, 
   createStationAPI, 
   updateStationAPI, 
-  deleteStationAPI
+  deleteStationAPI,
+  uploadStationImageAPI
 } from '../../apis';
 import './StationManagement.css';
 
@@ -53,6 +55,18 @@ const StationManagement = () => {
   const [searchText, setSearchText] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [form] = Form.useForm();
+  const [imageUrl, setImageUrl] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
+  
+  // Pagination state
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+    showSizeChanger: true,
+    showQuickJumper: true,
+    showTotal: (total, range) => `${range[0]}-${range[1]} của ${total} trạm`,
+  });
 
   // Sample data for stations
   const initialStations = [
@@ -135,20 +149,10 @@ const StationManagement = () => {
 
 
 
-  const facilityOptions = [
-    { value: 'escalator', label: 'Thang cuốn', icon: '🔼' },
-    { value: 'elevator', label: 'Thang máy', icon: '🛗' },
-    { value: 'toilet', label: 'Nhà vệ sinh', icon: '🚻' },
-    { value: 'atm', label: 'ATM', icon: '🏧' },
-    { value: 'parking', label: 'Bãi đỗ xe', icon: '🅿️' },
-    { value: 'shop', label: 'Cửa hàng', icon: '🏪' },
-    { value: 'wifi', label: 'WiFi', icon: '📶' }
-  ];
 
 
-
-  // Load stations from API
-  const loadStations = async (isInitial = false) => {
+  // Load stations from API with pagination
+  const loadStations = async (isInitial = false, page = 1, pageSize = 10, searchQuery = '') => {
     try {
       if (isInitial) {
         setInitialLoading(true);
@@ -156,31 +160,58 @@ const StationManagement = () => {
         setLoading(true);
       }
       
-      const response = await getAllStationsAPI();
-      const stationsData = response.result?.data || response.data || response;
+      // Call API with pagination parameters
+      const response = await getAllStationsAPI({
+        page,
+        size: pageSize,
+        search: searchQuery
+      });
       
-      // Transform API data to match component format
-      const transformedStations = stationsData.map(station => ({
-        id: station.id,
-        name: station.name || 'Unnamed Station',
-        code: station.stationCode || 'N/A',
-        address: station.address || 'Chưa có địa chỉ',
-        latitude: parseFloat(station.latitude) || 0,
-        longitude: parseFloat(station.longitude) || 0,
-        status: station.deleted === 0 ? 'active' : 'inactive',
-        imageUrl: station.imageUrl,
-        createdAt: station.createAt ? new Date(station.createAt).toLocaleDateString('vi-VN') : new Date().toLocaleDateString('vi-VN'),
-        updatedAt: station.updateAt ? new Date(station.updateAt).toLocaleDateString('vi-VN') : new Date().toLocaleDateString('vi-VN')
-      }));
-      
-      setStations(transformedStations);
-      setFilteredStations(transformedStations);
+      if (response.code === 200) {
+        const { result } = response;
+        const { data, currentPage, pageSize: returnedPageSize, totalElements } = result;
+        
+        // Transform API data to match component format
+        const transformedStations = data.map(station => ({
+          id: station.id,
+          name: station.name || 'Unnamed Station',
+          code: station.stationCode || 'N/A',
+          address: station.address || 'Chưa có địa chỉ',
+          latitude: parseFloat(station.latitude) || 0,
+          longitude: parseFloat(station.longitude) || 0,
+          status: station.deleted === 0 ? 'active' : 'inactive',
+          imageUrl: station.imageUrl,
+          createdAt: station.createAt ? new Date(station.createAt).toLocaleDateString('vi-VN') : new Date().toLocaleDateString('vi-VN'),
+          updatedAt: station.updateAt ? new Date(station.updateAt).toLocaleDateString('vi-VN') : new Date().toLocaleDateString('vi-VN')
+        }));
+        
+        setStations(transformedStations);
+        setFilteredStations(transformedStations);
+        
+        // Update pagination state
+        setPagination(prev => ({
+          ...prev,
+          current: currentPage,
+          pageSize: returnedPageSize,
+          total: totalElements
+        }));
+      } else {
+        throw new Error('API response error');
+      }
     } catch (error) {
       console.error('Error loading stations:', error);
       message.error('Không thể tải dữ liệu trạm');
-      // Fallback to sample data if API fails
-      setStations(initialStations);
-      setFilteredStations(initialStations);
+      
+      // Fallback to sample data if API fails (only for initial load)
+      if (isInitial) {
+        setStations(initialStations);
+        setFilteredStations(initialStations);
+        setPagination(prev => ({
+          ...prev,
+          current: 1,
+          total: initialStations.length
+        }));
+      }
     } finally {
       if (isInitial) {
         setInitialLoading(false);
@@ -198,62 +229,63 @@ const StationManagement = () => {
     
     // Load data from API
     loadStations(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  // Filter stations based on search and filters
+  // Handle search with debounce effect
   useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      // Reset to first page when searching
+      loadStations(false, 1, pagination.pageSize, searchText);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchText]);
+
+  // Handle status filter
+  useEffect(() => {
+    // For now, we'll handle status filter on client side
+    // You can modify the API to support status filtering if needed
     let filtered = stations;
 
-    // Search filter
-    if (searchText) {
-      filtered = filtered.filter(station =>
-        station.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        station.code.toLowerCase().includes(searchText.toLowerCase()) ||
-        station.address.toLowerCase().includes(searchText.toLowerCase())
-      );
-    }
-
-    // Status filter
     if (selectedStatus !== 'all') {
       filtered = filtered.filter(station => station.status === selectedStatus);
     }
 
     setFilteredStations(filtered);
-  }, [stations, searchText, selectedStatus]);
+  }, [stations, selectedStatus]);
 
-  const getStatusColor = (status) => {
-    const colors = {
-      active: 'success',
-      inactive: 'default',
-      maintenance: 'warning',
-      construction: 'processing'
-    };
-    return colors[status] || 'default';
-  };
 
-  const getStatusText = (status) => {
-    const texts = {
-      active: 'Hoạt động',
-      inactive: 'Không hoạt động',
-      maintenance: 'Bảo trì',
-      construction: 'Xây dựng'
-    };
-    return texts[status] || status;
-  };
-
-  const getFacilityIcon = (facility) => {
-    const option = facilityOptions.find(opt => opt.value === facility);
-    return option ? option.icon : '📍';
-  };
-
-  const getFacilityLabel = (facility) => {
-    const option = facilityOptions.find(opt => opt.value === facility);
-    return option ? option.label : facility;
+  // Handle image upload
+  const handleImageUpload = async (file) => {
+    setUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await uploadStationImageAPI(formData);
+      
+      if (response.code === 200) {
+        const newImageUrl = response.result;
+        setImageUrl(newImageUrl);
+        message.success("Upload ảnh thành công!");
+      } else {
+        message.error("Upload ảnh thất bại!");
+      }
+    } catch (error) {
+      message.error("Upload ảnh thất bại!");
+    } finally {
+      setUploadingImage(false);
+    }
+    
+    return false; // Prevent default upload behavior
   };
 
   const handleAdd = () => {
     setEditingStation(null);
     form.resetFields();
+    setImageUrl('');
     setIsModalVisible(true);
   };
 
@@ -267,6 +299,7 @@ const StationManagement = () => {
       longitude: station.longitude,
       status: station.status
     });
+    setImageUrl(station.imageUrl || '');
     setIsModalVisible(true);
   };
 
@@ -274,7 +307,14 @@ const StationManagement = () => {
     try {
       setLoading(true);
       await deleteStationAPI(id);
-      setStations(stations.filter(station => station.id !== id));
+      
+      // Calculate if we should go to previous page after deletion
+      const remainingItems = pagination.total - 1;
+      const totalPages = Math.ceil(remainingItems / pagination.pageSize);
+      const currentPage = pagination.current > totalPages && totalPages > 0 ? totalPages : pagination.current;
+      
+      // Reload data
+      await loadStations(false, currentPage, pagination.pageSize, searchText);
       message.success('Xóa trạm thành công');
     } catch (error) {
       console.error('Error deleting station:', error);
@@ -296,22 +336,21 @@ const StationManagement = () => {
           address: values.address,
           latitude: values.latitude.toString(),
           longitude: values.longitude.toString(),
-          imageUrl: values.imageUrl || null
+          imageUrl: imageUrl || null
         };
         
         if (editingStation) {
           // Update existing station
-          const response = await updateStationAPI(editingStation.id, payload);
+          await updateStationAPI(editingStation.id, payload);
           
           // Reload stations after update
-          await loadStations();
+          await loadStations(false, pagination.current, pagination.pageSize, searchText);
           message.success('Cập nhật trạm thành công');
         } else {
-          // Add new station
-          const response = await createStationAPI(payload);
+          await createStationAPI(payload);
           
-          // Reload stations after create
-          await loadStations();
+          // Reload stations after create  
+          await loadStations(false, 1, pagination.pageSize, searchText);
           message.success('Thêm trạm mới thành công');
         }
         
@@ -331,15 +370,22 @@ const StationManagement = () => {
     setIsModalVisible(false);
     form.resetFields();
     setEditingStation(null);
+    setImageUrl('');
   };
 
   const handleRefresh = async () => {
     try {
-      await loadStations();
+      await loadStations(false, pagination.current, pagination.pageSize, searchText);
       message.success('Dữ liệu đã được làm mới');
     } catch (error) {
       message.error('Làm mới dữ liệu thất bại');
     }
+  };
+
+  // Handle pagination change
+  const handleTableChange = (paginationConfig) => {
+    const { current, pageSize } = paginationConfig;
+    loadStations(false, current, pageSize, searchText);
   };
 
   const columns = [
@@ -440,16 +486,7 @@ const StationManagement = () => {
     }
   ];
 
-  const getStatistics = () => {
-    const total = stations.length;
-    const active = stations.filter(s => s.status === 'active').length;
-    const maintenance = stations.filter(s => s.status === 'maintenance').length;
-    const inactive = stations.filter(s => s.status === 'inactive').length;
 
-    return { total, active, maintenance, inactive };
-  };
-
-  const stats = getStatistics();
 
   // Show fullscreen preloader on initial load
   if (initialLoading) {
@@ -458,63 +495,6 @@ const StationManagement = () => {
 
   return (
     <div className="station-management">
-      {/* Statistics Cards */}
-      <Row gutter={16} className="statistics-row">
-        <Col xs={24} sm={12} md={6}>
-          <Card>
-            {loading ? (
-              <Skeleton active paragraph={{ rows: 1 }} />
-            ) : (
-              <Statistic
-                title="Tổng số trạm"
-                value={stats.total}
-                prefix={<FaSubway />}
-                valueStyle={{ color: '#1890ff' }}
-              />
-            )}
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card>
-            {loading ? (
-              <Skeleton active paragraph={{ rows: 1 }} />
-            ) : (
-              <Statistic
-                title="Đang hoạt động"
-                value={stats.active}
-                valueStyle={{ color: '#52c41a' }}
-              />
-            )}
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card>
-            {loading ? (
-              <Skeleton active paragraph={{ rows: 1 }} />
-            ) : (
-              <Statistic
-                title="Bảo trì"
-                value={stats.maintenance}
-                valueStyle={{ color: '#faad14' }}
-              />
-            )}
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card>
-            {loading ? (
-              <Skeleton active paragraph={{ rows: 1 }} />
-            ) : (
-              <Statistic
-                title="Không hoạt động"
-                value={stats.inactive}
-                valueStyle={{ color: '#8c8c8c' }}
-              />
-            )}
-          </Card>
-        </Col>
-      </Row>
-
       {/* Main Content */}
       <Card className="main-card">
         {/* Header Actions */}
@@ -574,12 +554,9 @@ const StationManagement = () => {
             dataSource={filteredStations}
             rowKey="id"
             scroll={{ x: 1200 }}
-            pagination={{
-              showSizeChanger: true,
-              showQuickJumper: true,
-              showTotal: (total, range) =>
-                `${range[0]}-${range[1]} của ${total} trạm`,
-            }}
+            pagination={pagination}
+            onChange={handleTableChange}
+            loading={loading}
           />
         )}
       </Card>
@@ -599,6 +576,46 @@ const StationManagement = () => {
           form={form}
           layout="vertical"
         >
+          {/* Upload Image Section */}
+          <Form.Item label="Hình ảnh trạm">
+            <div className="station-image-upload">
+              <div className="image-preview">
+                <Avatar
+                  size={120}
+                  src={imageUrl}
+                  icon={<EnvironmentOutlined />}
+                  shape="square"
+                />
+              </div>
+              <div className="upload-controls">
+                <Upload
+                  name="stationImage"
+                  beforeUpload={handleImageUpload}
+                  showUploadList={false}
+                  accept="image/*"
+                >
+                  <Button 
+                    icon={<CameraOutlined />} 
+                    loading={uploadingImage}
+                    type="primary"
+                    ghost
+                  >
+                    {uploadingImage ? "Đang upload..." : "Chọn ảnh"}
+                  </Button>
+                </Upload>
+                {imageUrl && (
+                  <Button 
+                    onClick={() => setImageUrl('')}
+                    danger
+                    type="text"
+                  >
+                    Xóa ảnh
+                  </Button>
+                )}
+              </div>
+            </div>
+          </Form.Item>
+
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
@@ -672,13 +689,6 @@ const StationManagement = () => {
               </Form.Item>
             </Col>
           </Row>
-
-          <Form.Item
-            name="imageUrl"
-            label="URL hình ảnh (tùy chọn)"
-          >
-            <Input placeholder="https://example.com/image.jpg" />
-          </Form.Item>
         </Form>
       </Modal>
     </div>
