@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { setLayoutData } from "../../redux/layoutSlice";
 import { BiSolidNews } from "react-icons/bi";
@@ -13,7 +13,6 @@ import {
   Space,
   Input,
   Select,
-  Button,
 } from "antd";
 
 import { useSelector } from "react-redux";
@@ -26,7 +25,7 @@ import {
   deleteContentAPI,
   createContentAPI,
 } from "../../apis";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
 
 const ContentManagemet = () => {
@@ -198,24 +197,7 @@ const ContentManagemet = () => {
   useEffect(() => {
     loadContents();
   }, [loadContents]);
-  // useEffect(() => {
-  //   const allNews = transformContent(contentData);
-  //   let filtered = allNews;
 
-  //   if (searchText) {
-  //     filtered = filtered.filter(
-  //       (news) =>
-  //         news.title.toLowerCase().includes(searchText.toLowerCase()) ||
-  //         news.content.toLowerCase().includes(searchText.toLowerCase())
-  //     );
-  //   }
-
-  //   if (selectedStatus !== "all") {
-  //     filtered = filtered.filter((news) => news.status === selectedStatus);
-  //   }
-
-  //   setFilteredNews(filtered);
-  // }, [contentData, searchText, selectedStatus]);
   const showAddModal = (type) => {
     form.resetFields();
     setCurrentContent({ id: null, type });

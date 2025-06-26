@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, Typography, Divider, Button } from "antd";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
-moment.locale("vi");
+
 const { Title, Paragraph, Text } = Typography;
 
 const getTypeLabel = (type) => {

@@ -5,16 +5,8 @@ import {
   Alert,
   Card,
   Button,
-  Input,
-  Modal,
-  Form,
-  Space,
   Popconfirm,
-  DatePicker,
   message,
-  Row,
-  Col,
-  Divider,
   Empty,
   Tag,
   Select,
@@ -23,8 +15,6 @@ import {
   ClockCircleOutlined,
   EditOutlined,
   DeleteOutlined,
-  PlusOutlined,
-  SearchOutlined,
   ExclamationCircleOutlined,
   EyeOutlined,
 } from "@ant-design/icons";
@@ -36,21 +26,12 @@ const { Title, Paragraph, Text } = Typography;
 
 const { Option } = Select;
 
-const NewsManagement = ({
-  data = [],
-  type,
-  transformContent,
-  contentData,
-  loading,
-  handlers,
-  modal,
-}) => {
+const NewsManagement = ({ data = [], type, loading, handlers, modal }) => {
   const {
     handleDelete,
     handleSubmit,
     showViewModal,
     handleCancel,
-    showAddModal,
     showEditModal,
   } = handlers;
   const {
