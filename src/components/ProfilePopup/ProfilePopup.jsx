@@ -24,8 +24,7 @@ const ProfilePopup = ({ visible, onClose }) => {
   };
 
   const handleEditProfile = () => {
-    // Navigate to profile edit page
-    message.info("Chức năng chỉnh sửa hồ sơ đang được phát triển");
+    navigate("/edit-profile");
     onClose();
   };
 

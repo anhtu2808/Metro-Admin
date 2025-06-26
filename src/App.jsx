@@ -15,6 +15,8 @@ import NewsManagement from "./pages/NewsManagement/NewsManagement";
 import BusRouteManagement from "./pages/BusRouteManagement/BusRouteManagement";
 import TicketManagement from "./pages/TicketManagement/TicketManagement";
 import StationManagement from "./pages/StationManagement/StationManagement";
+import EditProfile from "./pages/EditProfile/EditProfile";
+import ChangePassword from "./pages/ChangePassword/ChangePassword";
 
 
 const route = createBrowserRouter([
@@ -37,6 +39,12 @@ const route = createBrowserRouter([
       // ✅ Thêm route cho Staff
       { path: "staff/news", element: <NewsManagement /> },
       { path: "staff/fare-adjustment", element: <FareAdjustment /> },
+      
+      // ✅ Thêm route cho Edit Profile
+      { path: "edit-profile", element: <EditProfile /> },
+      
+      // ✅ Thêm route cho Change Password
+      { path: "change-password", element: <ChangePassword /> },
     ],
   },
   { path: "/login", element: <Login /> },
