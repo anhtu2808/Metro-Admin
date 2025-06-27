@@ -45,6 +45,7 @@ const NewsManagement = ({ data = [], type, loading, handlers, modal }) => {
 
   const handlePublish = async (item) => {
     const result = await handlers.handlePublish(item, type);
+    console.log("Publish result:", result);
     if (!result.success) {
       message.error(result.message || "Đăng thất bại!");
     }

@@ -239,10 +239,7 @@ const ContentManagemet = () => {
         <NewsManagement
           data={getFilteredContent("NEWS")}
           type="NEWS"
-          transformContent={transformContent}
-          contentData={contentData}
           loading={loading}
-          loadContents={loadContents}
           handlers={{
             handleSubmit,
             handleDelete,
@@ -273,16 +270,13 @@ const ContentManagemet = () => {
         <GuidelineMangement
           data={getFilteredContent("GUIDELINE")}
           type="GUIDELINE"
-          transformContent={transformContent}
-          contentData={contentData}
           loading={loading}
-          loadContents={loadContents}
+          showAdd={() => showAddModal("GUIDELINE")}
           handlers={{
             handleSubmit,
             handleDelete,
             handleCancel,
             handlePublish,
-            showAddModal: () => showAddModal("GUIDELINE"),
             showEditModal: (item) => showEditModal(item, "GUIDELINE"),
             showViewModal: (item) => showViewModal(item, "GUIDELINE"),
           }}
