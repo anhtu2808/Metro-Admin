@@ -15,6 +15,11 @@ export const getMyInfoAPI = async () => {
   const res = await api.get("/v1/users/my-info");
   return res.data;
 };
+//  - User API -
+export const updateUserAPI = async (id, payload) => {
+  const res = await api.put(`/v1/users/${id}`, payload);
+  return res.data;
+};
 
 //  - Role API -
 export const fetchRolesAPI = async () => {
@@ -44,8 +49,15 @@ export const updatePermissionAPI = async (id, data) => {
 };
 
 //  - Station API -
-export const getAllStationsAPI = async () => {
-  const res = await api.get("/v1/stations");
+export const getAllStationsAPI = async (params = {}) => {
+  const { page = 1, size = 10, search = '' } = params;
+  const queryParams = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+    ...(search && { search })
+  });
+  
+  const res = await api.get(`/v1/stations?${queryParams}`);
   return res.data;
 };
 
@@ -95,3 +107,20 @@ export const deleteContentAPI = async (id) => {
   const res = await api.delete(`/v1/contents/${id}`);
   return res.data;
 };
+//  - Image API -
+export const uploadProfileImageAPI = async (image) => {
+  const res = await api.post("/v1/uploads/users", image);
+  return res.data;
+};
+
+export const uploadStationImageAPI = async (image) => {
+  const res = await api.post("/v1/uploads/stations", image);
+  return res.data;
+};
+
+
+export const uploadContentImageAPI = async (image) => {
+  const res = await api.post("/v1/uploads/contents", image);
+  return res.data;
+};
+
