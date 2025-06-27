@@ -29,7 +29,10 @@ const MainLayout = () => {
   return (
     <div className="admin-container">
       <div className="admin-sidebar">
-        <Sidebar collapsed={collapsed} handleToggleSidebar={handleToggleSidebar} />
+        <Sidebar
+          collapsed={collapsed}
+          handleToggleSidebar={handleToggleSidebar}
+        />
       </div>
       <div className="admin-content">
         <div className="admin-header">
@@ -63,10 +66,7 @@ const MainLayout = () => {
         </PerfectScrollbar>
       </div>
 
-      <ProfilePopup
-        visible={showProfilePopup}
-        onClose={handleClosePopup}
-      />
+      <ProfilePopup visible={showProfilePopup} onClose={handleClosePopup} />
     </div>
   );
 };

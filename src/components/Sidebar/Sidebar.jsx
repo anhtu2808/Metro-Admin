@@ -7,7 +7,14 @@ import {
   SidebarContent,
 } from "react-pro-sidebar";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUser, FaTrain, FaBus, FaTicketAlt, FaLock, FaSubway } from "react-icons/fa";
+import {
+  FaUser,
+  FaTrain,
+  FaBus,
+  FaTicketAlt,
+  FaLock,
+  FaSubway,
+} from "react-icons/fa";
 import { MdOutlineAnalytics } from "react-icons/md";
 import { BiSolidNews } from "react-icons/bi";
 import { DollarOutlined } from "@ant-design/icons";
@@ -16,8 +23,6 @@ import { usePermission } from "../../hooks/usePermission";
 
 const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
   const navigate = useNavigate();
-
-
 
   return (
     <ProSidebar
@@ -35,8 +40,11 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
           />
         </div>
       </SidebarHeader>
-      <button className="sidebar-toggle-button" onClick={() => handleToggleSidebar()}>
-        {collapsed ? ">>" : "<<" }
+      <button
+        className="sidebar-toggle-button"
+        onClick={() => handleToggleSidebar()}
+      >
+        {collapsed ? ">>" : "<<"}
       </button>
 
       <SidebarContent>
@@ -53,10 +61,12 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
             Metro Line
             <Link to={"/metro-line"} />
           </MenuItem>
-          {usePermission("station:manage") && <MenuItem icon={<FaSubway />} className="pro-menu-item">
-            Station
-            <Link to={"/stations"} />
-          </MenuItem>}
+          {usePermission("station:manage") && (
+            <MenuItem icon={<FaSubway />} className="pro-menu-item">
+              Station
+              <Link to={"/stations"} />
+            </MenuItem>
+          )}
           <MenuItem icon={<FaBus />} className="pro-menu-item">
             Bus Route
             <Link to={"/bus-routes"} />
@@ -70,8 +80,8 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
             <Link to={"/role-management"} />
           </MenuItem>
           <MenuItem icon={<BiSolidNews />} className="pro-menu-item">
-            News
-            <Link to={"/staff/news"} />
+            Content
+            <Link to={"/staff/content"} />
           </MenuItem>
           <MenuItem icon={<DollarOutlined />} className="pro-menu-item">
             Fare Adjustment
