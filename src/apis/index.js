@@ -66,6 +66,11 @@ export const getStationByIdAPI = async (id) => {
   return res.data;
 };
 
+export const getStationsByLineIdAPI = async (lineId) => {
+  const res = await api.get(`/v1/lines/${lineId}/start-stations`);
+  return res.data;
+};
+
 export const createStationAPI = async (payload) => {
   const res = await api.post("/v1/stations", payload);
   return res.data;
@@ -82,10 +87,47 @@ export const deleteStationAPI = async (id) => {
 };
 
 //  - Line API -
-export const getAllLinesAPI = async () => {
-  const res = await api.get("/v1/lines");
+export const createLineAPI = async (payload) => {
+  const res = await api.post("/v1/lines", payload);
   return res.data;
 };
+
+export const updateLineAPI = async (id, payload) => {
+  const res = await api.put(`/v1/lines/${id}`, payload);
+  return res.data;
+};
+
+export const deleteLineAPI = async (id) => {
+  const res = await api.delete(`/v1/lines/${id}`);
+  return res.data;
+};
+export const getLineByIdAPI = async (id) => {
+  const res = await api.get(`/v1/lines/${id}`);
+  return res.data;
+};
+
+export const getAllLinesAPI = async (params = {}) => {
+  const { page = 1, size = 10, search = '' } = params;
+  const queryParams = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+    ...(search && { search })
+  });
+  const res = await api.get(`/v1/lines?${queryParams}`);
+  return res.data;
+};
+export const addStationsToLineAPI = async (lineId, payload) => {
+  const res = await api.post(`/v1/lines/${lineId}/stations`, payload);
+  return res.data;
+};
+
+//  - Line Segment API -
+export const updateLineSegmentAPI = async ( segmentId, payload ) => {
+  const res = await api.put(`/v1/line-segments/${segmentId}`, payload);
+  return res.data;
+};
+
+
 
 // - Content API -
 export const getAllContentAPI = async () => {
@@ -123,4 +165,9 @@ export const uploadContentImageAPI = async (image) => {
   const res = await api.post("/v1/uploads/contents", image);
   return res.data;
 };
+
+
+
+
+
 

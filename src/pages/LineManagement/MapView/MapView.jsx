@@ -4,6 +4,10 @@ import { Modal, Form, Input, Button, message, Card, Space, Typography } from 'an
 import { EditOutlined, InfoCircleOutlined, UpOutlined, DownOutlined, CloseOutlined } from '@ant-design/icons';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+import StationModal from '../../StationManagement/StationModal';
 import './MapView.css';
 
 const { Text } = Typography;
@@ -11,9 +15,9 @@ const { Text } = Typography;
 // Fix for default markers in react-leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
 });
 
 // Metro station GPS coordinates for Ho Chi Minh City
@@ -30,13 +34,12 @@ const stationCoordinates = {
   "An Phú": [10.8027, 106.7308]
 };
 
-const MapView = ({ selectedLine, segments, onSegmentUpdate }) => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+const MapView = ({ selectedLine, segments, onSegmentUpdate, onStationUpdate }) => {
+  const [isStationModalVisible, setIsStationModalVisible] = useState(false);
   const [editingStation, setEditingStation] = useState(null);
   const [selectedSegment, setSelectedSegment] = useState(null);
   const [segmentModalVisible, setSegmentModalVisible] = useState(false);
   const [segmentPanelCollapsed, setSegmentPanelCollapsed] = useState(false);
-  const [form] = Form.useForm();
   const [segmentForm] = Form.useForm();
 
   // Default center to Ho Chi Minh City
@@ -45,30 +48,24 @@ const MapView = ({ selectedLine, segments, onSegmentUpdate }) => {
 
   const handleStationEdit = (station) => {
     setEditingStation(station);
-    const coords = stationCoordinates[station] || [0, 0];
-    form.setFieldsValue({
-      station: station,
-      latitude: coords[0],
-      longitude: coords[1]
-    });
-    setIsModalVisible(true);
+    setIsStationModalVisible(true);
   };
 
-  const handleModalOk = () => {
-    form.validateFields().then(values => {
-      // Update coordinates
-      stationCoordinates[values.station] = [values.latitude, values.longitude];
-      message.success(`Updated coordinates for ${values.station}`);
-      setIsModalVisible(false);
-      setEditingStation(null);
-      form.resetFields();
-    });
-  };
-
-  const handleModalCancel = () => {
-    setIsModalVisible(false);
+  const handleStationModalSuccess = async () => {
+    setIsStationModalVisible(false);
     setEditingStation(null);
-    form.resetFields();
+    
+    // Call parent callback to reload station data
+    if (onStationUpdate) {
+      await onStationUpdate();
+    }
+    
+    message.success('Cập nhật station thành công!');
+  };
+
+  const handleStationModalCancel = () => {
+    setIsStationModalVisible(false);
+    setEditingStation(null);
   };
 
   const handleSegmentClick = (segment) => {
@@ -110,19 +107,47 @@ const MapView = ({ selectedLine, segments, onSegmentUpdate }) => {
     return colors[lineId] || '#1890ff';
   };
 
+  // Extract stations from line segments
+  const getStationsFromLine = (line) => {
+    if (!line || !line.lineSegments) return [];
+    
+    const stationsMap = new Map();
+    
+    // Add all start stations
+    line.lineSegments.forEach(segment => {
+      if (segment.startStation) {
+        stationsMap.set(segment.startStation.id, segment.startStation);
+      }
+    });
+    
+    // Add the final station (endStation of the last segment)
+    if (line.lineSegments.length > 0) {
+      const lastSegment = line.lineSegments[line.lineSegments.length - 1];
+      if (lastSegment.endStation) {
+        stationsMap.set(lastSegment.endStation.id, lastSegment.endStation);
+      }
+    }
+    
+    return Array.from(stationsMap.values());
+  };
+
   const renderStations = () => {
     if (!selectedLine) return null;
 
-    return selectedLine.stations.map((station, index) => {
-      const coords = stationCoordinates[station];
-      if (!coords) return null;
+    const stations = getStationsFromLine(selectedLine);
+    
+    return stations.map((station, index) => {
+      // Use actual coordinates from API or fallback to predefined coordinates
+      const coords = station.latitude && station.longitude 
+        ? [parseFloat(station.latitude), parseFloat(station.longitude)]
+        : stationCoordinates[station.name] || [10.8231, 106.6297]; // fallback to HCM center
 
       return (
-        <Marker key={`${station}-${index}`} position={coords}>
+        <Marker key={`${station.id}-${index}`} position={coords}>
           <Popup>
             <div className="station-popup">
               <div className="station-popup-header">
-                <Text strong>{station}</Text>
+                <Text strong>{station.name}</Text>
                 <Button 
                   type="text" 
                   icon={<EditOutlined />} 
@@ -132,9 +157,15 @@ const MapView = ({ selectedLine, segments, onSegmentUpdate }) => {
               </div>
               <div className="station-popup-content">
                 <Text type="secondary">
+                  Code: {station.stationCode || 'N/A'}<br/>
                   Lat: {coords[0].toFixed(6)}<br/>
                   Lng: {coords[1].toFixed(6)}
                 </Text>
+                {station.address && (
+                  <Text type="secondary" style={{ display: 'block', marginTop: 4 }}>
+                    Address: {station.address}
+                  </Text>
+                )}
               </div>
             </div>
           </Popup>
@@ -146,8 +177,14 @@ const MapView = ({ selectedLine, segments, onSegmentUpdate }) => {
   const renderPolylines = () => {
     if (!selectedLine) return null;
 
-    const lineCoords = selectedLine.stations
-      .map(station => stationCoordinates[station])
+    const stations = getStationsFromLine(selectedLine);
+    const lineCoords = stations
+      .map(station => {
+        // Use actual coordinates from API or fallback to predefined coordinates
+        return station.latitude && station.longitude 
+          ? [parseFloat(station.latitude), parseFloat(station.longitude)]
+          : stationCoordinates[station.name];
+      })
       .filter(coords => coords !== undefined);
 
     if (lineCoords.length < 2) return null;
@@ -265,43 +302,13 @@ const MapView = ({ selectedLine, segments, onSegmentUpdate }) => {
       </div>
 
       {/* Station Edit Modal */}
-      <Modal
-        title="Edit Station Coordinates"
-        open={isModalVisible}
-        onOk={handleModalOk}
-        onCancel={handleModalCancel}
-        okText="Update"
-        cancelText="Cancel"
-      >
-        <Form form={form} layout="vertical">
-          <Form.Item
-            name="station"
-            label="Station Name"
-          >
-            <Input disabled />
-          </Form.Item>
-          <Form.Item
-            name="latitude"
-            label="Latitude"
-            rules={[
-              { required: true, message: 'Please enter latitude' },
-              { type: 'number', message: 'Please enter a valid number' }
-            ]}
-          >
-            <Input type="number" step="any" placeholder="10.8231" />
-          </Form.Item>
-          <Form.Item
-            name="longitude"
-            label="Longitude"
-            rules={[
-              { required: true, message: 'Please enter longitude' },
-              { type: 'number', message: 'Please enter a valid number' }
-            ]}
-          >
-            <Input type="number" step="any" placeholder="106.6297" />
-          </Form.Item>
-        </Form>
-      </Modal>
+      <StationModal
+        visible={isStationModalVisible}
+        onCancel={handleStationModalCancel}
+        onSuccess={handleStationModalSuccess}
+        editingStation={editingStation}
+        loading={false}
+      />
 
       {/* Segment Info Modal */}
       <Modal

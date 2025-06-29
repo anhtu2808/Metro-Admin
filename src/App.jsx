@@ -17,6 +17,7 @@ import StationManagement from "./pages/StationManagement/StationManagement";
 import ContentManagement from "./pages/ContentManagement/ContentManagement";
 import EditProfile from "./pages/EditProfile/EditProfile";
 import ChangePassword from "./pages/ChangePassword/ChangePassword";
+import DevPage from "./pages/DevPage/DevPage";
 
 
 const route = createBrowserRouter([
@@ -45,6 +46,9 @@ const route = createBrowserRouter([
       
       // ✅ Thêm route cho Change Password
       { path: "change-password", element: <ChangePassword /> },
+      
+      // ✅ Thêm route cho Developer Tools
+      { path: "dev", element: <DevPage /> },
     ],
   },
   { path: "/login", element: <Login /> },

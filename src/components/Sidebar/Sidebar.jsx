@@ -14,6 +14,7 @@ import {
   FaTicketAlt,
   FaLock,
   FaSubway,
+  FaCode,
 } from "react-icons/fa";
 import { MdOutlineAnalytics } from "react-icons/md";
 import { BiSolidNews } from "react-icons/bi";
@@ -86,6 +87,10 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
           <MenuItem icon={<DollarOutlined />} className="pro-menu-item">
             Fare Adjustment
             <Link to={"/staff/fare-adjustment"} />
+          </MenuItem>
+          <MenuItem icon={<FaCode />} className="pro-menu-item">
+            Developer Tools
+            <Link to={"/dev"} />
           </MenuItem>
         </Menu>
       </SidebarContent>
