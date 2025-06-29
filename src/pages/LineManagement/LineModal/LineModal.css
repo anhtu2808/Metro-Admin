@@ -1,0 +1,209 @@
+/* Line Modal Styles */
+.line-modal .ant-modal-content {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.line-modal .ant-modal-header {
+  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+  border-bottom: none;
+  padding: 20px 24px;
+}
+
+.line-modal .ant-modal-title {
+  color: white !important;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.line-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+}
+
+.line-modal-header-icon {
+  font-size: 20px;
+  color: white;
+}
+
+.line-modal .ant-modal-close {
+  color: white;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.line-modal .ant-modal-close:hover {
+  color: white;
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.line-modal .ant-modal-body {
+  padding: 24px;
+  background: linear-gradient(135deg, #f8faff 0%, #ffffff 100%);
+}
+
+.line-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Line Info Card */
+.line-info-card {
+  border-radius: 12px;
+  border: 1px solid #e8f4fd;
+  background: linear-gradient(135deg, #f0f8ff 0%, #e8f4fd 100%);
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.08);
+}
+
+.line-info-card .ant-card-body {
+  padding: 16px;
+}
+
+/* Form Styles */
+.line-modal-form {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.line-modal-form .ant-form-item-label > label {
+  font-weight: 600;
+  color: #1a1a1a;
+  font-size: 14px;
+}
+
+.line-modal-form .ant-input,
+.line-modal-form .ant-select-selector,
+.line-modal-form .ant-input-affix-wrapper {
+  border-radius: 8px;
+  border: 2px solid #e8f4fd;
+  transition: all 0.3s ease;
+}
+
+.line-modal-form .ant-input:hover,
+.line-modal-form .ant-select-selector:hover,
+.line-modal-form .ant-input-affix-wrapper:hover {
+  border-color: #91caff;
+}
+
+.line-modal-form .ant-input:focus,
+.line-modal-form .ant-select-focused .ant-select-selector,
+.line-modal-form .ant-input-affix-wrapper-focused {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+}
+
+.line-modal-form .ant-form-item-explain-error {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Footer Styles */
+.line-modal .ant-modal-footer {
+  border-top: 1px solid #f0f0f0;
+  padding: 16px 24px;
+  background: #fafafa;
+}
+
+.line-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.line-modal-footer .ant-btn {
+  border-radius: 8px;
+  font-weight: 500;
+  height: 40px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.line-modal-footer .ant-btn-primary {
+  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+  border: none;
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+.line-modal-footer .ant-btn-primary:hover {
+  background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(24, 144, 255, 0.4);
+}
+
+.line-modal-footer .ant-btn-default {
+  border: 2px solid #d9d9d9;
+  color: #595959;
+}
+
+.line-modal-footer .ant-btn-default:hover {
+  border-color: #40a9ff;
+  color: #1890ff;
+  transform: translateY(-1px);
+}
+
+/* Select dropdown styles */
+.line-modal-form .ant-select-dropdown {
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.line-modal-form .ant-select-item {
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+}
+
+.line-modal-form .ant-select-item-option-selected {
+  background: linear-gradient(135deg, #e6f7ff 0%, #f0f8ff 100%);
+  color: #1890ff;
+  font-weight: 500;
+}
+
+.line-modal-form .ant-select-item-option-active {
+  background: linear-gradient(135deg, #f0f8ff 0%, #e6f7ff 100%);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .line-modal .ant-modal-content {
+    margin: 20px;
+    border-radius: 12px;
+  }
+  
+  .line-modal-form {
+    padding: 20px;
+  }
+  
+  .line-modal .ant-modal-body {
+    padding: 20px;
+  }
+  
+  .line-modal-footer .ant-btn {
+    height: 36px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+}
+
+/* Input focus animations */
+.line-modal-form .ant-input,
+.line-modal-form .ant-select-selector {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.line-modal-form .ant-form-item {
+  margin-bottom: 24px;
+}
+
+.line-modal-form .ant-form-item:last-child {
+  margin-bottom: 0;
+} 

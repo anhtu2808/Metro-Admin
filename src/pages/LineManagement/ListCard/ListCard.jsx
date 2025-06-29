@@ -20,34 +20,41 @@ export const ListCard = ({
     searchValue,
     onSearch,
     showSortButtons = false,
-    onSave
+    onSave,
+    showAddButton = true
 }) => (
     <Card
         className="line-management-card"
         title={
-            <div className="line-management-card-title">
-                <Space>
-                    {icon}
-                    <Text strong>{title}</Text>
-                    <Badge count={data.length} style={{ backgroundColor: '#1890ff' }} />
-                </Space>
-                <Space>
+            <div className="line-management-card-title d-flex">
+                <div className="d-flex align-items-center flex-1">
+                    <div className="d-flex align-items-center gap-2">
+                        {icon}
+                        <Text strong className="card-title-text">{title}</Text>
+                    </div>
+                    <Badge 
+                        count={data.length} 
+                        style={{ backgroundColor: '#1890ff' }} 
+                        className="card-title-badge"
+                    />
+                </div>
+                <div className="d-flex align-items-center gap-1 flex-shrink-0">
                     {showSortButtons && (
-                        <>
-                            <Tooltip title="Save changes">
-                                <button
-                                    onClick={onSave}
-                                    className="line-management-card-save-btn"
-                                >
-                                    <SaveFilled />
-                                </button>
-                            </Tooltip>
-                        </>
+                        <Tooltip title="Save changes">
+                            <button
+                                onClick={onSave}
+                                className="line-management-card-save-btn"
+                            >
+                                <SaveFilled />
+                            </button>
+                        </Tooltip>
                     )}
-                    <Tooltip title="Add new">
-                        <Button onClick={onAdd} type="text" icon={<PlusOutlined />} />
-                    </Tooltip>
-                </Space>
+                    {showAddButton && (
+                        <Tooltip title="Add new">
+                            <Button onClick={onAdd} type="text" icon={<PlusOutlined />} />
+                        </Tooltip>
+                    )}
+                </div>
             </div>
         }
     >

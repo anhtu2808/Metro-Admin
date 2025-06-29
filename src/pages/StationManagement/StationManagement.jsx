@@ -4,19 +4,13 @@ import {
   Button,
   Input,
   Space,
-  Modal,
-  Form,
   Select,
   Tag,
   Popconfirm,
   message,
   Card,
-  Row,
-  Col,
   Tooltip,
   Skeleton,
-  Upload,
-  Avatar
 } from 'antd';
 import {
   PlusOutlined,
@@ -25,18 +19,15 @@ import {
   EnvironmentOutlined,
   ReloadOutlined,
   ExportOutlined,
-  CameraOutlined,
 } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { setLayoutData } from '../../redux/layoutSlice';
 import { FaSubway } from 'react-icons/fa';
 import Preloader from '../../components/Preloader/Preloader';
+import StationModal from './StationModal';
 import { 
   getAllStationsAPI, 
-  createStationAPI, 
-  updateStationAPI, 
-  deleteStationAPI,
-  uploadStationImageAPI
+  deleteStationAPI
 } from '../../apis';
 import './StationManagement.css';
 
@@ -50,13 +41,9 @@ const StationManagement = () => {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalLoading, setModalLoading] = useState(false);
   const [editingStation, setEditingStation] = useState(null);
   const [searchText, setSearchText] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('all');
-  const [form] = Form.useForm();
-  const [imageUrl, setImageUrl] = useState('');
-  const [uploadingImage, setUploadingImage] = useState(false);
   
   // Pagination state
   const [pagination, setPagination] = useState({
@@ -257,49 +244,15 @@ const StationManagement = () => {
   }, [stations, selectedStatus]);
 
 
-  // Handle image upload
-  const handleImageUpload = async (file) => {
-    setUploadingImage(true);
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      
-      const response = await uploadStationImageAPI(formData);
-      
-      if (response.code === 200) {
-        const newImageUrl = response.result;
-        setImageUrl(newImageUrl);
-        message.success("Upload ảnh thành công!");
-      } else {
-        message.error("Upload ảnh thất bại!");
-      }
-    } catch (error) {
-      message.error("Upload ảnh thất bại!");
-    } finally {
-      setUploadingImage(false);
-    }
-    
-    return false; // Prevent default upload behavior
-  };
+
 
   const handleAdd = () => {
     setEditingStation(null);
-    form.resetFields();
-    setImageUrl('');
     setIsModalVisible(true);
   };
 
   const handleEdit = (station) => {
     setEditingStation(station);
-    form.setFieldsValue({
-      name: station.name,
-      code: station.code,
-      address: station.address,
-      latitude: station.latitude,
-      longitude: station.longitude,
-      status: station.status
-    });
-    setImageUrl(station.imageUrl || '');
     setIsModalVisible(true);
   };
 
@@ -324,53 +277,23 @@ const StationManagement = () => {
     }
   };
 
-  const handleModalOk = () => {
-    form.validateFields().then(async (values) => {
-      try {
-        setModalLoading(true);
-        
-        // Prepare payload for API
-        const payload = {
-          name: values.name,
-          stationCode: values.code,
-          address: values.address,
-          latitude: values.latitude.toString(),
-          longitude: values.longitude.toString(),
-          imageUrl: imageUrl || null
-        };
-        
-        if (editingStation) {
-          // Update existing station
-          await updateStationAPI(editingStation.id, payload);
-          
-          // Reload stations after update
-          await loadStations(false, pagination.current, pagination.pageSize, searchText);
-          message.success('Cập nhật trạm thành công');
-        } else {
-          await createStationAPI(payload);
-          
-          // Reload stations after create  
-          await loadStations(false, 1, pagination.pageSize, searchText);
-          message.success('Thêm trạm mới thành công');
-        }
-        
-        setIsModalVisible(false);
-        form.resetFields();
-        setEditingStation(null);
-      } catch (error) {
-        console.error('Error saving station:', error);
-        message.error(editingStation ? 'Cập nhật trạm thất bại' : 'Thêm trạm thất bại');
-      } finally {
-        setModalLoading(false);
-      }
-    });
+  const handleModalSuccess = async () => {
+    setIsModalVisible(false);
+    setEditingStation(null);
+    
+    // Reload stations after success
+    if (editingStation) {
+      // For edit, stay on current page
+      await loadStations(false, pagination.current, pagination.pageSize, searchText);
+    } else {
+      // For create, go to first page
+      await loadStations(false, 1, pagination.pageSize, searchText);
+    }
   };
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
-    form.resetFields();
     setEditingStation(null);
-    setImageUrl('');
   };
 
   const handleRefresh = async () => {
@@ -561,136 +484,14 @@ const StationManagement = () => {
         )}
       </Card>
 
-      {/* Add/Edit Modal */}
-      <Modal
-        title={editingStation ? 'Chỉnh sửa trạm' : 'Thêm trạm mới'}
-        open={isModalVisible}
-        onOk={handleModalOk}
+      {/* Station Modal */}
+      <StationModal
+        visible={isModalVisible}
         onCancel={handleModalCancel}
-        width={800}
-        okText={editingStation ? 'Cập nhật' : 'Thêm'}
-        cancelText="Hủy"
-        confirmLoading={modalLoading}
-      >
-        <Form
-          form={form}
-          layout="vertical"
-        >
-          {/* Upload Image Section */}
-          <Form.Item label="Hình ảnh trạm">
-            <div className="station-image-upload">
-              <div className="image-preview">
-                <Avatar
-                  size={120}
-                  src={imageUrl}
-                  icon={<EnvironmentOutlined />}
-                  shape="square"
-                />
-              </div>
-              <div className="upload-controls">
-                <Upload
-                  name="stationImage"
-                  beforeUpload={handleImageUpload}
-                  showUploadList={false}
-                  accept="image/*"
-                >
-                  <Button 
-                    icon={<CameraOutlined />} 
-                    loading={uploadingImage}
-                    type="primary"
-                    ghost
-                  >
-                    {uploadingImage ? "Đang upload..." : "Chọn ảnh"}
-                  </Button>
-                </Upload>
-                {imageUrl && (
-                  <Button 
-                    onClick={() => setImageUrl('')}
-                    danger
-                    type="text"
-                  >
-                    Xóa ảnh
-                  </Button>
-                )}
-              </div>
-            </div>
-          </Form.Item>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="name"
-                label="Tên trạm"
-                rules={[{ required: true, message: 'Vui lòng nhập tên trạm' }]}
-              >
-                <Input placeholder="Nhập tên trạm" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="code"
-                label="Mã trạm"
-                rules={[{ required: true, message: 'Vui lòng nhập mã trạm' }]}
-              >
-                <Input placeholder="VD: ST01" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Form.Item
-            name="address"
-            label="Địa chỉ"
-            rules={[{ required: true, message: 'Vui lòng nhập địa chỉ' }]}
-          >
-            <Input.TextArea rows={2} placeholder="Nhập địa chỉ đầy đủ" />
-          </Form.Item>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="latitude"
-                label="Vĩ độ (Latitude)"
-                rules={[
-                  { required: true, message: 'Vui lòng nhập vĩ độ' },
-                  { 
-                    validator: (_, value) => {
-                      if (!value) return Promise.resolve();
-                      const num = parseFloat(value);
-                      if (isNaN(num) || num < -90 || num > 90) {
-                        return Promise.reject(new Error('Vĩ độ phải từ -90 đến 90'));
-                      }
-                      return Promise.resolve();
-                    }
-                  }
-                ]}
-              >
-                <Input type="number" step="any" placeholder="10.7720" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="longitude"
-                label="Kinh độ (Longitude)"
-                rules={[
-                  { required: true, message: 'Vui lòng nhập kinh độ' },
-                  { 
-                    validator: (_, value) => {
-                      if (!value) return Promise.resolve();
-                      const num = parseFloat(value);
-                      if (isNaN(num) || num < -180 || num > 180) {
-                        return Promise.reject(new Error('Kinh độ phải từ -180 đến 180'));
-                      }
-                      return Promise.resolve();
-                    }
-                  }
-                ]}
-              >
-                <Input type="number" step="any" placeholder="106.6980" />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </Modal>
+        onSuccess={handleModalSuccess}
+        editingStation={editingStation}
+        loading={loading}
+      />
     </div>
   );
 };
