@@ -50,13 +50,13 @@ export const updatePermissionAPI = async (id, data) => {
 
 //  - Station API -
 export const getAllStationsAPI = async (params = {}) => {
-  const { page = 1, size = 10, search = '' } = params;
+  const { page = 1, size = 10, search = "" } = params;
   const queryParams = new URLSearchParams({
     page: page.toString(),
     size: size.toString(),
-    ...(search && { search })
+    ...(search && { search }),
   });
-  
+
   const res = await api.get(`/v1/stations?${queryParams}`);
   return res.data;
 };
@@ -107,11 +107,11 @@ export const getLineByIdAPI = async (id) => {
 };
 
 export const getAllLinesAPI = async (params = {}) => {
-  const { page = 1, size = 10, search = '' } = params;
+  const { page = 1, size = 10, search = "" } = params;
   const queryParams = new URLSearchParams({
     page: page.toString(),
     size: size.toString(),
-    ...(search && { search })
+    ...(search && { search }),
   });
   const res = await api.get(`/v1/lines?${queryParams}`);
   return res.data;
@@ -122,12 +122,10 @@ export const addStationsToLineAPI = async (lineId, payload) => {
 };
 
 //  - Line Segment API -
-export const updateLineSegmentAPI = async ( segmentId, payload ) => {
+export const updateLineSegmentAPI = async (segmentId, payload) => {
   const res = await api.put(`/v1/line-segments/${segmentId}`, payload);
   return res.data;
 };
-
-
 
 // - Content API -
 export const getAllContentAPI = async () => {
@@ -160,14 +158,28 @@ export const uploadStationImageAPI = async (image) => {
   return res.data;
 };
 
-
 export const uploadContentImageAPI = async (image) => {
   const res = await api.post("/v1/uploads/contents", image);
   return res.data;
 };
 
+// - Bus API -
+export const getAllBusRoutesAPI = async () => {
+  const res = await api.get("/v1/bus-routes");
+  return res.data;
+};
 
+export const createBusRoutesAPI = async (payload) => {
+  const res = await api.post("/v1/bus-routes", payload);
+  return res.data;
+};
 
+export const updateBusRoutesAPI = async (id, payload) => {
+  const res = await api.put(`/v1/bus-routes/${id}`, payload);
+  return res.data;
+};
 
-
-
+export const deleteBusRoutesAPI = async (id) => {
+  const res = await api.delete(`/v1/bus-routes/${id}`);
+  return res.data;
+};
