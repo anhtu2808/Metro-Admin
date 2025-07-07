@@ -2,52 +2,15 @@ import React from "react";
 import { Button, Modal, Space, Table, Tooltip } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-
-const data = [
-  {
-    id: "1",
-    ticketCode: "T001",
-    ticketName: "Vé 1 ngày",
-    description: "Vé di chuyển không giới hạn trong 1 ngày",
-    price: "40.000 đ",
-    validationDays: 1,
-  },
-  {
-    id: "2",
-    ticketCode: "T002",
-    ticketName: "Vé 3 ngày",
-    description: "Vé di chuyển không giới hạn trong 3 ngày",
-    price: "90.000 đ",
-    validationDays: 3,
-  },
-  {
-    id: "3",
-    ticketCode: "T003",
-    ticketName: "Vé tháng",
-    description: "Vé di chuyển không giới hạn trong 1 tháng",
-    price: "300.000 đ",
-    validationDays: 30,
-  },
-  {
-    id: "4",
-    ticketCode: "T004",
-    ticketName: "Vé tháng HSSV",
-    description: "Vé ưu đãi dành cho học sinh sinh viên",
-    price: "150.000 đ",
-    validationDays: 30,
-  }
-];
-
-const TicketTable = () => {
-  const handleDelete = (record) => {
+const TicketTable = ({ ticketData, loading = false, handleOpenModal, handleDelete }) => {
+  const onDelete = (record) => {
     Modal.confirm({
       title: "Xác nhận xóa",
-      content: `Bạn có chắc chắn muốn xóa vé "${record.ticketName}"?`,
+      content: `Bạn có chắc chắn muốn xóa vé "${record.name}"?`,
       okText: "Xóa",
       cancelText: "Hủy",
       onOk: () => {
-        console.log("Deleting ticket:", record);
-        // Add delete logic here
+        handleDelete(record);
       },
     });
   };
@@ -57,8 +20,18 @@ const TicketTable = () => {
     // Add update logic here
   };
 
+  // Check if ticket is a single-use ticket (vé lượt)
+  const isSingleUseTicket = (record) => {
+    return record.validityDays === 0 || record.name.toLowerCase().includes("vé lượt");
+  };
+
   return (
-    <Table dataSource={data} pagination={false}>
+    <Table 
+      dataSource={ticketData} 
+      pagination={false} 
+      rowKey="id"
+      loading={loading}
+    >
       <Table.Column
         title="ID"
         dataIndex="id"
@@ -66,15 +39,9 @@ const TicketTable = () => {
         width={120}
       />
       <Table.Column
-        title="Code"
-        dataIndex="ticketCode"
-        key="ticketCode"
-        width={200}
-      />
-      <Table.Column
         title="Tên vé"
-        dataIndex="ticketName"
-        key="ticketName"
+        dataIndex="name"
+        key="name"
         width={200}
       />
       <Table.Column
@@ -96,14 +63,15 @@ const TicketTable = () => {
         key="price"
         width={120}
         align="center"
+        render={(price) => price === 0 ? "Động" : `${price.toLocaleString()} VND`}
       />
       <Table.Column
         title="Hạn sử dụng"
-        dataIndex="validationDays"
-        key="validationDays"
+        dataIndex="validityDays"
+        key="validityDays"
         width={140}
         align="center"
-        render={(days) => `${days} ngày`}
+        render={(days) => days === 0 ? "1 lượt" : `${days} ngày`}
       />
       <Table.Column
         title="Action"
@@ -113,10 +81,15 @@ const TicketTable = () => {
         render={(_, record) => (
           <Space>
             <Tooltip title="Cập nhật">
-            <Button icon={<EditOutlined />} onClick={() => handleUpdate(record)} />
+              <Button icon={<EditOutlined />} onClick={() => handleOpenModal(record)} />
             </Tooltip>
-            <Tooltip title="Xóa">
-            <Button danger icon={<DeleteOutlined />} onClick={() => handleDelete(record)} />
+            <Tooltip title={isSingleUseTicket(record) ? "Không thể xóa vé lượt" : "Xóa"}>
+              <Button 
+                danger 
+                icon={<DeleteOutlined />} 
+                onClick={() => onDelete(record)}
+                disabled={isSingleUseTicket(record)}
+              />
             </Tooltip>
           </Space>
         )}

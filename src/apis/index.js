@@ -183,3 +183,28 @@ export const deleteBusRoutesAPI = async (id) => {
   const res = await api.delete(`/v1/bus-routes/${id}`);
   return res.data;
 };
+//  - Ticket Type API -
+export const createTicketTypeAPI = async (payload) => {
+  const res = await api.post("/v1/ticket-types", payload);
+  return res.data;
+};
+
+export const getTicketTypeByIdAPI = async (id) => {
+  const res = await api.get(`/v1/ticket-types/${id}`);
+  return res.data;
+};
+export const getAllTicketTypesAPI = async () => {
+  const res = await api.get("/v1/ticket-types");
+  return res.data;
+};
+
+export const updateTicketTypeAPI = async (id, payload) => {
+  const res = await api.put(`/v1/ticket-types/${id}`, payload);
+  return res.data;
+};
+
+export const deleteTicketTypeAPI = async (id) => {
+  const res = await api.delete(`/v1/ticket-types/${id}`);
+  return res.data;
+};
+
