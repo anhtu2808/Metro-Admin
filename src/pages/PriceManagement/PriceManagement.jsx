@@ -1,14 +1,14 @@
 import { Tabs } from "antd";
-import "./TicketManagement.css";
+import "./PriceManagement.css";
 import { FaTicketAlt } from "react-icons/fa";
 import FixPriceTab from "./FixPriceTab/FixPriceTab";
-import DynamicPriceTab from "./DynamicPriceTab/DynamicPriceTab";
-import TripPriceTableTab from "./DynamicPriceTab/DynamicPriceTab";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setLayoutData } from "../../redux/layoutSlice";
+import DynamicPriceTableTab from "./DynamicPriceTableTab/DynamicPriceTableTab";
+import DynamicPriceMasterTab from "./DynamicPriceMasterTab/DynamicPriceMasterTab";
 
-const TicketManagement = () => {
+const PriceManagement = () => {
   const dispatch = useDispatch();
   // Set title và icon cho trang
   useEffect(() => {
@@ -24,18 +24,18 @@ const TicketManagement = () => {
   const tabItems = [
     {
       key: '1',
-      label: 'Vé không giới hạn',
+      label: 'Vé cố định',
       children: <FixPriceTab />,
     },
     {
       key: '2',
-      label: 'Giá vé lượt',
-      children: <DynamicPriceTab />,
+      label: 'Quy định giá vé lượt',
+      children: <DynamicPriceMasterTab />,
     },
     {
       key: '3',
       label: 'Bảng giá vé lượt',
-      children: <TripPriceTableTab />,
+      children: <DynamicPriceTableTab />,
     },
   ];
 
@@ -51,4 +51,4 @@ const TicketManagement = () => {
   );
 };
 
-export default TicketManagement;
+export default PriceManagement;

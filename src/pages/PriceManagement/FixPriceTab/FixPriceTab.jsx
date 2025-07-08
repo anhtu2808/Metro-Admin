@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Form, Row, Select, Input, message } from "antd";
+import { Col, Form, Row, Input, message } from "antd";
 import { FaSearch, FaPlus } from "react-icons/fa";
-import TicketTable from "../TicketTable";
 import PrimaryButton from "../../../components/PrimaryButton/PrimaryButton";
 import { createTicketTypeAPI, deleteTicketTypeAPI, getAllTicketTypesAPI, updateTicketTypeAPI } from '../../../apis';
 import TicketTypeModal from './TicketTypeModal/TicketTypeModal';
+import TicketTypeTable from './TicketTypeTable';
 
-const { Option } = Select;
+
 
 const FixPriceTab = () => {
   const [ticketTypes, setTicketTypes] = useState([]);
@@ -87,8 +87,8 @@ const FixPriceTab = () => {
         const res = await createTicketTypeAPI(data);
         if (res.code === 201) {
           message.success('Thêm vé thành công');
-          setTicketTypes(prev => [...prev, data]);
-          setFilteredTicketTypes(prev => [...prev, data]);
+          setTicketTypes(prev => [...prev, res.result.data]);
+          setFilteredTicketTypes(prev => [...prev, res.result.data]);
           closeModal();
         } else {
           message.error('Thêm vé thất bại');
@@ -144,7 +144,7 @@ const FixPriceTab = () => {
       </Row>
 
       <div className="table-user" style={{ marginTop: "24px" }}>
-        <TicketTable 
+        <TicketTypeTable 
         ticketData={filteredTicketTypes} 
         loading={loading} 
         handleOpenModal={handleOpenModal} 

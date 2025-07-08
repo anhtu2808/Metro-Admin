@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Modal, Space, Table, Tooltip } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-const TicketTable = ({ ticketData, loading = false, handleOpenModal, handleDelete }) => {
+const TicketTypeTable = ({ ticketData, loading = false, handleOpenModal, handleDelete }) => {
   const onDelete = (record) => {
     Modal.confirm({
       title: "Xác nhận xóa",
@@ -15,10 +15,6 @@ const TicketTable = ({ ticketData, loading = false, handleOpenModal, handleDelet
     });
   };
 
-  const handleUpdate = (record) => {
-    console.log("Updating ticket:", record);
-    // Add update logic here
-  };
 
   // Check if ticket is a single-use ticket (vé lượt)
   const isSingleUseTicket = (record) => {
@@ -98,4 +94,4 @@ const TicketTable = ({ ticketData, loading = false, handleOpenModal, handleDelet
   );
 };
 
-export default TicketTable;
+export default TicketTypeTable;
