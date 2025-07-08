@@ -2,11 +2,11 @@ import { Tabs } from "antd";
 import "./TicketManagement.css";
 import { FaTicketAlt } from "react-icons/fa";
 import FixPriceTab from "./FixPriceTab/FixPriceTab";
-import DynamicPriceTab from "./DynamicPriceTab/DynamicPriceTab";
-import TripPriceTableTab from "./DynamicPriceTab/DynamicPriceTab";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setLayoutData } from "../../redux/layoutSlice";
+import DynamicPriceTableTab from "./DynamicPriceTableTab/DynamicPriceTableTab";
+import DynamicPriceMasterTab from "./DynamicPriceMasterTab/DynamicPriceMasterTab";
 
 const TicketManagement = () => {
   const dispatch = useDispatch();
@@ -24,18 +24,18 @@ const TicketManagement = () => {
   const tabItems = [
     {
       key: '1',
-      label: 'Vé không giới hạn',
+      label: 'Vé cố định',
       children: <FixPriceTab />,
     },
     {
       key: '2',
-      label: 'Giá vé lượt',
-      children: <DynamicPriceTab />,
+      label: 'Quy định giá vé lượt',
+      children: <DynamicPriceMasterTab />,
     },
     {
       key: '3',
       label: 'Bảng giá vé lượt',
-      children: <TripPriceTableTab />,
+      children: <DynamicPriceTableTab />,
     },
   ];
 

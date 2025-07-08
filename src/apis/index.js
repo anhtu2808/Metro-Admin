@@ -207,4 +207,45 @@ export const deleteTicketTypeAPI = async (id) => {
   const res = await api.delete(`/v1/ticket-types/${id}`);
   return res.data;
 };
+// - Dynamic Price Master API -
+export const createDynamicPriceMasterAPI = async (payload) => {
+  const res = await api.post("/v1/dynamic-price-masters", payload);
+  return res.data;
+};
 
+export const updateDynamicPriceMasterAPI = async (id, payload) => {
+  const res = await api.put(`/v1/dynamic-price-masters/${id}`, payload);
+  return res.data;
+};
+
+export const deleteDynamicPriceMasterAPI = async (id) => {
+  const res = await api.delete(`/v1/dynamic-price-masters/${id}`);
+  return res.data;
+};
+
+export const getDynamicPriceMasterAPI = async (id) => {
+  const res = await api.get(`/v1/dynamic-price-masters/${id}`);
+  return res.data;
+};
+
+export const getAllDynamicPriceMasterAPI = async (params = {}) => {
+  const { page = 1, size = 10, search = "" } = params;
+  const queryParams = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+    ...(search && { search }),
+  });
+  const res = await api.get(`/v1/dynamic-price-masters?${queryParams}`);
+  return res.data;
+};
+
+// - Dynamic Price API -
+export const getDynamicPriceByLineIdAPI = async (lineId) => {
+  const res = await api.get(`/v1/dynamic-prices/${lineId}`);
+  return res.data;
+};
+
+export const calculateDynamicPriceAPI = async (lineId) => {
+  const res = await api.post(`/v1/dynamic-prices/calculate?lineId=${lineId}`);
+  return res.data;
+};

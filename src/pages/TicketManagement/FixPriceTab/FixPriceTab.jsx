@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Form, Row, Select, Input, message } from "antd";
 import { FaSearch, FaPlus } from "react-icons/fa";
-import TicketTable from "../TicketTable";
 import PrimaryButton from "../../../components/PrimaryButton/PrimaryButton";
 import { createTicketTypeAPI, deleteTicketTypeAPI, getAllTicketTypesAPI, updateTicketTypeAPI } from '../../../apis';
 import TicketTypeModal from './TicketTypeModal/TicketTypeModal';
+import TicketTypeTable from './TicketTypeTable';
+
 
 const { Option } = Select;
 
@@ -144,7 +145,7 @@ const FixPriceTab = () => {
       </Row>
 
       <div className="table-user" style={{ marginTop: "24px" }}>
-        <TicketTable 
+        <TicketTypeTable 
         ticketData={filteredTicketTypes} 
         loading={loading} 
         handleOpenModal={handleOpenModal} 
