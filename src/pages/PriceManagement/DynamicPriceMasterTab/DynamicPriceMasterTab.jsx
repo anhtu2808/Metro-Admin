@@ -9,7 +9,8 @@ import {
   Form,
   InputNumber,
   Select,
-  message
+  message,
+  Input
 } from 'antd';
 import {
   CalculatorOutlined,
@@ -22,9 +23,11 @@ import {
   getAllLinesAPI,
   createDynamicPriceMasterAPI,
   updateDynamicPriceMasterAPI,
-  deleteDynamicPriceMasterAPI
+  deleteDynamicPriceMasterAPI,
+  calculateDynamicPriceAPI
 } from '../../../apis';
 import PrimaryButton from '../../../components/PrimaryButton/PrimaryButton';
+import Preloader from '../../../components/Preloader/Preloader';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -40,6 +43,9 @@ const DynamicPriceMasterTab = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [form] = Form.useForm();
   const [editing, setEditing] = useState(null);
+  const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
+  const [confirmText, setConfirmText] = useState('');
+  const [recordToCalculate, setRecordToCalculate] = useState(null);
 
   // Load list + master data
   const fetchData = async () => {
@@ -74,9 +80,42 @@ const DynamicPriceMasterTab = () => {
     fetchData();
   };
 
+  // Show confirm modal for recalculate
+  const showRecalculateModal = (record) => {
+    setRecordToCalculate(record);
+    setIsConfirmModalVisible(true);
+    setConfirmText('');
+  };
+
+  const handleConfirmModalOk = () => {
+    if (confirmText.toLowerCase() === 'ok') {
+      setIsConfirmModalVisible(false);
+      setConfirmText('');
+      handleCalculate(recordToCalculate);
+      setRecordToCalculate(null);
+    } else {
+      message.error('Vui lòng gõ chính xác "ok" để xác nhận');
+    }
+  };
+
+  const handleConfirmModalCancel = () => {
+    setIsConfirmModalVisible(false);
+    setConfirmText('');
+    setRecordToCalculate(null);
+  };
+
   // (stub) recalc
-  const handleCalculate = (record) => {
-    message.info('Tính lại bảng giá vé lượt cho tuyến ' + record.lineId);
+  const handleCalculate = async (record) => {
+    setLoading(true);
+    try {
+       await calculateDynamicPriceAPI(record.lineId);
+      message.success('Đã tính lại bảng giá vé lượt cho tuyến ' + lines.find(l => l.id === record.lineId).name);
+      fetchData();
+    } catch (error) {
+      message.error(error.response.data.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Open for create
@@ -88,16 +127,20 @@ const DynamicPriceMasterTab = () => {
 
   // Submit create/update
   const onSubmit = async () => {
-    const values = form.getFieldsValue();
-    if (editing) {
-      await updateDynamicPriceMasterAPI(editing.lineId, values);
-      message.success('Cập nhật thành công');
-    } else {
-      await createDynamicPriceMasterAPI(values);
-      message.success('Tạo mới thành công');
+    try {
+      const values = form.getFieldsValue();
+      if (editing) {
+        await updateDynamicPriceMasterAPI(editing.lineId, values);
+        message.success('Cập nhật thành công');
+      } else {
+        await createDynamicPriceMasterAPI(values);
+        message.success('Tạo mới thành công');
+      }
+      setModalOpen(false);
+      fetchData();
+    } catch (error) {
+      message.error(error.response.data.message);
     }
-    setModalOpen(false);
-    fetchData();
   };
 
   // Table columns
@@ -133,7 +176,7 @@ const DynamicPriceMasterTab = () => {
           <Tooltip title="Tính lại bảng giá vé lượt">
             <Button
               icon={<CalculatorOutlined />}
-              onClick={() => handleCalculate(record)}
+              onClick={() => showRecalculateModal(record)}
             />
           </Tooltip>
           <Tooltip title="Xóa">
@@ -149,6 +192,8 @@ const DynamicPriceMasterTab = () => {
   ];
 
   return (
+    <>
+    {loading && <Preloader fullscreen={true} />}
     <div style={{ marginTop: 20, padding: 24 }}>
       <Title level={3} style={{ textAlign: 'center' }}>
         Quy định giá vé
@@ -236,7 +281,27 @@ const DynamicPriceMasterTab = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </div>
+
+      <Modal
+        title="Xác nhận tính lại bảng giá"
+        open={isConfirmModalVisible}
+        onOk={handleConfirmModalOk}
+        onCancel={handleConfirmModalCancel}
+        okText="Xác nhận"
+        cancelText="Hủy"
+      >
+        <p>Bạn có chắc chắn muốn tính lại bảng giá cho tuyến <strong>{recordToCalculate && lines.find(l => l.id === recordToCalculate.lineId)?.name}</strong>?</p>
+        <p>Điều này sẽ ghi đè lên bảng giá hiện tại.</p>
+        <p>Để xác nhận, vui lòng gõ chữ <strong>"ok"</strong> vào ô bên dưới:</p>
+        <Input
+          value={confirmText}
+          onChange={(e) => setConfirmText(e.target.value)}
+          placeholder="Gõ 'ok' để xác nhận"
+          style={{ marginTop: 8 }}
+        />
+      </Modal>
+      </div>
+    </>
   );
 };
 

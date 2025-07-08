@@ -12,7 +12,7 @@ import { getMyInfo } from "./redux/userSlice";
 import PrivateRoute from "./components/PrivateRoute";
 import UserManagement from "./pages/UserManagement/UserManagement";
 import BusRouteManagement from "./pages/BusRouteManagement/BusRouteManagement";
-import TicketManagement from "./pages/TicketManagement/TicketManagement";
+import PriceManagement from "./pages/PriceManagement/PriceManagement";
 import StationManagement from "./pages/StationManagement/StationManagement";
 import ContentManagement from "./pages/ContentManagement/ContentManagement";
 import EditProfile from "./pages/EditProfile/EditProfile";
@@ -34,7 +34,7 @@ const route = createBrowserRouter([
       { path: "metro-line", element: <LineManagement /> },
       { path: "stations", element: <StationManagement /> },
       { path: "bus-routes", element: <BusRouteManagement /> },
-      { path: "ticket-price", element: <TicketManagement /> },
+      { path: "price-management", element: <PriceManagement /> },
       { path: "role-management", element: <RoleManagement /> },
 
       // ✅ Thêm route cho Staff

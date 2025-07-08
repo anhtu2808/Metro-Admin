@@ -73,8 +73,8 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
             <Link to={"/bus-routes"} />
           </MenuItem>
           <MenuItem icon={<FaTicketAlt />} className="pro-menu-item">
-            Ticket Price
-            <Link to={"/ticket-price"} />
+            Price Management
+            <Link to={"/price-management"} />
           </MenuItem>
           <MenuItem icon={<FaLock />} className="pro-menu-item">
             Role Management

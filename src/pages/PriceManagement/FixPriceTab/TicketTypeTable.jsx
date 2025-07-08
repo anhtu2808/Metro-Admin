@@ -15,10 +15,6 @@ const TicketTypeTable = ({ ticketData, loading = false, handleOpenModal, handleD
     });
   };
 
-  const handleUpdate = (record) => {
-    console.log("Updating ticket:", record);
-    // Add update logic here
-  };
 
   // Check if ticket is a single-use ticket (vé lượt)
   const isSingleUseTicket = (record) => {

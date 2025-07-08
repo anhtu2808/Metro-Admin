@@ -1,5 +1,5 @@
 import { Tabs } from "antd";
-import "./TicketManagement.css";
+import "./PriceManagement.css";
 import { FaTicketAlt } from "react-icons/fa";
 import FixPriceTab from "./FixPriceTab/FixPriceTab";
 import { useEffect } from "react";
@@ -8,7 +8,7 @@ import { setLayoutData } from "../../redux/layoutSlice";
 import DynamicPriceTableTab from "./DynamicPriceTableTab/DynamicPriceTableTab";
 import DynamicPriceMasterTab from "./DynamicPriceMasterTab/DynamicPriceMasterTab";
 
-const TicketManagement = () => {
+const PriceManagement = () => {
   const dispatch = useDispatch();
   // Set title và icon cho trang
   useEffect(() => {
@@ -51,4 +51,4 @@ const TicketManagement = () => {
   );
 };
 
-export default TicketManagement;
+export default PriceManagement;
