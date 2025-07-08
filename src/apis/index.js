@@ -249,3 +249,15 @@ export const calculateDynamicPriceAPI = async (lineId) => {
   const res = await api.post(`/v1/dynamic-prices/calculate?lineId=${lineId}`);
   return res.data;
 };
+
+//  - Ticket Order API -
+export const getAllTicketOrdersAPI = async (params = {}) => {
+  const { page = 1, size = 10, search = "" } = params;
+  const queryParams = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+    ...(search && { search }),
+  });
+  const res = await api.get(`/v1/ticket-orders?${queryParams}`);
+  return res.data;
+};

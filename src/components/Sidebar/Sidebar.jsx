@@ -15,6 +15,7 @@ import {
   FaLock,
   FaSubway,
   FaCode,
+  FaMoneyBillWave,
 } from "react-icons/fa";
 import { MdOutlineAnalytics } from "react-icons/md";
 import { BiSolidNews } from "react-icons/bi";
@@ -72,7 +73,7 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
             Bus Route
             <Link to={"/bus-routes"} />
           </MenuItem>
-          <MenuItem icon={<FaTicketAlt />} className="pro-menu-item">
+          <MenuItem icon={<FaMoneyBillWave />} className="pro-menu-item">
             Price Management
             <Link to={"/price-management"} />
           </MenuItem>
