@@ -19,7 +19,7 @@ import {
 } from "react-icons/fa";
 import { MdOutlineAnalytics } from "react-icons/md";
 import { BiSolidNews } from "react-icons/bi";
-import { DollarOutlined } from "@ant-design/icons";
+import { QrcodeOutlined } from "@ant-design/icons";
 import "./Sidebar.css";
 import { usePermission } from "../../hooks/usePermission";
 
@@ -77,6 +77,10 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
             Price Management
             <Link to={"/price-management"} />
           </MenuItem>
+          <MenuItem icon={<FaTicketAlt />} className="pro-menu-item">
+            Ticket Management
+            <Link to={"/ticket-management"} />
+          </MenuItem>
           <MenuItem icon={<FaLock />} className="pro-menu-item">
             Role Management
             <Link to={"/role-management"} />
@@ -85,13 +89,13 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
             Content
             <Link to={"/staff/content"} />
           </MenuItem>
-          <MenuItem icon={<DollarOutlined />} className="pro-menu-item">
-            Fare Adjustment
-            <Link to={"/staff/fare-adjustment"} />
-          </MenuItem>
           <MenuItem icon={<FaCode />} className="pro-menu-item">
             Developer Tools
             <Link to={"/dev"} />
+          </MenuItem>
+          <MenuItem icon={<QrcodeOutlined />} className="pro-menu-item">
+            QR Generator
+            <Link to={"/qr-generator"} />
           </MenuItem>
         </Menu>
       </SidebarContent>

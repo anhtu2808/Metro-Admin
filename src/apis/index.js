@@ -252,12 +252,47 @@ export const calculateDynamicPriceAPI = async (lineId) => {
 
 //  - Ticket Order API -
 export const getAllTicketOrdersAPI = async (params = {}) => {
-  const { page = 1, size = 10, search = "" } = params;
+  const { 
+    page = 1, 
+    size = 10, 
+    sortBy = "id",
+    userId, 
+    isStatic, 
+    isStudent, 
+    status 
+  } = params;
+  
   const queryParams = new URLSearchParams({
     page: page.toString(),
     size: size.toString(),
-    ...(search && { search }),
+    sortBy: sortBy.toString(),
+    ...(userId && { userId: userId.toString() }),
+    ...(isStatic !== undefined && { isStatic: isStatic.toString() }),
+    ...(isStudent !== undefined && { isStudent: isStudent.toString() }),
+    ...(status && { status }),
   });
+  
   const res = await api.get(`/v1/ticket-orders?${queryParams}`);
+  return res.data;
+};
+export const getTicketOrderByIdAPI = async (id) => {
+  const res = await api.get(`/v1/ticket-orders/${id}`);
+  return res.data;
+};
+export const createTicketOrderAPI = async (payload) => {
+  const res = await api.post("/v1/ticket-orders", payload);
+  return res.data;
+};
+export const updateTicketOrderAPI = async (id, payload) => {
+  const res = await api.put(`/v1/ticket-orders/${id}`, payload);
+  return res.data;
+};
+export const deleteTicketOrderAPI = async (id) => {
+  const res = await api.delete(`/v1/ticket-orders/${id}`);
+  return res.data;
+};
+
+export const getTicketOrderByTokenAPI = async (token) => {
+  const res = await api.get(`/v1/scanner/ticket-orders/by-token/${token}`);
   return res.data;
 };
