@@ -32,9 +32,9 @@ import Preloader from '../../../components/Preloader/Preloader';
 const { Title } = Typography;
 const { Option } = Select;
 
-// Format nghìn đồng → "7.000 đồng"
+// Format VND
 const vnd = (val) =>
-  Intl.NumberFormat('vi-VN').format(parseFloat(val) * 1000) + ' đồng';
+  Intl.NumberFormat('vi-VN').format(parseFloat(val)) + ' VNĐ';
 
 const DynamicPriceMasterTab = () => {
   const [data, setData] = useState([]);
@@ -130,7 +130,7 @@ const DynamicPriceMasterTab = () => {
     try {
       const values = form.getFieldsValue();
       if (editing) {
-        await updateDynamicPriceMasterAPI(editing.lineId, values);
+        await updateDynamicPriceMasterAPI(editing.id, values);
         message.success('Cập nhật thành công');
       } else {
         await createDynamicPriceMasterAPI(values);
@@ -208,7 +208,7 @@ const DynamicPriceMasterTab = () => {
       </PrimaryButton>
 
       <Table
-        rowKey="lineId"
+        rowKey="id"
         bordered
         pagination={false}
         loading={loading}
@@ -241,15 +241,17 @@ const DynamicPriceMasterTab = () => {
 
           <Form.Item
             name="startPrice"
-            label="Giá khởi điểm"
+            label="Giá khởi điểm (VNĐ)"
             rules={[{ required: true, message: 'Nhập giá khởi điểm' }]}
-            extra="Nhập số nhỏ (đơn vị nghìn đồng). Ví dụ: 7 → 7.000 VNĐ"
+            extra="Nhập giá khởi điểm. Ví dụ: 7000 VNĐ"
           >
             <InputNumber
               min={0}
-              step={1}
+              step={1000}
               style={{ width: '100%' }}
-              placeholder="Nhập 7 cho 7.000 VNĐ"
+              placeholder="Nhập 7000"
+              formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={value => value.replace(/\$\s?|(,*)/g, '')}
             />
           </Form.Item>
 
@@ -268,15 +270,17 @@ const DynamicPriceMasterTab = () => {
 
           <Form.Item
             name="pricePerKm"
-            label="Giá mỗi km sau khởi điểm"
+            label="Giá mỗi km sau khởi điểm (VNĐ/km)"
             rules={[{ required: true, message: 'Nhập giá mỗi km' }]}
-            extra="Nhập số nhỏ (nghìn đồng/km). Ví dụ: 1 → 1.000 VNĐ/km"
+            extra="Nhập giá mỗi km. Ví dụ: 1000 VNĐ/km"
           >
             <InputNumber
               min={0}
-              step={0.01}
+              step={100}
               style={{ width: '100%' }}
-              placeholder="Nhập 1 cho 1.000 VNĐ/km"
+              placeholder="Nhập 1000"
+              formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={value => value.replace(/\$\s?|(,*)/g, '')}
             />
           </Form.Item>
         </Form>

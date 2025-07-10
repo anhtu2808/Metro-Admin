@@ -4,7 +4,6 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import LineManagement from "./pages/LineManagement/LineManagement";
 import RoleManagement from "./pages/RoleManagement/RoleManagement";
 import Login from "./pages/Login/Login";
-import FareAdjustment from "./pages/FareAdjustment/FareAdjustment";
 import MainLayout from "./components/MainLayout/MainLayout";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,6 +17,8 @@ import ContentManagement from "./pages/ContentManagement/ContentManagement";
 import EditProfile from "./pages/EditProfile/EditProfile";
 import ChangePassword from "./pages/ChangePassword/ChangePassword";
 import DevPage from "./pages/DevPage/DevPage";
+import TicketManagement from "./pages/TicketManagement/TicketManagement";
+import QRGenerator from "./pages/QRGenerator/QRGenerator";
 
 
 const route = createBrowserRouter([
@@ -35,11 +36,11 @@ const route = createBrowserRouter([
       { path: "stations", element: <StationManagement /> },
       { path: "bus-routes", element: <BusRouteManagement /> },
       { path: "price-management", element: <PriceManagement /> },
+      { path: "ticket-management", element: <TicketManagement /> },
       { path: "role-management", element: <RoleManagement /> },
 
       // ✅ Thêm route cho Staff
       { path: "staff/content", element: <ContentManagement /> },
-      { path: "staff/fare-adjustment", element: <FareAdjustment /> },
       
       // ✅ Thêm route cho Edit Profile
       { path: "edit-profile", element: <EditProfile /> },
@@ -49,6 +50,9 @@ const route = createBrowserRouter([
       
       // ✅ Thêm route cho Developer Tools
       { path: "dev", element: <DevPage /> },
+      
+      // ✅ Thêm route cho QR Generator
+      { path: "qr-generator", element: <QRGenerator /> },
     ],
   },
   { path: "/login", element: <Login /> },

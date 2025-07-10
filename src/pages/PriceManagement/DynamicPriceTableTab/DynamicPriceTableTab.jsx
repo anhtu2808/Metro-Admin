@@ -116,7 +116,7 @@ const DynamicPriceTableTab = () => {
                 dataIndex: `col-${st.id}`,
                 align: 'center',
                 width: 120,
-                render: val => val ? `${val.toLocaleString()}.000 VNĐ` : '—'
+                render: val => val ? `${val.toLocaleString()} VNĐ` : '—'
             }))
         ];
 
