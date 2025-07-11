@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Table, Checkbox, message, Modal, Form, Input, Button } from "antd";
-import { ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { ReloadOutlined, SearchOutlined, FileExcelOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { setLayoutData } from "../../redux/layoutSlice";
 import { FaLock } from "react-icons/fa";
+import * as XLSX from 'xlsx';
 import {
   createPermissionAPI,
   fetchPermissionsAPI,
@@ -32,6 +33,84 @@ const RoleManagement = () => {
       })
     );
   }, [dispatch]);
+
+  // Hàm xuất Role-Permission Matrix ra Excel
+  const exportRolePermissionMatrix = () => {
+    if (permissionsData.length === 0 || rolesData.length === 0) {
+      message.warning("Không có dữ liệu để xuất");
+      return;
+    }
+
+    // Tạo header cho bảng
+    const headers = ["Permission", ...rolesData.map(role => role.name)];
+    
+    // Tạo dữ liệu cho từng hàng
+    const data = [headers];
+    
+    permissionsData.forEach(permission => {
+      const row = [permission.name];
+      rolesData.forEach(role => {
+        const hasPermission = role.permissionArr && role.permissionArr.includes(permission.id);
+        row.push(hasPermission ? "x": "");
+      });
+      data.push(row);
+    });
+
+    // Tạo workbook và worksheet
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    
+    // Thiết lập độ rộng cột
+    const colWidths = [{ wch: 30 }, ...rolesData.map(() => ({ wch: 15 }))];
+    ws['!cols'] = colWidths;
+    
+    XLSX.utils.book_append_sheet(wb, ws, "Role Permission Matrix");
+    
+    // Xuất file
+    const fileName = `Role_Permission_Matrix_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+    
+    message.success("Xuất file Excel thành công!");
+  };
+
+  // Hàm xuất danh sách Permissions ra Excel
+  const exportPermissionList = () => {
+    if (permissionsData.length === 0) {
+      message.warning("Không có dữ liệu permissions để xuất");
+      return;
+    }
+
+    // Tạo dữ liệu cho bảng permissions
+    const headers = ["ID", "Permission Name", "Description"];
+    const data = [headers];
+    
+    permissionsData.forEach(permission => {
+      data.push([
+        permission.id,
+        permission.name,
+        permission.description || ""
+      ]);
+    });
+
+    // Tạo workbook và worksheet
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    
+    // Thiết lập độ rộng cột
+    ws['!cols'] = [
+      { wch: 10 }, // ID
+      { wch: 30 }, // Permission Name
+      { wch: 50 }  // Description
+    ];
+    
+    XLSX.utils.book_append_sheet(wb, ws, "Permissions List");
+    
+    // Xuất file
+    const fileName = `Permissions_List_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+    
+    message.success("Xuất danh sách permissions thành công!");
+  };
 
   const handleOk = () => {
     form
@@ -261,6 +340,20 @@ const RoleManagement = () => {
             allowClear
           />
           <Button icon={<ReloadOutlined />} onClick={fetchData} />
+          <Button 
+            icon={<FileExcelOutlined />} 
+            onClick={exportRolePermissionMatrix}
+            type="default"
+          >
+            Export Role Matrix
+          </Button>
+          <Button 
+            icon={<FileExcelOutlined />} 
+            onClick={exportPermissionList}
+            type="default"
+          >
+            Export Permissions
+          </Button>
         </div>
       </div>
       <Table
