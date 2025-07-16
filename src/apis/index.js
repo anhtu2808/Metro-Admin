@@ -21,6 +21,21 @@ export const updateUserAPI = async (id, payload) => {
   return res.data;
 };
 
+export const createUserAPI = async (payload) => {
+  const res = await api.post("/v1/users", payload);
+  return res.data;
+};
+
+export const deleteUserAPI = async (id) => {
+  const res = await api.delete(`/v1/users/${id}`);
+  return res.data;
+};
+
+export const getUserByRoleAPI = async (role) => {
+  const res = await api.get(`/v1/users/role/${role}`);
+  return res.data;
+};
+
 //  - Role API -
 export const fetchRolesAPI = async () => {
   const res = await api.get("/v1/roles");
@@ -252,16 +267,16 @@ export const calculateDynamicPriceAPI = async (lineId) => {
 
 //  - Ticket Order API -
 export const getAllTicketOrdersAPI = async (params = {}) => {
-  const { 
-    page = 1, 
-    size = 10, 
+  const {
+    page = 1,
+    size = 10,
     sortBy = "id",
-    userId, 
-    isStatic, 
-    isStudent, 
-    status 
+    userId,
+    isStatic,
+    isStudent,
+    status,
   } = params;
-  
+
   const queryParams = new URLSearchParams({
     page: page.toString(),
     size: size.toString(),
@@ -271,7 +286,7 @@ export const getAllTicketOrdersAPI = async (params = {}) => {
     ...(isStudent !== undefined && { isStudent: isStudent.toString() }),
     ...(status && { status }),
   });
-  
+
   const res = await api.get(`/v1/ticket-orders?${queryParams}`);
   return res.data;
 };
