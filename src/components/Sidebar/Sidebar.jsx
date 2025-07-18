@@ -19,7 +19,7 @@ import {
 } from "react-icons/fa";
 import { MdOutlineAnalytics } from "react-icons/md";
 import { BiSolidNews } from "react-icons/bi";
-import { QrcodeOutlined } from "@ant-design/icons";
+import { QrcodeOutlined, ScanOutlined } from "@ant-design/icons";
 import "./Sidebar.css";
 import { usePermission } from "../../hooks/usePermission";
 
@@ -96,6 +96,10 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
           <MenuItem icon={<QrcodeOutlined />} className="pro-menu-item">
             QR Generator
             <Link to={"/qr-generator"} />
+          </MenuItem>
+          <MenuItem icon={<ScanOutlined />} className="pro-menu-item">
+            Metro Gateway Scanner
+            <Link to={"/metro-gateway-scanner"} />
           </MenuItem>
         </Menu>
       </SidebarContent>

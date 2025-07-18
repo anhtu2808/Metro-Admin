@@ -311,3 +311,9 @@ export const getTicketOrderByTokenAPI = async (token) => {
   const res = await api.get(`/v1/scanner/ticket-orders/by-token/${token}`);
   return res.data;
 };
+
+// - Scanner API -
+export const validateTicketAPI = async (payload) => {
+  const res = await api.post(`/v1/scanner/validate`, payload);
+  return res.data;
+};
