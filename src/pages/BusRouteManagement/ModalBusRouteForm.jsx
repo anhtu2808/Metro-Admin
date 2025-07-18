@@ -116,14 +116,7 @@ const ModalBusRouteForm = ({
         <Form.Item
           name="busRouteCode"
           label="Mã tuyến xe buýt"
-          rules={[
-            { required: true, message: "Vui lòng nhập mã tuyến!" },
-            {
-              pattern: /^B\d{2,}$/,
-              message:
-                "Mã tuyến phải bắt đầu bằng B và theo sau là số (VD: B22)",
-            },
-          ]}
+          rules={[{ required: true, message: "Vui lòng nhập mã tuyến!" }]}
         >
           <Input maxLength={50} placeholder="VD: B22, B35, ..." />
         </Form.Item>
