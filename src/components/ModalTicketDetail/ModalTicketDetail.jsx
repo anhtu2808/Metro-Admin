@@ -196,7 +196,7 @@ const ModalTicketDetail = ({
         {/* QR Code */}
         <div className="modal-ticket-detail-section modal-ticket-detail-qr-section">
           <div className="modal-ticket-detail-qr-header">
-            <Text strong className="modal-ticket-detail-section-title">🔐 Mã QR vé:</Text>
+            <Text strong className="modal-ticket-detail-section-title">Mã QR vé:</Text>
             {!readOnly && (
               <Button 
                 icon={<ReloadOutlined />} 

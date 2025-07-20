@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { setLayoutData } from '../../redux/layoutSlice';
 import { FaTicketAlt } from 'react-icons/fa';
 import { ORDER_STATUS } from '../../utils/constants';
-import { getTicketOrderByTokenAPI, updateTicketOrderAPI, getAllTicketOrdersAPI } from '../../apis';
+import { getTicketOrderByTokenAPI, updateTicketOrderAPI, getAllTicketOrdersAPI, getTicketOrderByIdAPI } from '../../apis';
 import QRScanner from '../../components/QRScanner/QRScanner';
 import PrimaryButton from '../../components/PrimaryButton/PrimaryButton';
 import ModalTicketDetail from '../../components/ModalTicketDetail';
@@ -308,8 +308,9 @@ const TicketManagement = () => {
   };
 
   // Handle view detail
-  const handleViewDetail = (record) => {
-    setSelectedTicket(record);
+  const handleViewDetail = async (record) => {
+    const ticketDetail = await getTicketOrderByIdAPI(record.id);
+    setSelectedTicket(ticketDetail.result);
     
     // Populate view form (read-only)
     viewForm.setFieldsValue({
