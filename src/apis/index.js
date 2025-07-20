@@ -36,6 +36,37 @@ export const getUserByRoleAPI = async (role) => {
   return res.data;
 };
 
+export const getAllUsersAPI = async (params = {}) => {
+  const { 
+    page = 1, 
+    size = 10, 
+    sort = 'id', 
+    role, 
+    deleted, 
+    username, 
+    email, 
+    search 
+  } = params;
+  
+  const queryParams = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+    sort: sort.toString()
+  });
+  
+  if (role) queryParams.append('role', role);
+  if (deleted !== undefined && deleted !== 'all') queryParams.append('deleted', deleted);
+  if (username) queryParams.append('username', username);
+  if (email) queryParams.append('email', email);
+  if (search) queryParams.append('search', search);
+
+  const res = await api.get(`/v1/users?${queryParams}`);
+  return res.data;
+};
+export const unBanUserAPI = async (id) => {
+  const res = await api.put(`/v1/users/${id}/unban`);
+  return res.data;
+};
 //  - Role API -
 export const fetchRolesAPI = async () => {
   const res = await api.get("/v1/roles");
