@@ -24,6 +24,7 @@ import LineSegmentModal from "./LineSegmentModal";
 import LineModal from "./LineModal";
 import { getAllLinesAPI, getAllStationsAPI, addStationsToLineAPI } from "../../apis";
 import Preloader from "../../components/Preloader/Preloader";
+import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
 
 const { Content } = Layout;
 
@@ -194,7 +195,7 @@ const LineManagement = () => {
             checked={visibleColumns.lines}
             onChange={() => handleColumnToggle('lines')}
           >
-            Line
+            Tuyến Metro
           </Checkbox>
         ),
       },
@@ -205,7 +206,7 @@ const LineManagement = () => {
             checked={visibleColumns.stationBank}
             onChange={() => handleColumnToggle('stationBank')}
           >
-            Station Bank
+            Danh sách ga
           </Checkbox>
         ),
       },
@@ -217,7 +218,7 @@ const LineManagement = () => {
             onChange={() => handleColumnToggle('stations')}
             disabled={!selectedLine}
           >
-            Station - {selectedLine ? getLineCode(selectedLine) : 'Select Line'}
+            Ga của tuyến {selectedLine ? getLineCode(selectedLine) : 'Chọn tuyến'}
           </Checkbox>
         ),
       },
@@ -229,7 +230,7 @@ const LineManagement = () => {
             onChange={() => handleColumnToggle('segments')}
             disabled={!selectedLine}
           >
-            Line Segment - {selectedLine ? getLineCode(selectedLine) : 'Select Line'}
+            Khoảng cách giữa các ga - {selectedLine ? getLineCode(selectedLine) : 'Chọn tuyến'}
           </Checkbox>
         ),
       },
@@ -307,10 +308,13 @@ const LineManagement = () => {
   };
 
   const handleModalOk = async () => {
-    if (confirmText.toLowerCase() === 'confirm') {
+    if (confirmText.toLowerCase() === 'ok') {
       try {
         setModalLoading(true);
-        
+        if(tempStations.length < 2) {
+          message.error('Vui lòng chọn ít nhất 2 ga');
+          return;
+        }
         // Prepare payload with station IDs
         const stationIds = tempStations.map(station => station.id);
         const payload = stationIds;
@@ -323,15 +327,15 @@ const LineManagement = () => {
         setSegments(generateSegments(null)); // Generate from tempStations
         setIsModalVisible(false);
         setConfirmText('');
-        message.success('Station changes saved successfully');
+        message.success('Thay đổi đã được lưu thành công');
       } catch (error) {
         console.error('Error saving stations to line:', error);
-        message.error('Failed to save station changes');
+        message.error('Lưu thay đổi thất bại');
       } finally {
         setModalLoading(false);
       }
     } else {
-      message.error('Please type "confirm" to save changes');
+      message.error('Vui lòng nhập "ok" để lưu thay đổi');
     }
   };
 
@@ -538,7 +542,7 @@ const LineManagement = () => {
       <DragDropContext onDragEnd={handleDragEnd}>
         {visibleColumns.lines && (
           <ListCard
-            title="Line"
+            title="Tuyến Metro"
             data={getFilteredData(lines, searchValues.lines)}
             onAdd={handleAddLine}
             onMenuClick={handleMenuClick}
@@ -550,9 +554,10 @@ const LineManagement = () => {
             onSearch={(value) => handleSearch('lines', value)}
           />
         )}
-        {visibleColumns.stationBank && (
+        
+        {visibleColumns.stationBank && selectedLine && visibleColumns.segments && (
           <ListCard
-            title="Station Bank"
+            title="Danh sách ga"
             data={getFilteredData(getAvailableStations(), searchValues.allStations)}
             onAdd={handleAddItem}
             onMenuClick={handleMenuClick}
@@ -562,25 +567,31 @@ const LineManagement = () => {
             onSearch={(value) => handleSearch('allStations', value)}
           />
         )}
-        {selectedLine && visibleColumns.stations && (
-          <ListCard
-            title={`Station - ${getLineCode(selectedLine)}`}
-            data={getFilteredData(tempStations, searchValues.stations)}
-            onAdd={() => message.info("Kéo station từ Station Bank để thêm vào tuyến")}
-            onMenuClick={handleMenuClick}
-            icon={<FaMapMarkerAlt style={{ fontSize: '20px', color: '#faad14' }} />}
-            droppableId="stations"
-            onSort={handleSort}
-            showSortButtons={true}
-            searchValue={searchValues.stations}
-            onSearch={(value) => handleSearch('stations', value)}
-            onSave={handleSaveStations}
-            showAddButton={false}
-          />
+        {visibleColumns.stations && (
+          selectedLine ? (
+            <ListCard
+              title={`Ga của tuyến ${getLineCode(selectedLine)}`}
+              data={getFilteredData(tempStations, searchValues.stations)}
+              onAdd={() => message.info("Kéo station từ Station Bank để thêm vào tuyến")}
+              onMenuClick={handleMenuClick}
+              icon={<FaMapMarkerAlt style={{ fontSize: '20px', color: '#faad14' }} />}
+              droppableId="stations"
+              onSort={handleSort}
+              showSortButtons={true}
+              searchValue={searchValues.stations}
+              onSearch={(value) => handleSearch('stations', value)}
+              onSave={handleSaveStations}
+              showAddButton={false}
+            />
+          ) : (
+            <div className="line-management-placeholder">
+              <span>Vui lòng chọn một tuyến để tiếp tục</span>
+            </div>
+          )
         )}
         {selectedLine && visibleColumns.segments && (
           <ListCard
-            title={`Line Segment - ${getLineCode(selectedLine)}`}
+            title={`Khoảng cách giữa các ga `}
             data={getFilteredData(segments, searchValues.segments)}
             onAdd={() => message.info("Segment được tự động tạo từ stations")}
             onMenuClick={handleMenuClick}
@@ -599,7 +610,7 @@ const LineManagement = () => {
       <div className="map-view-header">
         <div className="map-view-line-selector">
           <Space>
-            <span style={{ fontWeight: 500, color: '#1a1a1a' }}>Select Line:</span>
+            <span style={{ fontWeight: 500, color: '#1a1a1a' }}>Chọn tuyến:</span>
             <Space.Compact>
               {lines.map(line => (
                 <Button
@@ -659,7 +670,7 @@ const LineManagement = () => {
                 placement="bottomRight"
               >
                 <Button icon={<SettingOutlined />} type="default">
-                  Columns
+                  Cột hiển thị
                 </Button>
               </Dropdown>
             )}
@@ -676,19 +687,20 @@ const LineManagement = () => {
       </div>
 
       <Modal
-        title="Confirm Changes"
+        title="Xác nhận thay đổi"
         open={isModalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
-        okText="Save Changes"
-        cancelText="Cancel"
+        okText="Lưu thay đổi"
+        cancelText="Hủy"
         confirmLoading={modalLoading}
       >
-        <p>Type "confirm" to save your changes to stations and update segments:</p>
+        <p>Nhập "ok" để lưu thay đổi vào ga và cập nhật khoảng cách</p>
+        <p style={{color: 'red'}}>Lưu ý: Khi lưu thay đổi các dữ liệu cũ về khoảng cách sẽ bị xoá và được tạo lại từ dữ liệu mới</p>
         <Form form={form}>
           <Form.Item>
             <Input
-              placeholder="Type 'confirm' here"
+              placeholder="Nhập 'ok' để lưu thay đổi"
               value={confirmText}
               onChange={(e) => setConfirmText(e.target.value)}
             />

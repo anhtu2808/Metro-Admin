@@ -27,6 +27,7 @@
   import { useDispatch } from "react-redux";
   import { setLayoutData } from "../../redux/layoutSlice";
   import ModalFormUser from "./ModalFormUser";
+import Preloader from "../../components/Preloader/Preloader";
 
   const ROLE_TYPES = ["CUSTOMER", "STAFF", "MANAGER"];
 
@@ -329,6 +330,7 @@
   }));
 
     return (
+      <>
       <div className="manage-user-container">
         <div className="users-content" style={{ marginTop: "20px" }}>
           <Row justify="space-between" align="middle" gutter={[16, 16]}>
@@ -424,6 +426,7 @@
           />
         </div>
       </div>
+      </>
     );
   };
 

@@ -97,11 +97,11 @@ const StationModal = ({
       if (editingStation) {
         // Update existing station
         await updateStationAPI(editingStation.id, payload);
-        message.success('Cập nhật trạm thành công');
+        message.success('Cập nhật ga thành công');
       } else {
         // Create new station
         await createStationAPI(payload);
-        message.success('Thêm trạm mới thành công');
+        message.success('Thêm ga mới thành công');
       }
       
       // Reset form and close modal
@@ -130,7 +130,7 @@ const StationModal = ({
 
   return (
     <Modal
-      title={editingStation ? 'Chỉnh sửa trạm' : 'Thêm trạm mới'}
+      title={editingStation ? 'Chỉnh ga trạm' : 'Thêm ga mới'}
       open={visible}
       onOk={handleSubmit}
       onCancel={handleCancel}

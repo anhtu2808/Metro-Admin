@@ -213,7 +213,7 @@ const MapView = ({ selectedLine, segments, onSegmentUpdate, onStationUpdate }) =
           title={
             <Space>
               <InfoCircleOutlined />
-              <span>Line Segments</span>
+              <span>Khoảng cách giữa các trạm</span>
               <Text type="secondary" style={{ fontSize: '12px' }}>
                 ({segments.length})
               </Text>
@@ -269,7 +269,7 @@ const MapView = ({ selectedLine, segments, onSegmentUpdate, onStationUpdate }) =
         <div className="map-view-empty-content">
           <InfoCircleOutlined style={{ fontSize: 48, color: '#d9d9d9', marginBottom: 16 }} />
           <Text type="secondary" style={{ fontSize: 16 }}>
-            Please select a line to view on the map
+            Vui lòng chọn một tuyến để xem  bản đồ
           </Text>
         </div>
       </div>

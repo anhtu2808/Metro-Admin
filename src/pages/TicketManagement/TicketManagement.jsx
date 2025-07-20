@@ -47,7 +47,7 @@ const TicketManagement = () => {
     switch (status) {
       case 'ACTIVE': return 'green';
       case 'EXPIRED': return 'red';
-      case 'USED': return 'blue';
+      case 'USING': return 'blue';
       case 'UNPAID': return 'orange';
       case 'CANCELLED': return 'red';
       default: return 'default';
@@ -124,6 +124,7 @@ const TicketManagement = () => {
       case ORDER_STATUS.INACTIVE: return 'Chưa sử dụng';
       case ORDER_STATUS.UNPAID: return 'Chưa thanh toán';
       case ORDER_STATUS.USING: return 'Đang sử dụng';
+      case ORDER_STATUS.CANCELLED: return 'Đã hủy';
       default: return status;
     }
   };
