@@ -74,6 +74,15 @@ const TableUser = ({
     },
   ];
 
+  const paginationConfig = {
+    pageSize: 10,
+    showSizeChanger: true,
+    showQuickJumper: true,
+    pageSizeOptions: ["5", "10", "20", "50"],
+    showTotal: (total, range) =>
+      `${range[0]}-${range[1]} của ${total} người dùng`,
+  };
+
   return (
     <Table
       dataSource={dataSource}
@@ -82,7 +91,7 @@ const TableUser = ({
       bordered
       size="middle"
       loading={loading}
-      pagination={{ pageSize: 10 }}
+      pagination={paginationConfig}
     />
   );
 };
