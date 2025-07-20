@@ -1,6 +1,6 @@
 .station-management {
   padding: 24px;
-  background: #f5f5f5;
+  background: #ffffff;
   min-height: calc(100vh - 64px);
 }
 
@@ -96,20 +96,19 @@
   height: 40px;
 }
 
-.header-actions .ant-select .ant-select-selection-item,
-.header-actions .ant-select .ant-select-selection-placeholder {
-  line-height: 38px;
-}
+
 
 /* Button Styles */
 .header-actions .ant-btn {
-  border-radius: 8px;
-  height: 40px;
+  margin-left: 10px;
+  border-radius: 8px 8px 8px 8px !important;
+  height: 40px !important;
   display: flex;
   align-items: center;
   gap: 6px;
   font-weight: 500;
-  padding: 0 16px;
+  padding: 10px 20px !important;
+  
 }
 
 .header-actions .ant-btn-primary {
