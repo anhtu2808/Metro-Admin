@@ -7,10 +7,11 @@
 }
 
 .admin-content {
-   width: 100%;
+   flex: 1 1 auto;
    display: flex;
    flex-direction: column;
    height: 100vh;
+   min-width: 0;
 }
 
 .admin-main{
@@ -85,8 +86,9 @@
    flex: 1 1 auto;
    min-height: 0;
    overflow-y: auto;
+   overflow-x: auto;
    padding: 24px;
-} 
+}
 
 .admin-title {
    font-size: 18px;

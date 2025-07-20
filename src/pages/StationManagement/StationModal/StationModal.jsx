@@ -20,6 +20,7 @@ import {
   uploadStationImageAPI
 } from '../../../apis';
 import './StationModal.css';
+import ButtonPrimary from '../../../components/PrimaryButton/PrimaryButton';
 
 const StationModal = ({
   visible,
@@ -161,14 +162,14 @@ const StationModal = ({
                 showUploadList={false}
                 accept="image/*"
               >
-                <Button 
+                <ButtonPrimary 
                   icon={<CameraOutlined />} 
                   loading={uploadingImage}
                   type="primary"
                   ghost
                 >
                   {uploadingImage ? "Đang upload..." : "Chọn ảnh"}
-                </Button>
+                </ButtonPrimary>
               </Upload>
               {imageUrl && (
                 <Button 

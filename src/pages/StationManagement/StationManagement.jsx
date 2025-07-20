@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {
   Table,
-  Button,
   Input,
   Space,
-  Select,
   Tag,
   Popconfirm,
   message,
   Card,
   Tooltip,
   Skeleton,
+  Avatar,
+  Button,
 } from 'antd';
 import {
   PlusOutlined,
@@ -24,6 +24,7 @@ import { useDispatch } from 'react-redux';
 import { setLayoutData } from '../../redux/layoutSlice';
 import { FaSubway } from 'react-icons/fa';
 import Preloader from '../../components/Preloader/Preloader';
+import PrimaryButton from '../../components/PrimaryButton/PrimaryButton';
 import StationModal from './StationModal';
 import { 
   getAllStationsAPI, 
@@ -31,8 +32,7 @@ import {
 } from '../../apis';
 import './StationManagement.css';
 
-const { Search } = Input;
-const { Option } = Select;
+// Removed Search component, using regular Input instead
 
 const StationManagement = () => {
   const dispatch = useDispatch();
@@ -43,7 +43,6 @@ const StationManagement = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingStation, setEditingStation] = useState(null);
   const [searchText, setSearchText] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('all');
   
   // Pagination state
   const [pagination, setPagination] = useState({
@@ -151,7 +150,8 @@ const StationManagement = () => {
       const response = await getAllStationsAPI({
         page,
         size: pageSize,
-        search: searchQuery
+        search: searchQuery,
+        sort: 'id'
       });
       
       if (response.code === 200) {
@@ -166,7 +166,7 @@ const StationManagement = () => {
           address: station.address || 'Chưa có địa chỉ',
           latitude: parseFloat(station.latitude) || 0,
           longitude: parseFloat(station.longitude) || 0,
-          status: station.deleted === 0 ? 'active' : 'inactive',
+          status: 'active', // Assuming all returned stations are active since deleted ones won't be returned
           imageUrl: station.imageUrl,
           createdAt: station.createAt ? new Date(station.createAt).toLocaleDateString('vi-VN') : new Date().toLocaleDateString('vi-VN'),
           updatedAt: station.updateAt ? new Date(station.updateAt).toLocaleDateString('vi-VN') : new Date().toLocaleDateString('vi-VN')
@@ -230,18 +230,7 @@ const StationManagement = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText]);
 
-  // Handle status filter
-  useEffect(() => {
-    // For now, we'll handle status filter on client side
-    // You can modify the API to support status filtering if needed
-    let filtered = stations;
 
-    if (selectedStatus !== 'all') {
-      filtered = filtered.filter(station => station.status === selectedStatus);
-    }
-
-    setFilteredStations(filtered);
-  }, [stations, selectedStatus]);
 
 
 
@@ -312,6 +301,15 @@ const StationManagement = () => {
   };
 
   const columns = [
+    {
+      title: 'Hình ảnh',
+      dataIndex: 'imageUrl',
+      key: 'image',
+      width: 100,
+      render: (url) => (
+        <Avatar shape="square" size={48} src={url} icon={<FaSubway />} />
+      )
+    },
     {
       title: 'Mã trạm',
       dataIndex: 'code',
@@ -423,46 +421,31 @@ const StationManagement = () => {
         {/* Header Actions */}
         <div className="header-actions">
           <div className="filters">
-            <Search
+            <Input
               placeholder="Tìm kiếm trạm..."
               allowClear
-              style={{ width: 250 }}
+              style={{ width: 300 }}
               onChange={(e) => setSearchText(e.target.value)}
+              value={searchText}
             />
 
-            <Select
-              placeholder="Trạng thái"
-              style={{ width: 150 }}
-              value={selectedStatus}
-              onChange={setSelectedStatus}
-            >
-              <Option value="all">Tất cả</Option>
-              <Option value="active">Hoạt động</Option>
-              <Option value="maintenance">Bảo trì</Option>
-              <Option value="inactive">Không hoạt động</Option>
-            </Select>
           </div>
           <div className="actions">
-            <Button
+            <PrimaryButton
               icon={<ReloadOutlined />}
               onClick={handleRefresh}
               loading={loading}
+              type="button"
             >
               Làm mới
-            </Button>
-            <Button
-              icon={<ExportOutlined />}
-              onClick={() => message.info('Xuất dữ liệu')}
-            >
-              Xuất Excel
-            </Button>
-            <Button
-              type="primary"
+            </PrimaryButton>
+            <PrimaryButton
               icon={<PlusOutlined />}
               onClick={handleAdd}
+              type="button"
             >
               Thêm trạm
-            </Button>
+            </PrimaryButton>
           </div>
         </div>
 

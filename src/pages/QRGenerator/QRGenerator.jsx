@@ -97,7 +97,7 @@ const QRGenerator = () => {
   const handleGetTokenFromAPI = async () => {
     try {
       setLoading(true);
-      const response = await getTicketOrderByIdAPI(1);
+      const response = await getTicketOrderByIdAPI(26);
       
       if (response.code === 200) {
         const ticketQRToken = response.result.ticketQRToken;

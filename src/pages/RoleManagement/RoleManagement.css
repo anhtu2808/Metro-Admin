@@ -91,12 +91,9 @@
   border-radius: 12px;
 }
 
-.ant-modal-title {
-  font-size: 22px !important;
-  color: #1890ff !important;
-  font-weight: bold;
-}
 
 .ant-form-item-label > label {
   font-weight: 500;
 }
+
+

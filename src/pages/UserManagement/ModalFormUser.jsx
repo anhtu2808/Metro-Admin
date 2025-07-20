@@ -8,10 +8,14 @@ import {
   Modal,
   Select,
   Upload,
+  Row,
+  Col,
 } from "antd";
 import { useEffect, useState } from "react";
 import { uploadProfileImageAPI } from "../../apis";
 import "./ModalFormUser.css";
+import ButtonPrimary from '../../components/PrimaryButton/PrimaryButton'
+import DangerButton from "../../components/DangerButton/DangerButton";
 const { Option } = Select;
 
 const ModalFormUser = ({
@@ -93,6 +97,7 @@ const ModalFormUser = ({
       confirmLoading={loading}
       maskClosable={false}
       destroyOnClose
+      width={800}
     >
       <Form
         form={form}
@@ -102,97 +107,122 @@ const ModalFormUser = ({
         autoComplete="off"
       >
         {/* Thông tin cá nhân */}
-        <Form.Item
-          name="firstName"
-          label="Họ"
-          rules={[{ required: true, message: "Vui lòng nhập họ" }]}
-        >
-          <Input />
-        </Form.Item>
+        <Row gutter={16}>
+          <Col xs={24} md={12}>
+            <Form.Item
+              name="firstName"
+              label="Họ"
+              rules={[{ required: true, message: "Vui lòng nhập họ" }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12}>
+            <Form.Item
+              name="lastName"
+              label="Tên"
+              rules={[{ required: true, message: "Vui lòng nhập tên" }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
 
-        <Form.Item
-          name="lastName"
-          label="Tên"
-          rules={[{ required: true, message: "Vui lòng nhập tên" }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item name="address" label="Địa chỉ">
-          <Input />
-        </Form.Item>
-
-        <Form.Item name="phone" label="Số điện thoại">
-          <Input />
-        </Form.Item>
+        <Row gutter={16}>
+          <Col xs={24} md={12}>
+            <Form.Item name="address" label="Địa chỉ">
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12}>
+            <Form.Item name="phone" label="Số điện thoại">
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
 
         {/* Tài khoản */}
-        <Form.Item
-          name="username"
-          label="Tên người dùng"
-          rules={[{ required: true, message: "Vui lòng nhập tên người dùng!" }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          name="email"
-          label="Email"
-          rules={[
-            { type: "email", message: "Email không hợp lệ!" },
-            { required: true, message: "Vui lòng nhập email!" },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+        <Row gutter={16}>
+          <Col xs={24} md={12}>
+            <Form.Item
+              name="username"
+              label="Tên người dùng"
+              rules={[{ required: true, message: "Vui lòng nhập tên người dùng!" }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12}>
+            <Form.Item
+              name="email"
+              label="Email"
+              rules={[
+                { type: "email", message: "Email không hợp lệ!" },
+                { required: true, message: "Vui lòng nhập email!" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
 
         {/* Chỉ hiển thị khi tạo mới */}
         {!isEdit && (
-          <>
-            <Form.Item
-              name="password"
-              label="Mật khẩu"
-              rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
-              hasFeedback
-            >
-              <Input.Password />
-            </Form.Item>
-
-            <Form.Item
-              name="confirm"
-              label="Xác nhận mật khẩu"
-              dependencies={["password"]}
-              hasFeedback
-              rules={[
-                { required: true, message: "Vui lòng xác nhận mật khẩu!" },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue("password") === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(
-                      new Error("Mật khẩu xác nhận không khớp!")
-                    );
-                  },
-                }),
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
-          </>
+          <Row gutter={16}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="password"
+                label="Mật khẩu"
+                rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
+                hasFeedback
+              >
+                <Input.Password />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="confirm"
+                label="Xác nhận mật khẩu"
+                dependencies={["password"]}
+                hasFeedback
+                rules={[
+                  { required: true, message: "Vui lòng xác nhận mật khẩu!" },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error("Mật khẩu xác nhận không khớp!")
+                      );
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
+            </Col>
+          </Row>
         )}
 
         {/* Vai trò mặc định và disabled */}
-        <Form.Item
-          name="roleType"
-          label="Vai trò"
-          initialValue="CUSTOMER"
-          rules={[{ required: true, message: "Vui lòng chọn vai trò!" }]}
-        >
-          <Select disabled>
-            <Option value="CUSTOMER">Khách hàng</Option>
-          </Select>
-        </Form.Item>
+        <Row gutter={16}>
+          <Col xs={24} md={12}>
+            <Form.Item
+              name="roleType"
+              label="Vai trò"
+              initialValue="CUSTOMER"
+              rules={[{ required: true, message: "Vui lòng chọn vai trò!" }]}
+            >
+              <Select disabled={isEdit} >
+                <Option value="CUSTOMER">Khách hàng</Option>
+                <Option value="MANAGER">Quản lý</Option> 
+                <Option value="STAFF">Nhân viên</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
+
         <Form.Item label="Hình ảnh người dùng">
           <div className="user-image-upload">
             <div className="image-preview">
@@ -210,19 +240,19 @@ const ModalFormUser = ({
                 showUploadList={false}
                 accept="image/*"
               >
-                <Button
+                <ButtonPrimary
                   icon={<CameraOutlined />}
                   loading={uploadingImage}
                   type="primary"
                   ghost
                 >
                   {uploadingImage ? "Đang upload..." : "Chọn ảnh"}
-                </Button>
+                </ButtonPrimary>
               </Upload>
               {imageUrl && (
-                <Button onClick={() => setImageUrl("")} danger type="text">
+                <DangerButton onClick={() => setImageUrl("")} variant="outline">
                   Xóa ảnh
-                </Button>
+                </DangerButton>
               )}
             </div>
           </div>
