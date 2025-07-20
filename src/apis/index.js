@@ -65,10 +65,11 @@ export const updatePermissionAPI = async (id, data) => {
 
 //  - Station API -
 export const getAllStationsAPI = async (params = {}) => {
-  const { page = 1, size = 10, search = "" } = params;
+  const { page = 1, size = 10, search = "", sort = "id" } = params;
   const queryParams = new URLSearchParams({
     page: page.toString(),
     size: size.toString(),
+    sort: sort.toString(),
     ...(search && { search }),
   });
 
