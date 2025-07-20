@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {
   Table,
-  Button,
   Input,
   Space,
-  Select,
   Tag,
   Popconfirm,
   message,
   Card,
   Tooltip,
   Skeleton,
+  Avatar,
+  Button,
 } from 'antd';
 import {
   PlusOutlined,
@@ -24,6 +24,7 @@ import { useDispatch } from 'react-redux';
 import { setLayoutData } from '../../redux/layoutSlice';
 import { FaSubway } from 'react-icons/fa';
 import Preloader from '../../components/Preloader/Preloader';
+import PrimaryButton from '../../components/PrimaryButton/PrimaryButton';
 import StationModal from './StationModal';
 import { 
   getAllStationsAPI, 
@@ -32,7 +33,6 @@ import {
 import './StationManagement.css';
 
 const { Search } = Input;
-const { Option } = Select;
 
 const StationManagement = () => {
   const dispatch = useDispatch();
@@ -43,7 +43,6 @@ const StationManagement = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingStation, setEditingStation] = useState(null);
   const [searchText, setSearchText] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('all');
   
   // Pagination state
   const [pagination, setPagination] = useState({
@@ -230,18 +229,7 @@ const StationManagement = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText]);
 
-  // Handle status filter
-  useEffect(() => {
-    // For now, we'll handle status filter on client side
-    // You can modify the API to support status filtering if needed
-    let filtered = stations;
 
-    if (selectedStatus !== 'all') {
-      filtered = filtered.filter(station => station.status === selectedStatus);
-    }
-
-    setFilteredStations(filtered);
-  }, [stations, selectedStatus]);
 
 
 
@@ -312,6 +300,15 @@ const StationManagement = () => {
   };
 
   const columns = [
+    {
+      title: 'Hình ảnh',
+      dataIndex: 'imageUrl',
+      key: 'image',
+      width: 100,
+      render: (url) => (
+        <Avatar shape="square" size={48} src={url} icon={<FaSubway />} />
+      )
+    },
     {
       title: 'Mã trạm',
       dataIndex: 'code',
@@ -426,43 +423,27 @@ const StationManagement = () => {
             <Search
               placeholder="Tìm kiếm trạm..."
               allowClear
-              style={{ width: 250 }}
+              style={{ width: 300 }}
               onChange={(e) => setSearchText(e.target.value)}
             />
 
-            <Select
-              placeholder="Trạng thái"
-              style={{ width: 150 }}
-              value={selectedStatus}
-              onChange={setSelectedStatus}
-            >
-              <Option value="all">Tất cả</Option>
-              <Option value="active">Hoạt động</Option>
-              <Option value="maintenance">Bảo trì</Option>
-              <Option value="inactive">Không hoạt động</Option>
-            </Select>
           </div>
           <div className="actions">
-            <Button
+            <PrimaryButton
               icon={<ReloadOutlined />}
               onClick={handleRefresh}
               loading={loading}
+              type="button"
             >
               Làm mới
-            </Button>
-            <Button
-              icon={<ExportOutlined />}
-              onClick={() => message.info('Xuất dữ liệu')}
-            >
-              Xuất Excel
-            </Button>
-            <Button
-              type="primary"
+            </PrimaryButton>
+            <PrimaryButton
               icon={<PlusOutlined />}
               onClick={handleAdd}
+              type="button"
             >
               Thêm trạm
-            </Button>
+            </PrimaryButton>
           </div>
         </div>
 
