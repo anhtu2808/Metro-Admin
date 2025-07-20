@@ -155,12 +155,13 @@ export const createContentAPI = async (payload) => {
 
 export const updateContentAPI = async (id, payload) => {
   const res = await api.put(`/v1/contents/${id}`, payload);
+  console.log("Response từ updateContentAPI:", res);
   return res.data;
 };
 
 export const deleteContentAPI = async (id) => {
   const res = await api.delete(`/v1/contents/${id}`);
-  return res.data;
+  return res;
 };
 //  - Image API -
 export const uploadProfileImageAPI = async (image) => {

@@ -20,7 +20,6 @@ import DevPage from "./pages/DevPage/DevPage";
 import TicketManagement from "./pages/TicketManagement/TicketManagement";
 import QRGenerator from "./pages/QRGenerator/QRGenerator";
 
-
 const route = createBrowserRouter([
   {
     path: "/",
@@ -41,16 +40,16 @@ const route = createBrowserRouter([
 
       // ✅ Thêm route cho Staff
       { path: "staff/content", element: <ContentManagement /> },
-      
+
       // ✅ Thêm route cho Edit Profile
       { path: "edit-profile", element: <EditProfile /> },
-      
+
       // ✅ Thêm route cho Change Password
       { path: "change-password", element: <ChangePassword /> },
-      
+
       // ✅ Thêm route cho Developer Tools
       { path: "dev", element: <DevPage /> },
-      
+
       // ✅ Thêm route cho QR Generator
       { path: "qr-generator", element: <QRGenerator /> },
     ],

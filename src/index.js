@@ -8,7 +8,6 @@ import { store } from "./redux/store";
 import "antd/dist/reset.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
 
-
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(

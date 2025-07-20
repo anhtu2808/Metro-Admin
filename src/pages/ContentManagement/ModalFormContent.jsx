@@ -1,7 +1,8 @@
 import { Button, DatePicker, Form, Input, Modal, Space } from "antd";
 import moment from "moment";
-const { TextArea } = Input;
-
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import "./ModalFormContent.css"; // Assuming you have a CSS file for styles
 const getTypeLabel = (type) => {
   switch (type) {
     case "NEWS":
@@ -12,6 +13,7 @@ const getTypeLabel = (type) => {
       return "Nội dung";
   }
 };
+
 const ContentFormModal = ({
   currentContent,
   isModalVisible,
@@ -22,6 +24,7 @@ const ContentFormModal = ({
   const type = currentContent?.type || "NEWS";
   const label = getTypeLabel(type);
   const isEdit = !!currentContent?.id;
+
   return (
     <Modal
       title={isEdit ? `Chỉnh sửa ${label}` : `Thêm ${label} mới`}
@@ -36,6 +39,7 @@ const ContentFormModal = ({
         onFinish={handleSubmit}
         initialValues={{
           date: moment(),
+          content: currentContent?.content || "",
         }}
       >
         <Form.Item
@@ -58,12 +62,22 @@ const ContentFormModal = ({
           />
         </Form.Item>
 
-        <Form.Item
-          name="content"
-          label="Nội dung"
-          rules={[{ required: true, message: "Vui lòng nhập nội dung!" }]}
-        >
-          <TextArea rows={6} placeholder={`Nhập nội dung ${label}`} />
+        <Form.Item label="Nội dung" required>
+          <CKEditor
+            editor={ClassicEditor}
+            data={form.getFieldValue("content") || ""}
+            onChange={(event, editor) => {
+              form.setFieldsValue({ content: editor.getData() });
+            }}
+          />
+
+          <Form.Item
+            name="content"
+            noStyle
+            rules={[{ required: true, message: "Vui lòng nhập nội dung!" }]}
+          >
+            <Input type="hidden" />
+          </Form.Item>
         </Form.Item>
 
         <Form.Item>
