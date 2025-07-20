@@ -32,7 +32,7 @@ import {
 } from '../../apis';
 import './StationManagement.css';
 
-const { Search } = Input;
+// Removed Search component, using regular Input instead
 
 const StationManagement = () => {
   const dispatch = useDispatch();
@@ -150,7 +150,8 @@ const StationManagement = () => {
       const response = await getAllStationsAPI({
         page,
         size: pageSize,
-        search: searchQuery
+        search: searchQuery,
+        sort: 'id'
       });
       
       if (response.code === 200) {
@@ -165,7 +166,7 @@ const StationManagement = () => {
           address: station.address || 'Chưa có địa chỉ',
           latitude: parseFloat(station.latitude) || 0,
           longitude: parseFloat(station.longitude) || 0,
-          status: station.deleted === 0 ? 'active' : 'inactive',
+          status: 'active', // Assuming all returned stations are active since deleted ones won't be returned
           imageUrl: station.imageUrl,
           createdAt: station.createAt ? new Date(station.createAt).toLocaleDateString('vi-VN') : new Date().toLocaleDateString('vi-VN'),
           updatedAt: station.updateAt ? new Date(station.updateAt).toLocaleDateString('vi-VN') : new Date().toLocaleDateString('vi-VN')
@@ -420,11 +421,12 @@ const StationManagement = () => {
         {/* Header Actions */}
         <div className="header-actions">
           <div className="filters">
-            <Search
+            <Input
               placeholder="Tìm kiếm trạm..."
               allowClear
               style={{ width: 300 }}
               onChange={(e) => setSearchText(e.target.value)}
+              value={searchText}
             />
 
           </div>
