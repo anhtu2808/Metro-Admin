@@ -349,3 +349,28 @@ export const validateTicketAPI = async (payload) => {
   const res = await api.post(`/v1/scanner/validate`, payload);
   return res.data;
 };
+// - Student Verification API -
+export const getAllStudentVerificationsAPI = async () => {
+  const response = await api.get("/v1/student-verifications");
+  return response.data;
+};
+
+export const getStudentVerificationByIdAPI = async (id) => {
+  const response = await api.get(`/v1/student-verifications/${id}`);
+  return response.data;
+};
+
+export const updateStudentVerificationStatusAPI = async (id, data) => {
+  const response = await api.put(`/v1/student-verifications/${id}`, data);
+  return response.data;
+};
+
+export const createStudentVerificationAPI = async (payload) => {
+  const response = await api.post(`/v1/student-verifications`, payload);
+  return response.data;
+};
+
+export const deleteStudentVerificationAPI = async (id) => {
+  const response = await api.delete(`/v1/student-verifications/${id}`);
+  return response.data;
+};

@@ -9,6 +9,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import {
   FaUser,
+  FaUserGraduate,
   FaTrain,
   FaBus,
   FaTicketAlt,
@@ -16,6 +17,7 @@ import {
   FaSubway,
   FaCode,
   FaMoneyBillWave,
+  
 } from "react-icons/fa";
 import { MdOutlineAnalytics } from "react-icons/md";
 import { BiSolidNews } from "react-icons/bi";
@@ -42,6 +44,7 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
           />
         </div>
       </SidebarHeader>
+
       <button
         className="sidebar-toggle-button"
         onClick={() => handleToggleSidebar()}
@@ -51,55 +54,59 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
 
       <SidebarContent>
         <Menu iconShape="circle">
-          <MenuItem icon={<MdOutlineAnalytics />} className="pro-menu-item">
+          <MenuItem icon={<MdOutlineAnalytics />}>
             Dashboard
-            <Link to={"/"} />
+            <Link to="/" />
           </MenuItem>
-          <MenuItem icon={<FaUser />} className="pro-menu-item">
+          <MenuItem icon={<FaUser />}>
             User
-            <Link to={"/manage-users"} />
+            <Link to="/manage-users" />
           </MenuItem>
-          <MenuItem icon={<FaTrain />} className="pro-menu-item">
+          <MenuItem icon={<FaTrain />}>
             Metro Line
-            <Link to={"/metro-line"} />
+            <Link to="/metro-line" />
           </MenuItem>
           {usePermission("station:manage") && (
-            <MenuItem icon={<FaSubway />} className="pro-menu-item">
+            <MenuItem icon={<FaSubway />}>
               Station
-              <Link to={"/stations"} />
+              <Link to="/stations" />
             </MenuItem>
           )}
-          <MenuItem icon={<FaBus />} className="pro-menu-item">
+          <MenuItem icon={<FaBus />}>
             Bus Route
-            <Link to={"/bus-routes"} />
+            <Link to="/bus-routes" />
           </MenuItem>
-          <MenuItem icon={<FaMoneyBillWave />} className="pro-menu-item">
+          <MenuItem icon={<FaMoneyBillWave />}>
             Price Management
-            <Link to={"/price-management"} />
+            <Link to="/price-management" />
           </MenuItem>
-          <MenuItem icon={<FaTicketAlt />} className="pro-menu-item">
+          <MenuItem icon={<FaTicketAlt />}>
             Ticket Management
-            <Link to={"/ticket-management"} />
+            <Link to="/ticket-management" />
           </MenuItem>
-          <MenuItem icon={<FaLock />} className="pro-menu-item">
+          <MenuItem icon={<FaLock />}>
             Role Management
-            <Link to={"/role-management"} />
+            <Link to="/role-management" />
           </MenuItem>
-          <MenuItem icon={<BiSolidNews />} className="pro-menu-item">
+          <MenuItem icon={<BiSolidNews />}>
             Content
-            <Link to={"/staff/content"} />
+            <Link to="/staff/content" />
           </MenuItem>
-          <MenuItem icon={<FaCode />} className="pro-menu-item">
+          <MenuItem icon={<FaCode />}>
             Developer Tools
-            <Link to={"/dev"} />
+            <Link to="/dev" />
           </MenuItem>
-          <MenuItem icon={<QrcodeOutlined />} className="pro-menu-item">
+          <MenuItem icon={<QrcodeOutlined />}>
             QR Generator
-            <Link to={"/qr-generator"} />
+            <Link to="/qr-generator" />
           </MenuItem>
-          <MenuItem icon={<ScanOutlined />} className="pro-menu-item">
+          <MenuItem icon={<ScanOutlined />}>
             Metro Gateway Scanner
-            <Link to={"/metro-gateway-scanner"} />
+            <Link to="/metro-gateway-scanner" />
+          </MenuItem>
+          <MenuItem icon={<FaUserGraduate />}>
+            Student Verification
+          <Link to="/student-verification" />
           </MenuItem>
         </Menu>
       </SidebarContent>
