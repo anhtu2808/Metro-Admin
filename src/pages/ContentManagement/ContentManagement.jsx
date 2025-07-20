@@ -39,6 +39,7 @@ const ContentManagemet = () => {
   const [form] = Form.useForm();
   const [searchText, setSearchText] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [imageUrl, setImageUrl] = useState("");
   const userId = useSelector((state) => state.user.id);
 
   // Set layout icon + title
@@ -61,6 +62,7 @@ const ContentManagemet = () => {
         summary: item.summary,
         status: item.status,
         date: item.publishAt || new Date().toISOString(),
+        imageUrls: item.imageUrls || [],
       }));
 
   const getFilteredContent = (type) => {
@@ -91,7 +93,6 @@ const ContentManagemet = () => {
 
   // Handle form submission for adding or updating content
   const handleSubmit = async (values) => {
-    console.log("Form values gửi đi:", values);
     try {
       if (!userId) {
         message.error("Không thể xác định người dùng. Vui lòng đăng nhập lại.");
@@ -113,38 +114,24 @@ const ContentManagemet = () => {
         status: isEdit ? currentContent.status : "DRAFT",
         publishAt: values.date?.toISOString() || new Date().toISOString(),
         userId,
-        imageUrls: [],
+        imageUrls: imageUrl ? [imageUrl] : [],
       };
-
-      console.log("Payload gửi lên API:", payload);
 
       const response = isEdit
         ? await updateContentAPI(currentContent.id, payload)
         : await createContentAPI(payload);
 
-      console.log("Response từ API:", response);
-
-      if (response?.id) {
+      if (response?.status === 200 || response?.status === 201) {
         message.success(
           `${isEdit ? "Cập nhật" : "Thêm"} ${
             type === "NEWS" ? "tin tức" : "hướng dẫn"
           } thành công!`
         );
-        // Cập nhật ngay trên UI
-        if (isEdit) {
-          setContentData((prev) =>
-            prev.map((item) =>
-              item.id === currentContent.id ? { ...item, ...payload } : item
-            )
-          );
-        } else {
-          setContentData((prev) => [...prev, { id: Date.now(), ...payload }]);
-        }
-        console.log("Response từ API:", response);
         await loadContents();
         setIsModalVisible(false);
         form.resetFields();
         setCurrentContent(null);
+        setImageUrl("");
       } else {
         message.error(
           `${isEdit ? "Cập nhật" : "Thêm"} thất bại: ${
@@ -192,7 +179,7 @@ const ContentManagemet = () => {
 
       const response = await updateContentAPI(item.id, payload);
 
-      if (response?.code === 200 || response?.code === 201) {
+      if (response.status === 200) {
         message.success(
           `Đăng ${type === "NEWS" ? "tin tức" : "hướng dẫn"} thành công!`
         );
@@ -215,8 +202,9 @@ const ContentManagemet = () => {
   }, [loadContents]);
 
   const showAddModal = (type) => {
-    form.resetFields();
     setCurrentContent({ id: null, type });
+    form.resetFields();
+    setImageUrl("");
     setIsModalVisible(true);
   };
 
@@ -226,6 +214,7 @@ const ContentManagemet = () => {
       content: content.content,
       date: moment(content.date),
     });
+    setImageUrl(content.imageUrls?.[0] || "");
     setCurrentContent({ ...content, type });
     setIsModalVisible(true);
   };
@@ -239,6 +228,7 @@ const ContentManagemet = () => {
     setIsModalVisible(false);
     setViewModalVisible(false);
     setCurrentContent(null);
+    setImageUrl("");
   };
 
   const handleTabChange = (key) => {
@@ -273,6 +263,8 @@ const ContentManagemet = () => {
             setViewModalVisible,
             viewingContent,
             form,
+            imageUrl,
+            setImageUrl,
             type: "NEWS",
           }}
         />
@@ -304,6 +296,8 @@ const ContentManagemet = () => {
             setViewModalVisible,
             viewingContent,
             form,
+            imageUrl,
+            setImageUrl,
             type: "GUIDELINE",
           }}
         />

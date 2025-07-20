@@ -1,0 +1,10 @@
+.ck-content img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+  margin: 0 auto;
+}
+.ant-modal-body {
+    max-width: 100%;
+    overflow-x: auto;
+}

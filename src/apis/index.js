@@ -37,28 +37,29 @@ export const getUserByRoleAPI = async (role) => {
 };
 
 export const getAllUsersAPI = async (params = {}) => {
-  const { 
-    page = 1, 
-    size = 10, 
-    sort = 'id', 
-    role, 
-    deleted, 
-    username, 
-    email, 
-    search 
+  const {
+    page = 1,
+    size = 10,
+    sort = "id",
+    role,
+    deleted,
+    username,
+    email,
+    search,
   } = params;
-  
+
   const queryParams = new URLSearchParams({
     page: page.toString(),
     size: size.toString(),
-    sort: sort.toString()
+    sort: sort.toString(),
   });
-  
-  if (role) queryParams.append('role', role);
-  if (deleted !== undefined && deleted !== 'all') queryParams.append('deleted', deleted);
-  if (username) queryParams.append('username', username);
-  if (email) queryParams.append('email', email);
-  if (search) queryParams.append('search', search);
+
+  if (role) queryParams.append("role", role);
+  if (deleted !== undefined && deleted !== "all")
+    queryParams.append("deleted", deleted);
+  if (username) queryParams.append("username", username);
+  if (email) queryParams.append("email", email);
+  if (search) queryParams.append("search", search);
 
   const res = await api.get(`/v1/users?${queryParams}`);
   return res.data;
@@ -182,13 +183,14 @@ export const getAllContentAPI = async () => {
 
 export const createContentAPI = async (payload) => {
   const res = await api.post("/v1/contents", payload);
-  return res.data;
+  console.log("Response từ createContentAPI:", res);
+  return res;
 };
 
 export const updateContentAPI = async (id, payload) => {
   const res = await api.put(`/v1/contents/${id}`, payload);
   console.log("Response từ updateContentAPI:", res);
-  return res.data;
+  return res;
 };
 
 export const deleteContentAPI = async (id) => {
