@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Modal, Button, Typography, Alert, Space } from 'antd';
-import { CameraOutlined, StopOutlined } from '@ant-design/icons';
+import { CameraOutlined, StopOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { Html5Qrcode } from 'html5-qrcode';
 
 const { Text } = Typography;
@@ -9,7 +9,7 @@ const QRScanner = ({ visible, onCancel, onScanResult }) => {
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState(null);
   const [cameraPermission, setCameraPermission] = useState(null);
-  const scannerRef = useRef(null);
+  const [debugInfo, setDebugInfo] = useState({});
   const html5QrCodeRef = useRef(null);
 
   const qrCodeSuccessCallback = (decodedText, decodedResult) => {
@@ -25,53 +25,108 @@ const QRScanner = ({ visible, onCancel, onScanResult }) => {
     // console.log(`QR Code scan error: ${errorMessage}`);
   };
 
+  const checkBrowserSupport = () => {
+    const info = {
+      userAgent: navigator.userAgent,
+      isHTTPS: window.location.protocol === 'https:',
+      hasMediaDevices: !!navigator.mediaDevices,
+      hasGetUserMedia: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia),
+      hasHtml5Qrcode: typeof Html5Qrcode !== 'undefined',
+      isLocalhost: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    };
+    
+    setDebugInfo(info);
+    return info;
+  };
+
   const startScanning = async () => {
     try {
       setError(null);
       setIsScanning(true);
 
+      // Check browser support first
+      const browserInfo = checkBrowserSupport();
+      
+      // Check if we're on HTTPS or localhost (required for camera access)
+      if (!browserInfo.isHTTPS && !browserInfo.isLocalhost) {
+        throw new Error('Camera chỉ hoạt động trên HTTPS hoặc localhost. Vui lòng sử dụng HTTPS hoặc localhost.');
+      }
+
+      // Check if Html5Qrcode is available
+      if (!browserInfo.hasHtml5Qrcode) {
+        throw new Error('Thư viện QR Scanner chưa được tải. Vui lòng tải lại trang.');
+      }
+
+      // Check if getUserMedia is supported
+      if (!browserInfo.hasGetUserMedia) {
+        throw new Error('Trình duyệt không hỗ trợ truy cập camera. Vui lòng sử dụng trình duyệt hiện đại (Chrome, Firefox, Safari).');
+      }
+
       // Initialize Html5Qrcode
       html5QrCodeRef.current = new Html5Qrcode("qr-reader");
 
-      // Get cameras
-      const cameras = await Html5Qrcode.getCameras();
-      if (cameras && cameras.length) {
-        const cameraId = cameras[0].id;
-        
-        // Start scanning with back camera if available, otherwise use first camera
-        const backCamera = cameras.find(camera => 
-          camera.label.toLowerCase().includes('back') || 
-          camera.label.toLowerCase().includes('rear')
-        );
-        const selectedCameraId = backCamera ? backCamera.id : cameraId;
-
-        await html5QrCodeRef.current.start(
-          selectedCameraId,
-          {
-            fps: 10,
-            qrbox: { width: 250, height: 250 }
-          },
-          qrCodeSuccessCallback,
-          qrCodeErrorCallback
-        );
-
-        setCameraPermission('granted');
-      } else {
-        setError('Không tìm thấy camera trên thiết bị này.');
-        setIsScanning(false);
+      // Get cameras with better error handling
+      let cameras = [];
+      try {
+        cameras = await Html5Qrcode.getCameras();
+        console.log('Available cameras:', cameras);
+      } catch (cameraError) {
+        console.error('Error getting cameras:', cameraError);
+        throw new Error('Không thể truy cập danh sách camera. Vui lòng kiểm tra quyền truy cập camera.');
       }
+
+      if (!cameras || cameras.length === 0) {
+        throw new Error('Không tìm thấy camera trên thiết bị này. Vui lòng kiểm tra camera và thử lại.');
+      }
+
+      const cameraId = cameras[0].id;
+      
+      // Start scanning with back camera if available, otherwise use first camera
+      const backCamera = cameras.find(camera => 
+        camera.label.toLowerCase().includes('back') || 
+        camera.label.toLowerCase().includes('rear')
+      );
+      const selectedCameraId = backCamera ? backCamera.id : cameraId;
+
+      console.log('Starting camera with ID:', selectedCameraId);
+
+      await html5QrCodeRef.current.start(
+        selectedCameraId,
+        {
+          fps: 10,
+          qrbox: { width: 250, height: 250 }
+        },
+        qrCodeSuccessCallback,
+        qrCodeErrorCallback
+      );
+
+      setCameraPermission('granted');
+      console.log('Camera started successfully');
     } catch (err) {
       console.error('Error starting QR scanner:', err);
       
+      let errorMessage = 'Lỗi không xác định khi khởi động camera';
+      
       if (err.name === 'NotAllowedError') {
-        setError('Quyền truy cập camera bị từ chối. Vui lòng cho phép truy cập camera.');
+        errorMessage = 'Quyền truy cập camera bị từ chối. Vui lòng cho phép truy cập camera.';
         setCameraPermission('denied');
       } else if (err.name === 'NotFoundError') {
-        setError('Không tìm thấy camera trên thiết bị này.');
-      } else {
-        setError('Lỗi khi khởi động camera: ' + err.message);
+        errorMessage = 'Không tìm thấy camera trên thiết bị này.';
+      } else if (err.name === 'NotSupportedError') {
+        errorMessage = 'Trình duyệt không hỗ trợ truy cập camera.';
+      } else if (err.name === 'NotReadableError') {
+        errorMessage = 'Camera đang được sử dụng bởi ứng dụng khác. Vui lòng đóng ứng dụng khác và thử lại.';
+      } else if (err.name === 'OverconstrainedError') {
+        errorMessage = 'Camera không đáp ứng yêu cầu kỹ thuật.';
+      } else if (err.name === 'SecurityError') {
+        errorMessage = 'Lỗi bảo mật khi truy cập camera. Vui lòng kiểm tra cài đặt bảo mật.';
+      } else if (err.name === 'AbortError') {
+        errorMessage = 'Thao tác camera bị hủy. Vui lòng thử lại.';
+      } else if (err.message) {
+        errorMessage = err.message;
       }
       
+      setError(errorMessage);
       setIsScanning(false);
     }
   };
@@ -80,6 +135,7 @@ const QRScanner = ({ visible, onCancel, onScanResult }) => {
     try {
       if (html5QrCodeRef.current && html5QrCodeRef.current.isScanning) {
         await html5QrCodeRef.current.stop();
+        console.log('Camera stopped successfully');
       }
     } catch (err) {
       console.error('Error stopping scanner:', err);
@@ -96,7 +152,12 @@ const QRScanner = ({ visible, onCancel, onScanResult }) => {
   // Auto start scanning when modal opens
   useEffect(() => {
     if (visible && !isScanning) {
-      startScanning();
+      // Add a small delay to ensure the modal is fully rendered
+      const timer = setTimeout(() => {
+        startScanning();
+      }, 200);
+      
+      return () => clearTimeout(timer);
     }
     
     return () => {
@@ -163,6 +224,25 @@ const QRScanner = ({ visible, onCancel, onScanResult }) => {
             <Button type="primary" onClick={startScanning}>
               Thử lại
             </Button>
+            
+            {/* Debug information for developers */}
+            {process.env.NODE_ENV === 'development' && (
+              <details style={{ marginTop: '16px', textAlign: 'left' }}>
+                <summary style={{ cursor: 'pointer', color: '#1890ff' }}>
+                  <ExclamationCircleOutlined /> Thông tin debug
+                </summary>
+                <pre style={{ 
+                  marginTop: '8px',
+                  padding: '8px',
+                  background: '#f5f5f5',
+                  borderRadius: '4px',
+                  fontSize: '11px',
+                  overflow: 'auto'
+                }}>
+                  {JSON.stringify(debugInfo, null, 2)}
+                </pre>
+              </details>
+            )}
           </Space>
         ) : (
           <>
@@ -174,9 +254,22 @@ const QRScanner = ({ visible, onCancel, onScanResult }) => {
                 margin: '0 auto',
                 border: '2px solid #1890ff',
                 borderRadius: '8px',
-                overflow: 'hidden'
+                overflow: 'hidden',
+                minHeight: '300px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: '#f5f5f5'
               }}
-            />
+            >
+              {!isScanning && (
+                <div style={{ textAlign: 'center', color: '#666' }}>
+                  <CameraOutlined style={{ fontSize: '48px', marginBottom: '16px' }} />
+                  <br />
+                  <Text>Đang khởi động camera...</Text>
+                </div>
+              )}
+            </div>
             
             {isScanning && (
               <div style={{ marginTop: '16px' }}>
