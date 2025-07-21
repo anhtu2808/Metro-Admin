@@ -1,5 +1,6 @@
 .line-management-list {
     margin-top: 25px;
+    overflow-y: auto;
     padding-top: 10px;
 }
 
@@ -36,7 +37,7 @@
 .line-management-list-item:hover {
     background-color: #f0f7ff !important;
     border-color: #1890ff !important;
-    transform: translateY(-1px);
+    /* transform: translateY(-1px); */
 }
 
 .line-management-list-item.selected {

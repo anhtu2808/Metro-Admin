@@ -132,12 +132,6 @@ const TableUser = ({
       },
     },
     {
-      title: "Ngày tạo",
-      dataIndex: "createdAt",
-      key: "createdAt",
-      width: 100,
-    },
-    {
       title: "Hành động",
       key: "action",
       width: 100,

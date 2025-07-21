@@ -211,8 +211,11 @@ export const uploadContentImageAPI = async (image) => {
 };
 
 // - Bus API -
-export const getAllBusRoutesAPI = async () => {
-  const res = await api.get("/v1/bus-routes");
+export const getAllBusRoutesAPI = async (params = {}) => {
+  const { stationId, ...rest } = params;
+  const queryParams = new URLSearchParams({ ...rest });
+  if (stationId) queryParams.append('stationId', stationId);
+  const res = await api.get(`/v1/bus-routes${queryParams.toString() ? `?${queryParams}` : ''}`);
   return res.data;
 };
 

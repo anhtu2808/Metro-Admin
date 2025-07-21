@@ -37,10 +37,10 @@
   transform: scale(1.1);
 }
 
-.line-modal .ant-modal-body {
+/* .line-modal .ant-modal-body {
   padding: 24px;
   background: linear-gradient(135deg, #f8faff 0%, #ffffff 100%);
-}
+} */
 
 .line-modal-content {
   display: flex;
@@ -102,11 +102,11 @@
 
 /* Footer Styles */
 .line-modal .ant-modal-footer {
-  border-top: 1px solid #f0f0f0;
-  padding: 16px 24px;
-  background: #fafafa;
+ display: flex;
+ justify-content: end;
+
 }
-/* 
+
 .line-modal-footer {
   display: flex;
   justify-content: flex-end;
