@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setLayoutData } from "../../redux/layoutSlice";
 import { BiSolidNews } from "react-icons/bi";
 import {
@@ -14,10 +14,6 @@ import {
   Input,
   Select,
 } from "antd";
-
-import { useSelector } from "react-redux";
-import NewsManagement from "./NewsTab/NewsManagement";
-import GuidelineMangement from "./GuidelineTab/GuidelineMangement";
 import moment from "moment";
 import {
   getAllContentAPI,
@@ -27,6 +23,8 @@ import {
 } from "../../apis";
 import { SearchOutlined } from "@ant-design/icons";
 import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
+import NewsManagement from "./NewsTab/NewsManagement";
+import GuidelineMangement from "./GuidelineTab/GuidelineMangement";
 
 const ContentManagemet = () => {
   const dispatch = useDispatch();
@@ -41,6 +39,7 @@ const ContentManagemet = () => {
   const [form] = Form.useForm();
   const [searchText, setSearchText] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [imageUrl, setImageUrl] = useState("");
   const userId = useSelector((state) => state.user.id);
 
   // Set layout icon + title
@@ -52,16 +51,18 @@ const ContentManagemet = () => {
       })
     );
   }, [dispatch]);
+
   const transformContent = (content, type) =>
     (content || [])
-      .filter((content) => content.type === type)
-      .map((content) => ({
-        id: content.id,
-        title: content.title,
-        content: content.body,
-        summary: content.summary,
-        status: content.status,
-        date: content.publishAt || new Date().toISOString(),
+      .filter((item) => item.type === type)
+      .map((item) => ({
+        id: item.id,
+        title: item.title,
+        content: item.body,
+        summary: item.summary,
+        status: item.status,
+        date: item.publishAt || new Date().toISOString(),
+        imageUrls: item.imageUrls || [],
       }));
 
   const getFilteredContent = (type) => {
@@ -75,7 +76,7 @@ const ContentManagemet = () => {
       return matchesSearch && matchesStatus;
     });
   };
-  // Call API to load content
+
   const loadContents = useCallback(async () => {
     try {
       setLoading(true);
@@ -103,6 +104,7 @@ const ContentManagemet = () => {
         message.error("Không xác định được loại nội dung.");
         return;
       }
+
       const isEdit = !!currentContent?.id;
       const payload = {
         type,
@@ -110,16 +112,16 @@ const ContentManagemet = () => {
         body: values.content,
         summary: values.title,
         status: isEdit ? currentContent.status : "DRAFT",
-        publishAt: values.date.toISOString(),
-        userId: userId,
-        imageUrls: [],
+        publishAt: values.date?.toISOString() || new Date().toISOString(),
+        userId,
+        imageUrls: imageUrl ? [imageUrl] : [],
       };
 
       const response = isEdit
         ? await updateContentAPI(currentContent.id, payload)
         : await createContentAPI(payload);
 
-      if ([200, 201].includes(response?.code)) {
+      if (response?.status === 200 || response?.status === 201) {
         message.success(
           `${isEdit ? "Cập nhật" : "Thêm"} ${
             type === "NEWS" ? "tin tức" : "hướng dẫn"
@@ -129,6 +131,7 @@ const ContentManagemet = () => {
         setIsModalVisible(false);
         form.resetFields();
         setCurrentContent(null);
+        setImageUrl("");
       } else {
         message.error(
           `${isEdit ? "Cập nhật" : "Thêm"} thất bại: ${
@@ -146,14 +149,15 @@ const ContentManagemet = () => {
   const handleDelete = async (id, type) => {
     try {
       const response = await deleteContentAPI(id);
-      if (response?.code === 204) {
+
+      if (response?.status === 204) {
         message.success(
           `Xóa ${type === "NEWS" ? "tin tức" : "hướng dẫn"} thành công!`
         );
-        await loadContents();
+        setContentData((prev) => prev.filter((item) => item.id !== id));
       } else {
         message.error(
-          `Xóa thất bại: ${response.message || "Lỗi không xác định"}`
+          `Xóa thất bại: ${response?.message || "Lỗi không xác định"}`
         );
       }
     } catch (error) {
@@ -170,12 +174,12 @@ const ContentManagemet = () => {
         body: item.content,
         status: "PUBLISHED",
         imageUrls: item.imageUrls || [],
-        userId: userId,
+        userId,
       };
 
       const response = await updateContentAPI(item.id, payload);
 
-      if (response?.code === 200 || response?.code === 201) {
+      if (response.status === 200) {
         message.success(
           `Đăng ${type === "NEWS" ? "tin tức" : "hướng dẫn"} thành công!`
         );
@@ -193,14 +197,14 @@ const ContentManagemet = () => {
     }
   };
 
-  // Load content when component mounts
   useEffect(() => {
     loadContents();
   }, [loadContents]);
 
   const showAddModal = (type) => {
-    form.resetFields();
     setCurrentContent({ id: null, type });
+    form.resetFields();
+    setImageUrl("");
     setIsModalVisible(true);
   };
 
@@ -210,6 +214,7 @@ const ContentManagemet = () => {
       content: content.content,
       date: moment(content.date),
     });
+    setImageUrl(content.imageUrls?.[0] || "");
     setCurrentContent({ ...content, type });
     setIsModalVisible(true);
   };
@@ -223,6 +228,7 @@ const ContentManagemet = () => {
     setIsModalVisible(false);
     setViewModalVisible(false);
     setCurrentContent(null);
+    setImageUrl("");
   };
 
   const handleTabChange = (key) => {
@@ -230,7 +236,6 @@ const ContentManagemet = () => {
     setActiveType(key === "1" ? "NEWS" : "GUIDELINE");
   };
 
-  // Tab definitions
   const tabItems = [
     {
       key: "1",
@@ -258,6 +263,8 @@ const ContentManagemet = () => {
             setViewModalVisible,
             viewingContent,
             form,
+            imageUrl,
+            setImageUrl,
             type: "NEWS",
           }}
         />
@@ -289,6 +296,8 @@ const ContentManagemet = () => {
             setViewModalVisible,
             viewingContent,
             form,
+            imageUrl,
+            setImageUrl,
             type: "GUIDELINE",
           }}
         />
@@ -314,6 +323,7 @@ const ContentManagemet = () => {
                 allowClear
                 style={{ width: 200 }}
                 onChange={(value) => setStatusFilter(value)}
+                value={statusFilter}
               >
                 <Select.Option value="all">Tất cả</Select.Option>
                 <Select.Option value="DRAFT">Bản nháp</Select.Option>
