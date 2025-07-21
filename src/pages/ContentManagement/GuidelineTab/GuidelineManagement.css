@@ -68,6 +68,23 @@
   color: #1677ff !important;
 }
 
+.guideline-image-container {
+  width: 100%;
+  height: 200px; /* Chiều cao cố định cho tất cả các ảnh */
+  background-color: #f0f0f0; /* Nền xám cho card không có ảnh */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.guideline-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .search-input {
   width: 300px;
 }

@@ -40,12 +40,13 @@ const NewsManagement = ({ data = [], type, loading, handlers, modal }) => {
     viewModalVisible,
     viewingContent,
     form,
+    imageUrl,
+    setImageUrl,
   } = modal;
   const [error, setError] = useState(null);
 
   const handlePublish = async (item) => {
     const result = await handlers.handlePublish(item, type);
-    console.log("Publish result:", result);
     if (!result.success) {
       message.error(result.message || "Đăng thất bại!");
     }
@@ -137,6 +138,13 @@ const NewsManagement = ({ data = [], type, loading, handlers, modal }) => {
                     <ClockCircleOutlined />{" "}
                     {new Date(item.date).toLocaleString()}
                   </Text>
+                  <div className="news-image-container">
+                    {item.imageUrls?.[0] ? (
+                      <img src={item.imageUrls[0]} alt={item.title} />
+                    ) : (
+                      <span style={{ color: "#999" }}>No Image</span>
+                    )}
+                  </div>
                   <Paragraph ellipsis={{ rows: 2 }} className="news-excerpt">
                     {item.summary}
                   </Paragraph>
@@ -155,6 +163,8 @@ const NewsManagement = ({ data = [], type, loading, handlers, modal }) => {
         isModalVisible={isModalVisible}
         handleCancel={handleCancel}
         form={form}
+        imageUrl={imageUrl}
+        setImageUrl={setImageUrl}
         handleSubmit={(values) => handleSubmit(values, "NEWS")}
       />
 

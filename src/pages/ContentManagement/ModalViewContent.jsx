@@ -2,6 +2,7 @@ import React from "react";
 import { Modal, Typography, Divider, Button } from "antd";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
+import "./ModalViewContent.css";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -44,9 +45,10 @@ const ContentViewModal = ({
             {moment(viewingContent.date).format("HH:mm:ss - DD/MM/YYYY")}
           </Text>
           <Divider />
-          <Paragraph className="content-content-detail">
-            {viewingContent.content}
-          </Paragraph>
+          <div
+            className="content-content-detail"
+            dangerouslySetInnerHTML={{ __html: viewingContent.content }}
+          />
         </div>
       )}
     </Modal>

@@ -41,6 +41,7 @@ const ContentManagemet = () => {
   const [form] = Form.useForm();
   const [searchText, setSearchText] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [imageUrl, setImageUrl] = useState("");
   const userId = useSelector((state) => state.user.id);
 
   // Set layout icon + title
@@ -62,6 +63,7 @@ const ContentManagemet = () => {
         summary: content.summary,
         status: content.status,
         date: content.publishAt || new Date().toISOString(),
+        imageUrls: content.imageUrls || [],
       }));
 
   const getFilteredContent = (type) => {
@@ -112,14 +114,14 @@ const ContentManagemet = () => {
         status: isEdit ? currentContent.status : "DRAFT",
         publishAt: values.date.toISOString(),
         userId: userId,
-        imageUrls: [],
+        imageUrls: imageUrl ? [imageUrl] : [],
       };
 
       const response = isEdit
         ? await updateContentAPI(currentContent.id, payload)
         : await createContentAPI(payload);
 
-      if ([200, 201].includes(response?.code)) {
+      if (response?.status === 200 || response?.status === 201) {
         message.success(
           `${isEdit ? "Cập nhật" : "Thêm"} ${
             type === "NEWS" ? "tin tức" : "hướng dẫn"
@@ -129,6 +131,7 @@ const ContentManagemet = () => {
         setIsModalVisible(false);
         form.resetFields();
         setCurrentContent(null);
+        setImageUrl("");
       } else {
         message.error(
           `${isEdit ? "Cập nhật" : "Thêm"} thất bại: ${
@@ -146,7 +149,7 @@ const ContentManagemet = () => {
   const handleDelete = async (id, type) => {
     try {
       const response = await deleteContentAPI(id);
-      if (response?.code === 204) {
+      if (response?.status === 204) {
         message.success(
           `Xóa ${type === "NEWS" ? "tin tức" : "hướng dẫn"} thành công!`
         );
@@ -175,7 +178,7 @@ const ContentManagemet = () => {
 
       const response = await updateContentAPI(item.id, payload);
 
-      if (response?.code === 200 || response?.code === 201) {
+      if (response?.status === 200) {
         message.success(
           `Đăng ${type === "NEWS" ? "tin tức" : "hướng dẫn"} thành công!`
         );
@@ -199,8 +202,9 @@ const ContentManagemet = () => {
   }, [loadContents]);
 
   const showAddModal = (type) => {
-    form.resetFields();
     setCurrentContent({ id: null, type });
+    form.resetFields();
+    setImageUrl("");
     setIsModalVisible(true);
   };
 
@@ -210,6 +214,7 @@ const ContentManagemet = () => {
       content: content.content,
       date: moment(content.date),
     });
+    setImageUrl(content.imageUrls?.[0] || "");
     setCurrentContent({ ...content, type });
     setIsModalVisible(true);
   };
@@ -223,6 +228,7 @@ const ContentManagemet = () => {
     setIsModalVisible(false);
     setViewModalVisible(false);
     setCurrentContent(null);
+    setImageUrl("");
   };
 
   const handleTabChange = (key) => {
@@ -258,6 +264,8 @@ const ContentManagemet = () => {
             setViewModalVisible,
             viewingContent,
             form,
+            imageUrl,
+            setImageUrl,
             type: "NEWS",
           }}
         />
@@ -289,6 +297,8 @@ const ContentManagemet = () => {
             setViewModalVisible,
             viewingContent,
             form,
+            imageUrl,
+            setImageUrl,
             type: "GUIDELINE",
           }}
         />
