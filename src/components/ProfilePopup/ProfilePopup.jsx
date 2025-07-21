@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Avatar, Typography, Button, Divider, Space } from "antd";
+import { Card, Avatar, Typography, Button, Divider } from "antd";
 import { UserOutlined, SettingOutlined, LogoutOutlined, EditOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";

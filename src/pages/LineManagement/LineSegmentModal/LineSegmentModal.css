@@ -1,0 +1,247 @@
+.line-segment-modal .ant-modal-content {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.line-segment-modal .ant-modal-header {
+  background: #1890ff;
+  border-bottom: none;
+  padding: 16px 24px;
+}
+
+.line-segment-modal .ant-modal-title {
+  color: white !important;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+
+
+.line-segment-modal .ant-modal-close {
+  color: white;
+}
+
+.line-segment-modal .ant-modal-close:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.line-segment-modal-content {
+  padding: 24px;
+}
+
+/* Segment Info Card */
+.segment-info-card {
+  margin-bottom: 24px;
+  border-radius: 12px;
+  border: 1px solid #e8f4fd;
+  background: linear-gradient(135deg, #f0f7ff 0%, #e6f7ff 100%);
+}
+
+.segment-info-card .ant-card-body {
+  padding: 16px;
+}
+
+.segment-order {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);
+}
+
+.station-info {
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  border: 1px solid rgba(24, 144, 255, 0.1);
+}
+
+/* Form Styling */
+.line-segment-form {
+  background: #fafafa;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+}
+
+.line-segment-form .ant-form-item-label > label {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.line-segment-form .ant-input-number {
+  border-radius: 8px;
+  border: 1px solid #d9d9d9;
+  transition: all 0.3s ease;
+}
+
+.line-segment-form .ant-input-number:hover {
+  border-color: #1890ff;
+}
+
+.line-segment-form .ant-input-number:focus,
+.line-segment-form .ant-input-number-focused {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.line-segment-form .ant-select {
+  border-radius: 8px;
+}
+
+.line-segment-form .ant-select .ant-select-selector {
+  border-radius: 8px !important;
+  border: 1px solid #d9d9d9;
+  transition: all 0.3s ease;
+}
+
+.line-segment-form .ant-select:hover .ant-select-selector {
+  border-color: #1890ff;
+}
+
+.line-segment-form .ant-select.ant-select-focused .ant-select-selector {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* Swap Button */
+.line-segment-form .ant-btn[title*="Hoán đổi"] {
+  border: 2px dashed #1890ff;
+  color: #1890ff;
+  background: rgba(24, 144, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.line-segment-form .ant-btn[title*="Hoán đổi"]:hover {
+  background: rgba(24, 144, 255, 0.1);
+  border-color: #40a9ff;
+  color: #40a9ff;
+  transform: rotate(180deg);
+}
+
+/* Station Tags in Select */
+.ant-select-dropdown .ant-select-item-option-content .ant-space {
+  align-items: center;
+}
+
+.ant-select-dropdown .ant-select-item-option-content .ant-tag {
+  margin-right: 8px;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* Footer */
+.line-segment-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  background: #fafafa;
+  border-top: 1px solid #f0f0f0;
+  margin: 0 -24px -24px;
+}
+
+.line-segment-modal-footer .ant-btn {
+  min-width: 100px;
+  height: 36px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.line-segment-modal-footer .ant-btn-primary {
+  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+  border: none;
+  box-shadow: 0 2px 4px rgba(24, 144, 255, 0.3);
+}
+
+.line-segment-modal-footer .ant-btn-primary:hover {
+  background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(24, 144, 255, 0.4);
+}
+
+.line-segment-modal-footer .ant-btn:not(.ant-btn-primary) {
+  border-color: #d9d9d9;
+  color: #595959;
+}
+
+.line-segment-modal-footer .ant-btn:not(.ant-btn-primary):hover {
+  border-color: #1890ff;
+  color: #1890ff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .line-segment-modal {
+    margin: 0;
+    max-width: 100vw;
+  }
+  
+  .line-segment-modal .ant-modal-content {
+    border-radius: 0;
+  }
+  
+  .line-segment-modal-content {
+    padding: 16px;
+  }
+  
+  .line-segment-form {
+    padding: 16px;
+  }
+  
+  .segment-info-card .ant-row .ant-col {
+    margin-bottom: 8px;
+  }
+  
+  .line-segment-form .ant-form-item {
+    margin-bottom: 16px;
+  }
+}
+
+/* Animation */
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.line-segment-modal .ant-modal-content {
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+/* Loading States */
+.line-segment-form .ant-form-item-has-error .ant-input-number,
+.line-segment-form .ant-form-item-has-error .ant-select .ant-select-selector {
+  border-color: #ff4d4f;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
+}
+
+.line-segment-form .ant-form-item-explain-error {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Input addon styling */
+.line-segment-form .ant-input-number-group-addon {
+  background: #f5f5f5;
+  border-color: #d9d9d9;
+  color: #8c8c8c;
+  font-weight: 500;
+  padding: 0 8px;
+} 

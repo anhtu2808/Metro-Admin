@@ -1,12 +1,8 @@
-import { Card, Space,Typography, Tooltip, Button, Badge, Input, List, Dropdown } from "antd";
+import { Card, Space,Typography, Tooltip, Button, Badge, Input, List } from "antd";
 import { SaveFilled, PlusOutlined, SearchOutlined, DragOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import "./ListCard.css";
 const { Text } = Typography;
-const menuItems = [
-    { key: "EDIT", label: "Edit" },
-    { key: "DELETE", label: "Delete" },
-];
 
 export const ListCard = ({
     title,
@@ -20,39 +16,46 @@ export const ListCard = ({
     searchValue,
     onSearch,
     showSortButtons = false,
-    onSave
+    onSave,
+    showAddButton = true
 }) => (
     <Card
         className="line-management-card"
         title={
-            <div className="line-management-card-title">
-                <Space>
-                    {icon}
-                    <Text strong>{title}</Text>
-                    <Badge count={data.length} style={{ backgroundColor: '#1890ff' }} />
-                </Space>
-                <Space>
+            <div className="line-management-card-title d-flex">
+                <div className="d-flex align-items-center flex-1">
+                    <div className="d-flex align-items-center gap-2 ">
+                        {icon}
+                        <Text style={{marginLeft: '10px'}} strong className=" mr-2 card-title-text">{title}</Text>
+                    </div>
+                    <Badge 
+                        count={data.length} 
+                        style={{ backgroundColor: 'var(--primary-color)' }} 
+                        className="card-title-badge"
+                    />
+                </div>
+                <div className="d-flex align-items-center gap-1 flex-shrink-0">
                     {showSortButtons && (
-                        <>
-                            <Tooltip title="Save changes">
-                                <button
-                                    onClick={onSave}
-                                    className="line-management-card-save-btn"
-                                >
-                                    <SaveFilled />
-                                </button>
-                            </Tooltip>
-                        </>
+                        <Tooltip title="Lưu thay đổi">
+                            <button
+                                onClick={onSave}
+                                className="line-management-card-save-btn"
+                            >
+                                <SaveFilled />
+                            </button>
+                        </Tooltip>
                     )}
-                    <Tooltip title="Add new">
-                        <Button onClick={onAdd} type="text" icon={<PlusOutlined />} />
-                    </Tooltip>
-                </Space>
+                    {showAddButton && (
+                        <Tooltip title="Thêm mới">
+                            <Button onClick={onAdd} type="text" icon={<PlusOutlined />} />
+                        </Tooltip>
+                    )}
+                </div>
             </div>
         }
     >
         <Input
-            placeholder={`Search ${title.toLowerCase()}...`}
+            placeholder={`Tìm kiếm ${title.toLowerCase()}...`}
             prefix={<SearchOutlined />}
             className="line-management-input-search"
             value={searchValue}
@@ -66,15 +69,10 @@ export const ListCard = ({
                     <List.Item
                         className="line-management-list-item"
                         actions={[
-                            <Dropdown
-                                menu={{
-                                    items: menuItems,
-                                    onClick: ({ key }) => onMenuClick?.(key, item),
-                                }}
-                                trigger={['click']}
-                            >
-                                <EllipsisOutlined style={{ cursor: "pointer" }} />
-                            </Dropdown>
+                            <EllipsisOutlined
+                                style={{ cursor: "pointer" }}
+                                onClick={() => onMenuClick?.('EDIT', item)}
+                            />
                         ]}
                     >
                         <div className="line-management-list-item-content">
@@ -113,15 +111,10 @@ export const ListCard = ({
                                                 <div {...provided.dragHandleProps} className="line-management-drag-handle">
                                                     <DragOutlined style={{ cursor: 'grab', marginRight: 8 }} />
                                                 </div>,
-                                                <Dropdown
-                                                    menu={{
-                                                        items: menuItems,
-                                                        onClick: ({ key }) => onMenuClick?.(key, item),
-                                                    }}
-                                                    trigger={['click']}
-                                                >
-                                                    <EllipsisOutlined style={{ cursor: "pointer" }} />
-                                                </Dropdown>
+                                                <EllipsisOutlined
+                                                    style={{ cursor: "pointer" }}
+                                                    onClick={() => onMenuClick?.('EDIT', item)}
+                                                />
                                             ]}
                                         >
                                             <div className="line-management-list-item-content">

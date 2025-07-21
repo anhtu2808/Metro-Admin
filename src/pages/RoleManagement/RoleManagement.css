@@ -26,6 +26,32 @@
   color: #1890ff;
 }
 
+/* Export buttons styling */
+.role-header .ant-btn[class*="FileExcelOutlined"] {
+  background: #f6f6f6;
+  border-color: #d9d9d9;
+  color: #595959;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.role-header .ant-btn[class*="FileExcelOutlined"]:hover {
+  background: #1890ff;
+  border-color: #1890ff;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);
+}
+
+.role-header .ant-btn {
+  font-weight: 500;
+  border-radius: 6px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .ant-table {
   background: #fff;
   border-radius: 8px;
@@ -65,12 +91,9 @@
   border-radius: 12px;
 }
 
-.ant-modal-title {
-  font-size: 22px !important;
-  color: #1890ff !important;
-  font-weight: bold;
-}
 
 .ant-form-item-label > label {
   font-weight: 500;
 }
+
+

@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {
   Table,
-  Button,
   Input,
   Space,
-  Modal,
-  Form,
-  Select,
   Tag,
   Popconfirm,
   message,
   Card,
-  Row,
-  Col,
   Tooltip,
   Skeleton,
-  Upload,
-  Avatar
+  Avatar,
+  Button,
 } from 'antd';
 import {
   PlusOutlined,
@@ -25,23 +19,20 @@ import {
   EnvironmentOutlined,
   ReloadOutlined,
   ExportOutlined,
-  CameraOutlined,
 } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { setLayoutData } from '../../redux/layoutSlice';
 import { FaSubway } from 'react-icons/fa';
 import Preloader from '../../components/Preloader/Preloader';
+import PrimaryButton from '../../components/PrimaryButton/PrimaryButton';
+import StationModal from './StationModal';
 import { 
   getAllStationsAPI, 
-  createStationAPI, 
-  updateStationAPI, 
-  deleteStationAPI,
-  uploadStationImageAPI
+  deleteStationAPI
 } from '../../apis';
 import './StationManagement.css';
 
-const { Search } = Input;
-const { Option } = Select;
+// Removed Search component, using regular Input instead
 
 const StationManagement = () => {
   const dispatch = useDispatch();
@@ -50,13 +41,8 @@ const StationManagement = () => {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalLoading, setModalLoading] = useState(false);
   const [editingStation, setEditingStation] = useState(null);
   const [searchText, setSearchText] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('all');
-  const [form] = Form.useForm();
-  const [imageUrl, setImageUrl] = useState('');
-  const [uploadingImage, setUploadingImage] = useState(false);
   
   // Pagination state
   const [pagination, setPagination] = useState({
@@ -164,7 +150,8 @@ const StationManagement = () => {
       const response = await getAllStationsAPI({
         page,
         size: pageSize,
-        search: searchQuery
+        search: searchQuery,
+        sort: 'id'
       });
       
       if (response.code === 200) {
@@ -179,7 +166,7 @@ const StationManagement = () => {
           address: station.address || 'Chưa có địa chỉ',
           latitude: parseFloat(station.latitude) || 0,
           longitude: parseFloat(station.longitude) || 0,
-          status: station.deleted === 0 ? 'active' : 'inactive',
+          status: 'active', // Assuming all returned stations are active since deleted ones won't be returned
           imageUrl: station.imageUrl,
           createdAt: station.createAt ? new Date(station.createAt).toLocaleDateString('vi-VN') : new Date().toLocaleDateString('vi-VN'),
           updatedAt: station.updateAt ? new Date(station.updateAt).toLocaleDateString('vi-VN') : new Date().toLocaleDateString('vi-VN')
@@ -243,63 +230,18 @@ const StationManagement = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText]);
 
-  // Handle status filter
-  useEffect(() => {
-    // For now, we'll handle status filter on client side
-    // You can modify the API to support status filtering if needed
-    let filtered = stations;
-
-    if (selectedStatus !== 'all') {
-      filtered = filtered.filter(station => station.status === selectedStatus);
-    }
-
-    setFilteredStations(filtered);
-  }, [stations, selectedStatus]);
 
 
-  // Handle image upload
-  const handleImageUpload = async (file) => {
-    setUploadingImage(true);
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      
-      const response = await uploadStationImageAPI(formData);
-      
-      if (response.code === 200) {
-        const newImageUrl = response.result;
-        setImageUrl(newImageUrl);
-        message.success("Upload ảnh thành công!");
-      } else {
-        message.error("Upload ảnh thất bại!");
-      }
-    } catch (error) {
-      message.error("Upload ảnh thất bại!");
-    } finally {
-      setUploadingImage(false);
-    }
-    
-    return false; // Prevent default upload behavior
-  };
+
+
 
   const handleAdd = () => {
     setEditingStation(null);
-    form.resetFields();
-    setImageUrl('');
     setIsModalVisible(true);
   };
 
   const handleEdit = (station) => {
     setEditingStation(station);
-    form.setFieldsValue({
-      name: station.name,
-      code: station.code,
-      address: station.address,
-      latitude: station.latitude,
-      longitude: station.longitude,
-      status: station.status
-    });
-    setImageUrl(station.imageUrl || '');
     setIsModalVisible(true);
   };
 
@@ -324,53 +266,23 @@ const StationManagement = () => {
     }
   };
 
-  const handleModalOk = () => {
-    form.validateFields().then(async (values) => {
-      try {
-        setModalLoading(true);
-        
-        // Prepare payload for API
-        const payload = {
-          name: values.name,
-          stationCode: values.code,
-          address: values.address,
-          latitude: values.latitude.toString(),
-          longitude: values.longitude.toString(),
-          imageUrl: imageUrl || null
-        };
-        
-        if (editingStation) {
-          // Update existing station
-          await updateStationAPI(editingStation.id, payload);
-          
-          // Reload stations after update
-          await loadStations(false, pagination.current, pagination.pageSize, searchText);
-          message.success('Cập nhật trạm thành công');
-        } else {
-          await createStationAPI(payload);
-          
-          // Reload stations after create  
-          await loadStations(false, 1, pagination.pageSize, searchText);
-          message.success('Thêm trạm mới thành công');
-        }
-        
-        setIsModalVisible(false);
-        form.resetFields();
-        setEditingStation(null);
-      } catch (error) {
-        console.error('Error saving station:', error);
-        message.error(editingStation ? 'Cập nhật trạm thất bại' : 'Thêm trạm thất bại');
-      } finally {
-        setModalLoading(false);
-      }
-    });
+  const handleModalSuccess = async () => {
+    setIsModalVisible(false);
+    setEditingStation(null);
+    
+    // Reload stations after success
+    if (editingStation) {
+      // For edit, stay on current page
+      await loadStations(false, pagination.current, pagination.pageSize, searchText);
+    } else {
+      // For create, go to first page
+      await loadStations(false, 1, pagination.pageSize, searchText);
+    }
   };
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
-    form.resetFields();
     setEditingStation(null);
-    setImageUrl('');
   };
 
   const handleRefresh = async () => {
@@ -389,6 +301,15 @@ const StationManagement = () => {
   };
 
   const columns = [
+    {
+      title: 'Hình ảnh',
+      dataIndex: 'imageUrl',
+      key: 'image',
+      width: 100,
+      render: (url) => (
+        <Avatar shape="square" size={48} src={url} icon={<FaSubway />} />
+      )
+    },
     {
       title: 'Mã trạm',
       dataIndex: 'code',
@@ -500,46 +421,31 @@ const StationManagement = () => {
         {/* Header Actions */}
         <div className="header-actions">
           <div className="filters">
-            <Search
+            <Input
               placeholder="Tìm kiếm trạm..."
               allowClear
-              style={{ width: 250 }}
+              style={{ width: 300 }}
               onChange={(e) => setSearchText(e.target.value)}
+              value={searchText}
             />
 
-            <Select
-              placeholder="Trạng thái"
-              style={{ width: 150 }}
-              value={selectedStatus}
-              onChange={setSelectedStatus}
-            >
-              <Option value="all">Tất cả</Option>
-              <Option value="active">Hoạt động</Option>
-              <Option value="maintenance">Bảo trì</Option>
-              <Option value="inactive">Không hoạt động</Option>
-            </Select>
           </div>
           <div className="actions">
-            <Button
+            <PrimaryButton
               icon={<ReloadOutlined />}
               onClick={handleRefresh}
               loading={loading}
+              type="button"
             >
               Làm mới
-            </Button>
-            <Button
-              icon={<ExportOutlined />}
-              onClick={() => message.info('Xuất dữ liệu')}
-            >
-              Xuất Excel
-            </Button>
-            <Button
-              type="primary"
+            </PrimaryButton>
+            <PrimaryButton
               icon={<PlusOutlined />}
               onClick={handleAdd}
+              type="button"
             >
               Thêm trạm
-            </Button>
+            </PrimaryButton>
           </div>
         </div>
 
@@ -561,136 +467,14 @@ const StationManagement = () => {
         )}
       </Card>
 
-      {/* Add/Edit Modal */}
-      <Modal
-        title={editingStation ? 'Chỉnh sửa trạm' : 'Thêm trạm mới'}
-        open={isModalVisible}
-        onOk={handleModalOk}
+      {/* Station Modal */}
+      <StationModal
+        visible={isModalVisible}
         onCancel={handleModalCancel}
-        width={800}
-        okText={editingStation ? 'Cập nhật' : 'Thêm'}
-        cancelText="Hủy"
-        confirmLoading={modalLoading}
-      >
-        <Form
-          form={form}
-          layout="vertical"
-        >
-          {/* Upload Image Section */}
-          <Form.Item label="Hình ảnh trạm">
-            <div className="station-image-upload">
-              <div className="image-preview">
-                <Avatar
-                  size={120}
-                  src={imageUrl}
-                  icon={<EnvironmentOutlined />}
-                  shape="square"
-                />
-              </div>
-              <div className="upload-controls">
-                <Upload
-                  name="stationImage"
-                  beforeUpload={handleImageUpload}
-                  showUploadList={false}
-                  accept="image/*"
-                >
-                  <Button 
-                    icon={<CameraOutlined />} 
-                    loading={uploadingImage}
-                    type="primary"
-                    ghost
-                  >
-                    {uploadingImage ? "Đang upload..." : "Chọn ảnh"}
-                  </Button>
-                </Upload>
-                {imageUrl && (
-                  <Button 
-                    onClick={() => setImageUrl('')}
-                    danger
-                    type="text"
-                  >
-                    Xóa ảnh
-                  </Button>
-                )}
-              </div>
-            </div>
-          </Form.Item>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="name"
-                label="Tên trạm"
-                rules={[{ required: true, message: 'Vui lòng nhập tên trạm' }]}
-              >
-                <Input placeholder="Nhập tên trạm" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="code"
-                label="Mã trạm"
-                rules={[{ required: true, message: 'Vui lòng nhập mã trạm' }]}
-              >
-                <Input placeholder="VD: ST01" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Form.Item
-            name="address"
-            label="Địa chỉ"
-            rules={[{ required: true, message: 'Vui lòng nhập địa chỉ' }]}
-          >
-            <Input.TextArea rows={2} placeholder="Nhập địa chỉ đầy đủ" />
-          </Form.Item>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="latitude"
-                label="Vĩ độ (Latitude)"
-                rules={[
-                  { required: true, message: 'Vui lòng nhập vĩ độ' },
-                  { 
-                    validator: (_, value) => {
-                      if (!value) return Promise.resolve();
-                      const num = parseFloat(value);
-                      if (isNaN(num) || num < -90 || num > 90) {
-                        return Promise.reject(new Error('Vĩ độ phải từ -90 đến 90'));
-                      }
-                      return Promise.resolve();
-                    }
-                  }
-                ]}
-              >
-                <Input type="number" step="any" placeholder="10.7720" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="longitude"
-                label="Kinh độ (Longitude)"
-                rules={[
-                  { required: true, message: 'Vui lòng nhập kinh độ' },
-                  { 
-                    validator: (_, value) => {
-                      if (!value) return Promise.resolve();
-                      const num = parseFloat(value);
-                      if (isNaN(num) || num < -180 || num > 180) {
-                        return Promise.reject(new Error('Kinh độ phải từ -180 đến 180'));
-                      }
-                      return Promise.resolve();
-                    }
-                  }
-                ]}
-              >
-                <Input type="number" step="any" placeholder="106.6980" />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </Modal>
+        onSuccess={handleModalSuccess}
+        editingStation={editingStation}
+        loading={loading}
+      />
     </div>
   );
 };

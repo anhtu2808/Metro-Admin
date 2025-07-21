@@ -1,0 +1,255 @@
+.dev-page {
+  padding: 24px;
+  min-height: calc(100vh - 64px);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.dev-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 20px 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dev-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: none;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.dev-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.dev-card .ant-card-head {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-bottom: none;
+  color: white;
+}
+
+.dev-card .ant-card-head-title {
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.dev-card .ant-card-extra {
+  color: white;
+}
+
+.dev-card .ant-card-extra .ant-btn {
+  color: white;
+  border-color: white;
+  background: transparent;
+}
+
+.dev-card .ant-card-extra .ant-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: white;
+  color: white;
+}
+
+.dev-card .ant-card-body {
+  padding: 20px;
+  background: white;
+}
+
+/* Token Display */
+.token-display {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid #e9ecef;
+}
+
+.token-textarea {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.token-textarea:focus {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.token-info {
+  background: #f0f7ff;
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 4px solid #1890ff;
+}
+
+/* User Info */
+.user-info .ant-typography {
+  margin-bottom: 8px !important;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px 20px;
+  background: #fafafa;
+  border-radius: 8px;
+  border: 2px dashed #d9d9d9;
+}
+
+/* API Endpoints */
+.endpoint-item {
+  margin-bottom: 12px;
+}
+
+.endpoint-label {
+  margin-bottom: 4px;
+}
+
+.endpoint-value .ant-input-group-addon {
+  background: #1890ff;
+  border-color: #1890ff;
+}
+
+.endpoint-value .ant-input-group-addon .ant-btn {
+  color: white;
+  border: none;
+  background: transparent;
+}
+
+.endpoint-value .ant-input-group-addon .ant-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Debug TextArea */
+.debug-textarea {
+  background: #2d3748 !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #4a5568 !important;
+  border-radius: 8px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.debug-textarea:focus {
+  background: #2d3748 !important;
+  border-color: #1890ff !important;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2) !important;
+}
+
+.localstorage-debug {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+/* Buttons */
+.dev-page .ant-btn {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.dev-page .ant-btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.dev-page .ant-btn-primary:hover {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+}
+
+.dev-page .ant-btn-dangerous {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  border: none;
+  color: white;
+}
+
+.dev-page .ant-btn-dangerous:hover {
+  background: linear-gradient(135deg, #ff5252 0%, #e53e3e 100%);
+  transform: translateY(-1px);
+}
+
+/* Tags */
+.dev-page .ant-tag {
+  border-radius: 12px;
+  font-weight: 500;
+  padding: 4px 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dev-page {
+    padding: 16px;
+  }
+  
+  .dev-page-header {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  
+  .dev-card .ant-card-body {
+    padding: 16px;
+  }
+  
+  .token-textarea {
+    font-size: 11px;
+  }
+  
+  .debug-textarea {
+    font-size: 11px;
+  }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dev-card {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.dev-card:nth-child(1) { animation-delay: 0.1s; }
+.dev-card:nth-child(2) { animation-delay: 0.2s; }
+.dev-card:nth-child(3) { animation-delay: 0.3s; }
+.dev-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Scrollbar */
+.debug-textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.debug-textarea::-webkit-scrollbar-track {
+  background: #4a5568;
+  border-radius: 4px;
+}
+
+.debug-textarea::-webkit-scrollbar-thumb {
+  background: #718096;
+  border-radius: 4px;
+}
+
+.debug-textarea::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+} 

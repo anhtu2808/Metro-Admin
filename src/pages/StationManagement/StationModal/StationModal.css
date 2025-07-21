@@ -1,0 +1,113 @@
+/* Station Image Upload Styles */
+.station-image-upload {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #fafafa, #f0f7ff);
+  border-radius: 12px;
+  border: 2px dashed #d9d9d9;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.station-image-upload:hover {
+  border-color: #1890ff;
+  background: linear-gradient(135deg, #f0f7ff, #e6f7ff);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(24, 144, 255, 0.1);
+}
+
+.image-preview {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.image-preview .ant-avatar {
+  border: 3px solid #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.image-preview .ant-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.upload-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  align-items: flex-start;
+}
+
+.upload-controls .ant-btn {
+  border-radius: 8px;
+  font-weight: 500;
+  height: 40px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.upload-controls .ant-btn-primary {
+  background: linear-gradient(135deg, #1890ff, #40a9ff);
+  border-color: #1890ff;
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
+}
+
+.upload-controls .ant-btn-primary:hover {
+  background: linear-gradient(135deg, #40a9ff, #1890ff);
+  border-color: #40a9ff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+.upload-controls .ant-btn-text {
+  color: #ff4d4f;
+  border: 2px solid transparent;
+  background: transparent;
+}
+
+.upload-controls .ant-btn-text:hover {
+  color: #ff7875;
+  background: rgba(255, 77, 79, 0.1);
+  border-color: rgba(255, 77, 79, 0.2);
+  transform: translateY(-1px);
+}
+
+.upload-controls .ant-btn[disabled] {
+  background: #f5f5f5;
+  border-color: #d9d9d9;
+  color: #bfbfbf;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.upload-controls .ant-btn-loading {
+  pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .station-image-upload {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .upload-controls {
+    align-items: center;
+    width: 100%;
+  }
+  
+  .upload-controls .ant-btn {
+    width: 100%;
+    justify-content: center;
+  }
+} 
