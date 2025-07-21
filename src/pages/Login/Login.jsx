@@ -44,7 +44,9 @@ const Login = () => {
         message.error("Tài khoản hoặc mật khẩu không đúng");
       } else if (error.errorFields) {
         // Form validation error
-      }
+      } else {
+        message.error("Đăng nhập thất bại, có lỗi xảy ra");
+      } 
     } finally {
       setIsLoading(false);
     }

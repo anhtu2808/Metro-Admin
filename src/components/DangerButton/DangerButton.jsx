@@ -10,6 +10,7 @@ const DangerButton = ({
   icon,
   iconPosition = "left",
   loading = false,
+  variant = "primary",
   ...props 
 }) => {
   const renderIcon = () => {
@@ -23,7 +24,7 @@ const DangerButton = ({
   };
 
   const hasText = children && children.toString().trim().length > 0;
-  const buttonClass = `custom-danger-button btn-${size}${className ? ` ${className}` : ''}${
+  const buttonClass = ` ${variant === "outline" ? "customer-danger-button-outline" : "custom-danger-button"} btn-${size}${className ? ` ${className}` : ''}${
     icon && !hasText ? ' btn-icon-only' : ''
   }${loading ? ' btn-loading' : ''}`;
 

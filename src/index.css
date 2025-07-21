@@ -27,3 +27,17 @@ code {
   --tenth-color: #b3b3b3;
   --eleventh-color: #999999;
 }
+
+.ant-modal-title {
+  color: var(--primary-color) !important;
+  font-size: 22px !important;
+  font-weight: bold;
+}
+.ant-btn-variant-solid{
+  background-color: var(--primary-color) !important;
+ 
+}
+
+.ant-tabs-tab-btn{
+  color: var(--primary-color) !important;
+}

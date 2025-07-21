@@ -48,9 +48,34 @@
   color: #1890ff;
 }
 
+.view-mode-toggle .ant-space {
+  align-items: center;
+}
+
+.view-mode-toggle .ant-dropdown-trigger {
+  height: 40px;
+  padding: 0 16px;
+  font-weight: 500;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  color: #8c8c8c;
+  transition: all 0.2s ease;
+}
+
+.view-mode-toggle .ant-dropdown-trigger:hover {
+  background: #f0f7ff;
+  color: #1890ff;
+  border-color: #1890ff;
+}
+
 .line-management-content {
   flex: 1;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .line-management-content .ant-layout {
@@ -65,12 +90,14 @@
 /* Kanban view styles */
 .line-management-kanban {
   display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 24px;
-  max-width: 1600px;
+  grid-template-columns: repeat(4, minmax(250px, 300px));
+  gap: 16px;
   margin: 0 auto;
-  padding: 0;
+  padding: 0 20px;
   height: 100%;
+  overflow-x: auto;
+  min-width: 1100px;
+  max-width: none;
 }
 
 /* Map view styles */
@@ -90,6 +117,25 @@
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
+}
+
+.map-view-header {
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f0;
+  background: white;
+  flex-shrink: 0;
+}
+
+.map-view-line-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.map-view-content {
+  flex: 1;
+  height: 100%;
+  position: relative;
 }
 
 
@@ -115,27 +161,71 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
+  padding: 14px 16px;
+  min-height: 60px;
+  flex-wrap: nowrap;
 }
 
 .line-management-card-title .ant-space {
-  gap: 8px !important;
+  gap: 6px !important;
+  flex: 1;
+  min-width: 0;
 }
 
 .line-management-card-title .ant-typography {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: #1a1a1a;
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .line-management-card-title button {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+}
+
+.line-management-card-title .ant-space:first-child {
+  min-width: 0;
+  flex: 1;
+}
+
+.line-management-card-title .ant-space:last-child {
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+/* Save button specific styles */
+.line-management-card-save-btn {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 4px !important;
+  padding: 0 !important;
+  width: 28px !important;
+  height: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  font-size: 12px !important;
+}
+
+.line-management-card-save-btn:hover {
+  background-color: var(--primary-color-hover) !important;
+}
+
+/* Badge positioning fix */
+.line-management-card-title .ant-badge {
+  flex-shrink: 0;
+  margin-left: 4px;
 }
 
 /* Search input styles */
@@ -179,8 +269,9 @@
 /* List styles */
 .line-management-kanban .ant-list {
   flex: 1;
-  /* overflow-y: auto; */
+
   padding: 0 16px 16px;
+  max-height: calc(100vh - 300px);
 }
 
 .line-management-list-item {
@@ -195,7 +286,7 @@
 .line-management-list-item:hover {
   background-color: #f0f7ff !important;
   border-color: #1890ff !important;
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
 }
 
 .line-management-list-item.dragging {
@@ -255,23 +346,59 @@
   background: #bfbfbf;
 }
 
+/* Placeholder when no line selected */
+.line-management-placeholder {
+  height: calc(100vh - 140px);
+  width: calc(60vw);
+  border-radius: 12px;
+  background: white;
+  text-align: center;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
 /* Badge styles */
 .line-management-kanban .ant-badge .ant-badge-count {
   background: #1890ff;
   box-shadow: none;
-  padding: 0 6px;
-  height: 20px;
-  line-height: 20px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 600;
-  min-width: 20px;
+  padding: 0 4px;
+  height: 16px;
+  line-height: 16px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 500;
+  min-width: 16px;
 }
 
 /* Responsive adjustments */
 @media (max-width: 1400px) {
   .line-management-kanban {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(4, minmax(220px, 280px));
+    gap: 14px;
+    min-width: 950px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .line-management-kanban {
+    grid-template-columns: repeat(4, minmax(200px, 260px));
+    gap: 12px;
+    padding: 0 16px;
+    min-width: 850px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .line-management-kanban {
+    grid-template-columns: repeat(4, minmax(180px, 240px));
+    gap: 10px;
+    padding: 0 12px;
+    min-width: 750px;
   }
 }
 
@@ -291,6 +418,7 @@
   }
 
   .line-management-kanban {
+    grid-template-columns: 1fr;
     gap: 16px;
   }
 

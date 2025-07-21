@@ -1,11 +1,10 @@
-.bus-routes-search {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  align-items: center;
-  padding: 16px;
-  background-color: #fff;
-  border-radius: 8px;
+
+
+.bus-container {
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .bus-search-input {

@@ -4,15 +4,22 @@
 }
 
 .line-management-card-save-btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 5px 10px;
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 4px !important;
+    padding: 0 !important;
+    width: 28px !important;
+    height: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    font-size: 12px !important;
 }
 
 .line-management-card-save-btn:hover {
-    background-color: var(--primary-color-hover);
+    background-color: var(--primary-color-hover) !important;
 }
 
 /* List item styles */

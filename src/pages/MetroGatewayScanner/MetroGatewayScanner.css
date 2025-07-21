@@ -1,0 +1,287 @@
+.metro-gateway-scanner {
+  padding: 24px;
+  background: #f5f5f5;
+  min-height: calc(100vh - 100px);
+}
+
+.scanner-config-card,
+.scanner-action-card,
+.validation-result-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.scanner-config-card .ant-card-head {
+  background: var(--primary-color);
+  border-radius: 12px 12px 0 0;
+}
+
+.scanner-config-card .ant-card-head-title {
+  color: white;
+  font-weight: 600;
+}
+
+.scanner-action-card .ant-card-head {
+  background: var(--primary-color);
+  border-radius: 12px 12px 0 0;
+}
+
+.scanner-action-card .ant-card-head-title {
+  color: white;
+  font-weight: 600;
+}
+
+.validation-result-card .ant-card-head {
+  background: var(--primary-color);
+  border-radius: 12px 12px 0 0;
+}
+
+.validation-result-card .ant-card-head-title {
+  color: white;
+  font-weight: 600;
+}
+
+.scanner-config-card .ant-card-body,
+.scanner-action-card .ant-card-body,
+.validation-result-card .ant-card-body {
+  padding: 24px;
+}
+
+/* Station and Line Selection */
+.ant-select-selector {
+  border-radius: 8px !important;
+  border: 2px solid #d9d9d9 !important;
+  transition: all 0.3s ease !important;
+}
+
+.ant-select-focused .ant-select-selector {
+  border-color: #1890ff !important;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2) !important;
+}
+
+/* Switch Styling */
+.ant-switch-checked {
+  background-color: #52c41a !important;
+}
+
+/* Alert Styling */
+.ant-alert {
+  border-radius: 8px;
+  border: none;
+}
+
+.ant-alert-info {
+  background: #e6f7ff;
+  border-left: 4px solid var(--primary-color);
+}
+
+.ant-alert-success {
+  background: #f6ffed;
+  border-left: 4px solid #52c41a;
+}
+
+.ant-alert-error {
+  background: #fff2f0;
+  border-left: 4px solid #ff4d4f;
+}
+
+/* Button Hover Effects */
+.ant-btn:hover {
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.ant-btn-primary:hover {
+  box-shadow: 0 6px 16px rgba(24, 144, 255, 0.4) !important;
+}
+
+/* Code/Token Display */
+pre {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .metro-gateway-scanner {
+    padding: 16px;
+  }
+  
+  .scanner-config-card .ant-card-body,
+  .scanner-action-card .ant-card-body,
+  .validation-result-card .ant-card-body {
+    padding: 16px;
+  }
+}
+
+/* Animation for validation result */
+.validation-result-card {
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tag styling */
+.ant-tag {
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* Loading states */
+.ant-spin-container {
+  border-radius: 8px;
+}
+
+/* Card title icons */
+.scanner-config-card .ant-card-head-title,
+.scanner-action-card .ant-card-head-title,
+.validation-result-card .ant-card-head-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Gate animation */
+.gate-wrapper {
+  margin: 24px auto;
+  width: 120px;
+  height: 60px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+}
+
+.gate-post {
+  width: 8px;
+  height: 50px;
+  background: var(--primary-color);
+  border-radius: 2px;
+}
+
+.gate-bar {
+  width: 60px;
+  height: 8px;
+  background: var(--primary-color);
+  transform-origin: left center;
+  transition: transform 0.5s ease-out;
+}
+
+.gate-bar.open {
+  transform: rotate(-75deg);
+}
+
+/* QR Scanner specific styles */
+#qr-reader {
+  position: relative;
+  width: 100% !important;
+  max-width: 400px !important;
+  margin: 0 auto !important;
+  border: 2px solid #1890ff !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  min-height: 300px !important;
+  background: #f5f5f5 !important;
+}
+
+#qr-reader video {
+  width: 100% !important;
+  height: auto !important;
+  border-radius: 6px !important;
+}
+
+#qr-reader__scan_region {
+  position: relative !important;
+}
+
+#qr-reader__scan_region > img {
+  display: none !important;
+}
+
+#qr-reader__scan_region > video {
+  width: 100% !important;
+  height: auto !important;
+  border-radius: 6px !important;
+}
+
+
+
+/* Debug information styling */
+details {
+  margin-top: 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  padding: 8px;
+}
+
+details summary {
+  font-weight: 500;
+  color: #1890ff;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+details pre {
+  margin-top: 8px;
+  padding: 8px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 11px;
+  overflow: auto;
+  max-height: 200px;
+}
+
+/* Thêm vào cuối file MetroGatewayScanner.css */
+
+.gate-visualization {
+  background-color: #f7f7f7;
+  border-radius: 8px;
+  padding: 24px;
+  margin-top: 15px;
+  border: 1px solid #e8e8e8;
+}
+
+.gate-wrapper {
+  position: relative;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 300px;
+  margin: 70px auto 0;
+}
+
+.gate-post {
+  width: 15px;
+  height: 60px;
+  background-color: #a0a0a0;
+  border-radius: 3px;
+}
+
+.gate-bar {
+  width: 100%;
+  height: 12px;
+  background-color: #ff4d4f; /* Màu đỏ khi đóng */
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.5s ease-in-out, background-color 0.5s;
+  transform-origin: center;
+}
+
+.gate-bar.open {
+  transform: translateY(-150%) rotate(90deg);
+  background-color: #52c41a; /* Màu xanh khi mở */
+}
