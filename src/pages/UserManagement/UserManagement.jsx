@@ -171,6 +171,7 @@ import Preloader from "../../components/Preloader/Preloader";
           if (targetRole !== activeRoleTab) {
             await loadUsersByRole(activeRoleTab, false, filters, paginationByRole[activeRoleTab]);
           }
+          handleModalCancel();
         } else {
           throw new Error(response?.message || "Lỗi không xác định");
         }
@@ -179,7 +180,7 @@ import Preloader from "../../components/Preloader/Preloader";
           error?.response?.data?.message || "Không thể tạo/cập nhật người dùng"
         );
       } finally {
-        handleModalCancel();
+       
       }
     };
 
