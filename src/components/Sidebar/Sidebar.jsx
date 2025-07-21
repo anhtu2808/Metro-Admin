@@ -26,6 +26,15 @@ import { usePermission } from "../../hooks/usePermission";
 
 const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
   const navigate = useNavigate();
+  const isCanManageBusRoute = usePermission("BUS_ROUTE_MANAGE");
+  const isCanManageStation = usePermission("STATION_MANAGE");
+  const isCanManagePrice = usePermission("PRICE_MANAGE");
+  const isCanManageTicketOrder = usePermission("TICKET_ORDER_MANAGE");
+  const isCanManageContent = usePermission("CONTENT_MANAGE");
+  const isCanManageLine = usePermission("BUS_ROUTE_MANAGE");
+  const isCanManageUser = usePermission("CUSTOMER_MANAGE");
+  const isCanViewDashboard = usePermission("DASHBOARD_VIEW");
+
 
   return (
     <ProSidebar
@@ -52,25 +61,31 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
 
       <SidebarContent>
         <Menu iconShape="circle">
-          <Tooltip placement="right" title={collapsed ? "Dashboard" : ""}>
-            <MenuItem icon={<MdOutlineAnalytics />} className="pro-menu-item">
-              Dashboard
-              <Link to={"/"} />
-            </MenuItem>
-          </Tooltip>
-          <Tooltip placement="right" title={collapsed ? "Người dùng" : ""}>
-            <MenuItem icon={<FaUser />} className="pro-menu-item">
-              Người dùng
-              <Link to={"/manage-users"} />
-            </MenuItem>
-          </Tooltip>
-          <Tooltip placement="right" title={collapsed ? "Tuyến Metro" : ""}>
-            <MenuItem icon={<FaTrain />} className="pro-menu-item">
-              Tuyến Metro
-              <Link to={"/metro-line"} />
-            </MenuItem>
-          </Tooltip>
-          {usePermission("station:manage") && (
+          {isCanViewDashboard && (
+            <Tooltip placement="right" title={collapsed ? "Dashboard" : ""}>
+              <MenuItem icon={<MdOutlineAnalytics />} className="pro-menu-item">
+                Dashboard
+                <Link to={"/"} />
+              </MenuItem>
+            </Tooltip>
+          )}
+          {isCanManageUser && (
+            <Tooltip placement="right" title={collapsed ? "Người dùng" : ""}>
+              <MenuItem icon={<FaUser />} className="pro-menu-item">
+                Người dùng
+                <Link to={"/manage-users"} />
+              </MenuItem>
+            </Tooltip>
+          )}
+          {isCanManageLine && (
+            <Tooltip placement="right" title={collapsed ? "Tuyến Metro" : ""}>
+              <MenuItem icon={<FaTrain />} className="pro-menu-item">
+                Tuyến Metro
+                <Link to={"/metro-line"} />
+              </MenuItem>
+            </Tooltip>
+          )}
+          {isCanManageStation && (
             <Tooltip placement="right" title={collapsed ? "Quản lí ga" : ""}>
               <MenuItem icon={<FaSubway />} className="pro-menu-item">
                 Ga
@@ -78,31 +93,38 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
               </MenuItem>
             </Tooltip>
           )}
-          <Tooltip placement="right" title={collapsed ? "Tuyến xe buýt" : ""}>
-            <MenuItem icon={<FaBus />} className="pro-menu-item">
-              Tuyến xe buýt
-              <Link to={"/bus-routes"} />
-            </MenuItem>
-          </Tooltip>
-          <Tooltip placement="right" title={collapsed ? "Quản lý giá" : ""}>
-            <MenuItem icon={<FaMoneyBillWave />} className="pro-menu-item">
-              Quản lý giá
-              <Link to={"/price-management"} />
-            </MenuItem>
-          </Tooltip>
-          <Tooltip placement="right" title={collapsed ? "Quản lý vé" : ""}>
-            <MenuItem icon={<FaTicketAlt />} className="pro-menu-item">
-              Quản lý vé
-              <Link to={"/ticket-management"} />
-            </MenuItem>
-          </Tooltip>
-          
-          <Tooltip placement="right" title={collapsed ? "Nội dung" : ""}>
-            <MenuItem icon={<BiSolidNews />} className="pro-menu-item">
-              Nội dung
-              <Link to={"/staff/content"} />
-            </MenuItem>
-          </Tooltip>
+          {isCanManageBusRoute && (
+            <Tooltip placement="right" title={collapsed ? "Tuyến xe buýt" : ""}>
+              <MenuItem icon={<FaBus />} className="pro-menu-item">
+                Tuyến xe buýt
+                <Link to={"/bus-routes"} />
+              </MenuItem>
+            </Tooltip>
+          )}
+          {isCanManagePrice && (
+            <Tooltip placement="right" title={collapsed ? "Quản lý giá" : ""}>
+              <MenuItem icon={<FaMoneyBillWave />} className="pro-menu-item">
+                Quản lý giá
+                <Link to={"/price-management"} />
+              </MenuItem>
+            </Tooltip>
+          )}
+          {isCanManageTicketOrder && (
+            <Tooltip placement="right" title={collapsed ? "Quản lý vé" : ""}>
+              <MenuItem icon={<FaTicketAlt />} className="pro-menu-item">
+                Quản lý vé
+                <Link to={"/ticket-management"} />
+              </MenuItem>
+            </Tooltip>
+          )}
+          {isCanManageContent && (
+            <Tooltip placement="right" title={collapsed ? "Nội dung" : ""}>
+              <MenuItem icon={<BiSolidNews />} className="pro-menu-item">
+                Nội dung
+                <Link to={"/staff/content"} />
+              </MenuItem>
+            </Tooltip>
+          )}
           <Tooltip
             placement="right"
             title={collapsed ? "Metro Gate Scanner" : ""}
