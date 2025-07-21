@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, Select, Typography, message, Modal, Input } from 'antd';
 import { calculateDynamicPriceAPI, getAllLinesAPI, getDynamicPriceByLineIdAPI, getStationsByLineIdAPI } from '../../../apis';
 import PrimaryButton from '../../../components/PrimaryButton/PrimaryButton';
+import { usePermission } from '../../../hooks/usePermission';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -14,6 +15,7 @@ const DynamicPriceTableTab = () => {
     const [loading, setLoading] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [confirmText, setConfirmText] = useState('');
+    const isCanCalculate = usePermission("dynamicPrice:calculate");
 
     useEffect(() => {
         const fetchLines = async () => {
@@ -171,20 +173,20 @@ const DynamicPriceTableTab = () => {
                         </Option>
                     ))}
                 </Select>
-                <PrimaryButton onClick={showRecalculateModal}>
+                {isCanCalculate && <PrimaryButton onClick={showRecalculateModal}>
                     Tính lại
-                </PrimaryButton>
+                </PrimaryButton>}
             </div>
 
             {selectedLine && (
                 prices === null ? (
                     <div style={{ textAlign: 'center', marginTop: 40 }}>
                         <p>Tuyến này hiện chưa có bảng giá.</p>
-                        <PrimaryButton
+                        {isCanCalculate && <PrimaryButton
                             onClick={showRecalculateModal}
                         >
                             Tính bảng giá
-                        </PrimaryButton>
+                        </PrimaryButton>}
                     </div>
                 ) : (
                     renderMatrix()

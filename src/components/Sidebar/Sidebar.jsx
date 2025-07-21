@@ -19,7 +19,7 @@ import {
 } from "react-icons/fa";
 import { MdOutlineAnalytics } from "react-icons/md";
 import { BiSolidNews } from "react-icons/bi";
-import { QrcodeOutlined, ScanOutlined } from "@ant-design/icons";
+import { ScanOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import "./Sidebar.css";
 import { usePermission } from "../../hooks/usePermission";
@@ -31,7 +31,7 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
   const isCanManagePrice = usePermission("PRICE_MANAGE");
   const isCanManageTicketOrder = usePermission("TICKET_ORDER_MANAGE");
   const isCanManageContent = usePermission("CONTENT_MANAGE");
-  const isCanManageLine = usePermission("BUS_ROUTE_MANAGE");
+  const isCanManageLine = usePermission("LINE_MANAGE");
   const isCanManageUser = usePermission("CUSTOMER_MANAGE");
   const isCanViewDashboard = usePermission("DASHBOARD_VIEW");
 
@@ -146,12 +146,7 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
               <Link to={"/role-management"} />
             </MenuItem>
           </Tooltip>
-          {/* <Tooltip placement="right" title={collapsed ? "Tạo mã QR" : ""}>
-            <MenuItem icon={<QrcodeOutlined />} className="pro-menu-item">
-              QR Generator
-              <Link to={"/qr-generator"} />
-            </MenuItem>
-          </Tooltip> */}
+
 
         </Menu>
       </SidebarContent>

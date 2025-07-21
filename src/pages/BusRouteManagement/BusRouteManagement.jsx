@@ -226,8 +226,8 @@ const BusRouteManagement = () => {
                     onChange={handleStationChange}
                   >
                     {stations.map((station) => (
-                      <Select.Option key={station.value} value={station.value}>
-                        {station.label}
+                      <Select.Option key={station.id} value={station.id}>
+                        {station.name}
                       </Select.Option>
                     ))}
                   </Select>

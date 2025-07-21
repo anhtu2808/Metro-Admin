@@ -1,16 +1,5 @@
 import { CameraOutlined, EnvironmentOutlined } from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Form,
-  Input,
-  message,
-  Modal,
-  Select,
-  Upload,
-  Row,
-  Col,
-} from "antd";
+import {Avatar,Form,Input,message,Modal,Select,Upload,Row,Col} from "antd";
 import { useEffect, useState } from "react";
 import { uploadProfileImageAPI } from "../../apis";
 import "./ModalFormUser.css";
@@ -19,6 +8,9 @@ import DangerButton from "../../components/DangerButton/DangerButton";
 const { Option } = Select;
 
 const ModalFormUser = ({
+  isCanManageCustomer,
+  isCanManageStaff,
+  isCanManageManager,
   visible,
   onCancel,
   editingUser,
@@ -205,7 +197,6 @@ const ModalFormUser = ({
           </Row>
         )}
 
-        {/* Vai trò mặc định và disabled */}
         <Row gutter={16}>
           <Col xs={24} md={12}>
             <Form.Item
@@ -215,9 +206,9 @@ const ModalFormUser = ({
               rules={[{ required: true, message: "Vui lòng chọn vai trò!" }]}
             >
               <Select disabled={isEdit} >
-                <Option value="CUSTOMER">Khách hàng</Option>
-                <Option value="MANAGER">Quản lý</Option> 
-                <Option value="STAFF">Nhân viên</Option>
+                {isCanManageCustomer && <Option value="CUSTOMER">Khách hàng</Option>}
+                {isCanManageManager && <Option value="MANAGER">Quản lý</Option>} 
+                {isCanManageStaff && <Option value="STAFF">Nhân viên</Option>}
               </Select>
             </Form.Item>
           </Col>
