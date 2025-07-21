@@ -96,12 +96,14 @@ const ContentManagemet = () => {
     try {
       if (!userId) {
         message.error("Không thể xác định người dùng. Vui lòng đăng nhập lại.");
+        setIsModalVisible(false);
         return;
       }
 
       const type = currentContent?.type;
       if (!type) {
         message.error("Không xác định được loại nội dung.");
+        setIsModalVisible(false);
         return;
       }
 
@@ -110,7 +112,7 @@ const ContentManagemet = () => {
         type,
         title: values.title,
         body: values.content,
-        summary: values.title,
+        summary: values.summary,
         status: isEdit ? currentContent.status : "DRAFT",
         publishAt: values.date?.toISOString() || new Date().toISOString(),
         userId,
@@ -139,9 +141,11 @@ const ContentManagemet = () => {
           }`
         );
       }
+      setIsModalVisible(false);
     } catch (error) {
       console.error("Lỗi khi gửi dữ liệu:", error);
       message.error("Đã xảy ra lỗi. Vui lòng thử lại.");
+      setIsModalVisible(false);
     }
   };
 
@@ -168,12 +172,15 @@ const ContentManagemet = () => {
 
   const handlePublish = async (item, type) => {
     try {
+      const isPublishing = item.status === "PUBLISHED";
+
       const payload = {
         ...item,
         type,
         body: item.content,
-        status: "PUBLISHED",
         imageUrls: item.imageUrls || [],
+        status: item.status,
+        publishAt: isPublishing ? new Date().toISOString() : item.publishAt,
         userId,
       };
 
@@ -181,18 +188,20 @@ const ContentManagemet = () => {
 
       if (response.status === 200) {
         message.success(
-          `Đăng ${type === "NEWS" ? "tin tức" : "hướng dẫn"} thành công!`
+          `${isPublishing ? "Đăng" : "Chuyển về bản nháp"} ${
+            type === "NEWS" ? "tin tức" : "hướng dẫn"
+          } thành công!`
         );
         await loadContents();
         return { success: true };
       } else {
         const msg = response.message || "Lỗi không xác định";
-        message.error(`Đăng thất bại: ${msg}`);
+        message.error(`Cập nhật trạng thái thất bại: ${msg}`);
         return { success: false, message: msg };
       }
     } catch (error) {
-      console.error("Lỗi khi đăng:", error);
-      message.error("Đã xảy ra lỗi khi đăng nội dung.");
+      console.error("Lỗi khi cập nhật trạng thái:", error);
+      message.error("Đã xảy ra lỗi khi cập nhật trạng thái nội dung.");
       return { success: false, message: "Lỗi khi gọi API" };
     }
   };
@@ -202,7 +211,7 @@ const ContentManagemet = () => {
   }, [loadContents]);
 
   const showAddModal = (type) => {
-    setCurrentContent({ id: null, type });
+    setCurrentContent({ type });
     form.resetFields();
     setImageUrl("");
     setIsModalVisible(true);
@@ -211,8 +220,8 @@ const ContentManagemet = () => {
   const showEditModal = (content, type) => {
     form.setFieldsValue({
       title: content.title,
+      summary: content.summary,
       content: content.content,
-      date: moment(content.date),
     });
     setImageUrl(content.imageUrls?.[0] || "");
     setCurrentContent({ ...content, type });
@@ -229,6 +238,7 @@ const ContentManagemet = () => {
     setViewModalVisible(false);
     setCurrentContent(null);
     setImageUrl("");
+    form.resetFields();
   };
 
   const handleTabChange = (key) => {

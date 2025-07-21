@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Spin,
@@ -9,7 +9,6 @@ import {
   message,
   Empty,
   Tag,
-  Select,
 } from "antd";
 import {
   ClockCircleOutlined,
@@ -17,14 +16,14 @@ import {
   DeleteOutlined,
   ExclamationCircleOutlined,
   EyeOutlined,
+  CloseSquareOutlined,
+  DiffOutlined,
 } from "@ant-design/icons";
 import ModalFormContent from "../ModalFormContent";
 import ModalViewContent from "../ModalViewContent";
 import "./NewsManagement.css";
 
 const { Title, Paragraph, Text } = Typography;
-
-const { Option } = Select;
 
 const NewsManagement = ({ data = [], type, loading, handlers, modal }) => {
   const {
@@ -33,7 +32,9 @@ const NewsManagement = ({ data = [], type, loading, handlers, modal }) => {
     showViewModal,
     handleCancel,
     showEditModal,
+    handlePublish,
   } = handlers;
+
   const {
     isModalVisible,
     currentContent,
@@ -43,15 +44,8 @@ const NewsManagement = ({ data = [], type, loading, handlers, modal }) => {
     imageUrl,
     setImageUrl,
   } = modal;
-  const [error, setError] = useState(null);
 
-  const handlePublish = async (item) => {
-    const result = await handlers.handlePublish(item, type);
-    console.log("Publish result:", result);
-    if (!result.success) {
-      message.error(result.message || "Đăng thất bại!");
-    }
-  };
+  const [error, setError] = useState(null);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -72,6 +66,20 @@ const NewsManagement = ({ data = [], type, loading, handlers, modal }) => {
         return "Đã đăng";
       default:
         return status;
+    }
+  };
+
+  const handleToggleStatus = async (item) => {
+    const newStatus = item.status === "DRAFT" ? "PUBLISHED" : "DRAFT";
+    const payload = {
+      ...item,
+      status: newStatus,
+      publishAt:
+        newStatus === "PUBLISHED" ? new Date().toISOString() : item.publishAt,
+    };
+    const result = await handlePublish(payload, type);
+    if (!result.success) {
+      message.error(result.message || "Cập nhật trạng thái thất bại!");
     }
   };
 
@@ -118,20 +126,31 @@ const NewsManagement = ({ data = [], type, loading, handlers, modal }) => {
                       Xóa
                     </Button>
                   </Popconfirm>,
-                  item.status === "DRAFT" && (
-                    <Popconfirm
-                      title="Bạn có chắc chắn muốn đăng tin tức này không?"
-                      onConfirm={() => handlePublish(item)}
-                      okText="Đồng ý"
-                      cancelText="Hủy"
+                  <Popconfirm
+                    title={`Bạn có chắc chắn muốn ${
+                      item.status === "DRAFT" ? "đăng" : "chuyển về bản nháp"
+                    } tin tức này không?`}
+                    onConfirm={() => handleToggleStatus(item)}
+                    okText="Đồng ý"
+                    cancelText="Hủy"
+                    icon={
+                      <ExclamationCircleOutlined style={{ color: "green" }} />
+                    }
+                  >
+                    <Button
                       icon={
-                        <ExclamationCircleOutlined style={{ color: "green" }} />
+                        item.status === "DRAFT" ? (
+                          <DiffOutlined />
+                        ) : (
+                          <CloseSquareOutlined />
+                        )
                       }
+                      type={item.status === "DRAFT" ? "primary" : "default"}
                     >
-                      <Button type="primary">Đăng</Button>,
-                    </Popconfirm>
-                  ),
-                ].filter(Boolean)}
+                      {item.status === "DRAFT" ? "Đăng" : "Nháp"}
+                    </Button>
+                  </Popconfirm>,
+                ]}
               >
                 <div className="news-card-content">
                   <Title level={4}>{item.title}</Title>

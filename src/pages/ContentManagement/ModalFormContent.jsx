@@ -107,6 +107,7 @@ const ContentFormModal = ({
       onCancel={handleCancel}
       footer={null}
       width={700}
+      destroyOnHidden
     >
       <Form form={form} layout="vertical" onFinish={handleSubmit}>
         <Form.Item label="Hình ảnh Nội dung">
@@ -152,15 +153,11 @@ const ContentFormModal = ({
         </Form.Item>
 
         <Form.Item
-          name="date"
-          label="Ngày đăng"
-          rules={[{ required: true, message: "Vui lòng chọn ngày đăng!" }]}
+          name="summary"
+          label="Tóm tắt"
+          rules={[{ required: true, message: "Vui lòng nhập tóm tắt!" }]}
         >
-          <DatePicker
-            showTime
-            format="DD/MM/YYYY HH:mm:ss"
-            style={{ width: "100%" }}
-          />
+          <Input.TextArea placeholder={`Nhập tóm tắt ${label}`} rows={3} />
         </Form.Item>
 
         <Form.Item label="Nội dung" required>
