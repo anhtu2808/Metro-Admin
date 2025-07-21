@@ -67,26 +67,20 @@ const BusRouteManagement = () => {
       setTotal(routesRes.result?.total || routesRes.total || 0);
 
       const formattedStations = stationList.map((station) => ({
-        value: station.id,
-        label: station.name,
+        id: station.id,
+        name: station.name,
       }));
       setStations(formattedStations);
 
-      const normalize = (str) =>
-        (str || "")
-          .normalize("NFD")
-          .replace(/[ -\u036f]/g, "")
-          .trim()
-          .toLowerCase();
-
       const transformed = rawRoutes.map((route) => {
-        const matchedStation = formattedStations.find(
-          (s) => normalize(s.label) === normalize(route.busStationName)
-        );
+   
 
         return {
           id: route.id,
-          stationId: matchedStation?.value ?? null,
+          station: {
+            id: route.station.id,
+            name: route.station.name,
+          },
           busCode: route.busCode,
           busStationName: route.busStationName,
           startLocation: route.startLocation,
@@ -232,8 +226,8 @@ const BusRouteManagement = () => {
                     onChange={handleStationChange}
                   >
                     {stations.map((station) => (
-                      <Select.Option key={station.value} value={station.value}>
-                        {station.label}
+                      <Select.Option key={station.id} value={station.id}>
+                        {station.name}
                       </Select.Option>
                     ))}
                   </Select>

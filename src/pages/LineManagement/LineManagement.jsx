@@ -13,7 +13,7 @@ import {
 
 import { FaTrain, FaRoute, FaMapMarkerAlt } from "react-icons/fa";
 import { AppstoreOutlined, EnvironmentOutlined, SettingOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { setLayoutData } from "../../redux/layoutSlice";
 import { DragDropContext } from "react-beautiful-dnd";
@@ -55,6 +55,9 @@ const LineManagement = () => {
   const [modalLoading, setModalLoading] = useState(false);
   const [confirmText, setConfirmText] = useState('');
   const [form] = Form.useForm();
+
+  // Thêm flag kiểm tra thay đổi
+  const [hasStationChanged, setHasStationChanged] = useState(false);
 
   // Extract stations from line segments
   const extractStationsFromLine = (line) => {
@@ -371,6 +374,14 @@ const LineManagement = () => {
       } 
       // Check if it's a line segment (string format like "Station A - Station B")
       else if (typeof item === 'string' && item.includes(' - ') && selectedLine) {
+        // Nếu có thay đổi station chưa lưu thì cảnh báo
+        if (hasStationChanged) {
+          Modal.warning({
+            title: 'Cảnh báo',
+            content: 'Đã có thay đổi danh sách ga, vui lòng lưu thay đổi rồi tiếp tục cập nhật thông tin khoảng cách.',
+          });
+          return;
+        }
         // Find the corresponding segment from selectedLine
         const segmentIndex = segments.indexOf(item);
         if (segmentIndex !== -1 && selectedLine.lineSegments && selectedLine.lineSegments[segmentIndex]) {
@@ -537,6 +548,16 @@ const LineManagement = () => {
       setSegments(generateSegments(null)); // Generate from tempStations
     }
   }, [tempStations, selectedLine]);
+
+  // Theo dõi thay đổi tempStations so với stations ban đầu
+  useEffect(() => {
+    if (selectedLine) {
+      const isChanged = JSON.stringify(tempStations.map(s => s.id)) !== JSON.stringify(stations.map(s => s.id));
+      setHasStationChanged(isChanged);
+    } else {
+      setHasStationChanged(false);
+    }
+  }, [tempStations, stations, selectedLine]);
 
   const renderKanbanView = () => (
       <DragDropContext onDragEnd={handleDragEnd}>

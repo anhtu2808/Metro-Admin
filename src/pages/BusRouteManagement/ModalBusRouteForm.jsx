@@ -20,23 +20,13 @@ const ModalBusRouteForm = ({
 
     try {
       const values = await form.validateFields();
-
-      const selectedStation = stations.find(
-        (s) => s.value === values.metroStationId
-      );
-
-      if (!selectedStation) {
-        Modal.error({
-          title: "Lỗi",
-          content: "Không tìm thấy ga Metro đã chọn.",
-        });
-        return;
-      }
+      console.log(values);
+      
 
       const payload = {
         id: editingRoute?.id,
-        stationId: values.metroStationId,
-        busStationName: selectedStation.label,
+        stationId: values.stationId,
+        busStationName: values.busStationName,
         busCode: values.busRouteCode.trim(),
         startLocation: values.startLocation.trim(),
         endLocation: values.endLocation.trim(),
@@ -67,8 +57,9 @@ const ModalBusRouteForm = ({
   useEffect(() => {
     if (editingRoute) {
       form.setFieldsValue({
-        metroStationId: editingRoute.stationId,
+        stationId: editingRoute.station.id,
         busRouteCode: editingRoute.busCode,
+        busStationName: editingRoute.busStationName,
         startLocation: editingRoute.startLocation,
         endLocation: editingRoute.endLocation,
         headwayMinutes: editingRoute.headwayMinutes,
@@ -100,14 +91,23 @@ const ModalBusRouteForm = ({
         scrollToFirstError
       >
         <Form.Item
-          name="metroStationId"
+
+          name="busStationName"
+          label="Tên trạm xe buýt"
+          rules={[{ required: true, message: "Vui lòng nhập tên trạm xe buýt!" }]}
+        >
+          <Input placeholder="Nhập tên trạm xe buýt" />
+        </Form.Item>
+        <Form.Item
+
+          name="stationId"
           label="Ga Metro kết nối"
           rules={[{ required: true, message: "Vui lòng chọn ga Metro!" }]}
         >
           <Select placeholder="Chọn một ga">
             {stations.map((station) => (
-              <Option key={station.value} value={station.value}>
-                {station.label}
+              <Option key={station.id} value={station.id}>
+                {station.name}
               </Option>
             ))}
           </Select>

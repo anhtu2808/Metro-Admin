@@ -5,6 +5,7 @@ import PrimaryButton from "../../../components/PrimaryButton/PrimaryButton";
 import { createTicketTypeAPI, deleteTicketTypeAPI, getAllTicketTypesAPI, updateTicketTypeAPI } from '../../../apis';
 import TicketTypeModal from './TicketTypeModal/TicketTypeModal';
 import TicketTypeTable from './TicketTypeTable';
+import { usePermission } from '../../../hooks/usePermission';
 
 
 
@@ -15,6 +16,9 @@ const FixPriceTab = () => {
   const [filteredTicketTypes, setFilteredTicketTypes] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTicketType, setEditingTicketType] = useState(null);
+  const isCanUpdatePrice = usePermission("TICKET_TYPE_UPDATE");
+  const isCanCreatePrice = usePermission("TICKET_TYPE_CREATE");
+  const isCanDeletePrice = usePermission("TICKET_TYPE_DELETE");
 
   useEffect(() => {
     const fetchTicketTypes = async () => {
@@ -132,15 +136,15 @@ const FixPriceTab = () => {
           </Form>
         </Col>
 
-        <Col xs={24} md={6} style={{ textAlign: "left" }}>
-          <PrimaryButton
+        {isCanCreatePrice && <Col xs={24} md={6} style={{ textAlign: "left" }}>
+          {isCanCreatePrice && <PrimaryButton
             icon={<FaPlus />}
             size="medium"
             onClick={() => handleOpenModal(null)}
           >
             Thêm giá vé
-          </PrimaryButton>
-        </Col>
+          </PrimaryButton>}
+        </Col>}
       </Row>
 
       <div className="table-user" style={{ marginTop: "24px" }}>
