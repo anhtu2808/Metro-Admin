@@ -121,7 +121,7 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
             <Tooltip placement="right" title={collapsed ? "Nội dung" : ""}>
               <MenuItem icon={<BiSolidNews />} className="pro-menu-item">
                 Nội dung
-                <Link to={"/staff/content"} />
+                <Link to={"/content"} />
               </MenuItem>
             </Tooltip>
           )}

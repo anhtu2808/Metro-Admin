@@ -6,7 +6,6 @@ export const ORDER_STATUS = {
     INACTIVE: "INACTIVE", 
     USING: "USING",
     ACTIVE: "ACTIVE",
-    USED: "USED",
     EXPIRED: "EXPIRED",
     CANCELLED: "CANCELLED"
 }

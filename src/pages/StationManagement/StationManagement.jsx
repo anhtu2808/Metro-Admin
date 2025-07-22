@@ -18,7 +18,6 @@ import {
   DeleteOutlined,
   EnvironmentOutlined,
   ReloadOutlined,
-  ExportOutlined,
 } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { setLayoutData } from '../../redux/layoutSlice';
@@ -221,14 +220,15 @@ const StationManagement = () => {
 
   // Handle search with debounce effect
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      // Reset to first page when searching
-      loadStations(false, 1, pagination.pageSize, searchText);
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (searchText) {
+      const timeoutId = setTimeout(() => {
+        loadStations(false, 1, pagination.pageSize, searchText);
+      }, 500);
+  
+      return () => clearTimeout(timeoutId);
+    }
   }, [searchText]);
+
 
 
 

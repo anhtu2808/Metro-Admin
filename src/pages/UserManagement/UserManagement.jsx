@@ -399,6 +399,9 @@ const UserManagement = () => {
           </div>
 
           <ModalFormUser
+            isCanManageCustomer={isCanManageCustomer}
+            isCanManageStaff={isCanManageStaff}
+            isCanManageManager={isCanManageManager}
             onSubmit={handleCreateOrUpdateUser}
             visible={isModalVisible}
             onCancel={handleModalCancel}

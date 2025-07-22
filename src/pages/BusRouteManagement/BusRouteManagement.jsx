@@ -18,7 +18,7 @@ import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
 const BusRouteManagement = () => {
   const dispatch = useDispatch();
   const [showModalBusRouteForm, setShowModalBusRouteForm] = useState(false);
-  const [busRoutes, setBusRoutes] = useState([]);
+  const [busRoute, setBusRoutes] = useState([]);
   const [filteredBusRoutes, setFilteredBusRoutes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [stations, setStations] = useState([]);

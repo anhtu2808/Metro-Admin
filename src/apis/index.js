@@ -335,7 +335,14 @@ export const createTicketOrderAPI = async (payload) => {
   return res.data;
 };
 export const updateTicketOrderAPI = async (id, payload) => {
-  const res = await api.put(`/v1/ticket-orders/${id}`, payload);
+  const body = {};
+  if (payload.status !== undefined) body.status = payload.status;
+  if (payload.validUntil !== undefined) body.validUntil = payload.validUntil;
+  if (payload.ticketTypeId !== undefined) body.ticketTypeId = payload.ticketTypeId;
+  if (payload.startStationId !== undefined) body.startStationId = payload.startStationId;
+  if (payload.endStationId !== undefined) body.endStationId = payload.endStationId;
+  if (payload.lineId !== undefined) body.lineId = payload.lineId;
+  const res = await api.put(`/v1/ticket-orders/${id}`, body);
   return res.data;
 };
 export const deleteTicketOrderAPI = async (id) => {
@@ -347,6 +354,8 @@ export const getTicketOrderByTokenAPI = async (token) => {
   const res = await api.get(`/v1/scanner/ticket-orders/by-token/${token}`);
   return res.data;
 };
+
+
 
 // - Scanner API -
 export const validateTicketAPI = async (payload) => {

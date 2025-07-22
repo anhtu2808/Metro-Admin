@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Form, Input, Select, Button, Typography, Row, Col } from 'antd';
 import { EditOutlined, ReloadOutlined, EyeOutlined } from '@ant-design/icons';
 import { ORDER_STATUS } from '../../utils/constants';
 import QRCode from 'react-qr-code';
 import './ModalTicketDetail.css';
+import { message } from 'antd';
+import { getStationsByLineIdAPI } from '../../apis';
 
 const { Text } = Typography;
 
@@ -14,14 +16,64 @@ const ModalTicketDetail = ({
   loading,
   selectedTicket,
   form,
-  readOnly = false
+  readOnly = false,
+  stations: stationsProp = [], // fallback prop, ưu tiên state nội bộ
 }) => {
+  const [stations, setStations] = useState([]);
+
+  useEffect(() => {
+    const fetchStations = async () => {
+      if (
+        selectedTicket &&
+        selectedTicket.lineId &&
+        selectedTicket.ticketType &&
+        !selectedTicket.ticketType.isStatic
+      ) {
+        try {
+          const res = await getStationsByLineIdAPI(selectedTicket.lineId);
+          if (res.code === 200 && Array.isArray(res.result)) {
+            setStations(res.result);
+          } else {
+            setStations([]);
+          }
+        } catch (err) {
+          setStations([]);
+        }
+      } else {
+        setStations([]);
+      }
+    };
+    fetchStations();
+  }, [selectedTicket]);
+
   if (!selectedTicket) return null;
 
   // Handle regenerate QR
-  const handleRegenerateQR = () => {
+  const handleRegenerateQR = async () => {
     console.log('Regenerating QR for ticket:', selectedTicket.id);
     // TODO: Call API to regenerate QR token
+  };
+
+  // Handle update ticket order
+  const handleFinish = async (values) => {
+    try {
+      const payload = {
+        status: values.status,
+        ticketTypeId: selectedTicket.ticketType?.id,
+        lineId: selectedTicket.lineId,
+      };
+      if (!selectedTicket.ticketType?.isStatic) {
+        payload.startStationId = values.startStationId || selectedTicket.startStation?.id;
+        payload.endStationId = values.endStationId || selectedTicket.endStation?.id;
+      } else {
+        payload.startStationId = selectedTicket.startStation?.id;
+        payload.endStationId = selectedTicket.endStation?.id;
+      }
+      if (onSubmit) await onSubmit(payload);
+      if (onCancel) onCancel();
+    } catch (err) {
+      message.error('Cập nhật vé thất bại!');
+    }
   };
 
   return (
@@ -58,7 +110,7 @@ const ModalTicketDetail = ({
         <Form
           form={form}
           layout="vertical"
-          onFinish={onSubmit}
+          onFinish={handleFinish}
           className="modal-ticket-detail-form"
         >
           <Row gutter={16}>
@@ -74,15 +126,63 @@ const ModalTicketDetail = ({
                 rules={readOnly ? [] : [{ required: true, message: 'Vui lòng chọn trạng thái' }]}
               >
                 <Select disabled={readOnly}>
-                  <Select.Option value={ORDER_STATUS.ACTIVE}>Hoạt động</Select.Option>
+                  <Select.Option value={ORDER_STATUS.ACTIVE}>Đã kích hoạt</Select.Option>
                   <Select.Option value={ORDER_STATUS.EXPIRED}>Hết hạn</Select.Option>
-                  <Select.Option value={ORDER_STATUS.USED}>Đã sử dụng</Select.Option>
+                  <Select.Option value={ORDER_STATUS.INACTIVE}>Chưa kích hoạt</Select.Option>
                   <Select.Option value={ORDER_STATUS.UNPAID}>Chưa thanh toán</Select.Option>
-                  <Select.Option value={ORDER_STATUS.CANCELLED}>Đã hủy</Select.Option>
+                  <Select.Option value={ORDER_STATUS.USING}>Đang sử dụng</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
           </Row>
+
+          {/* Nếu là vé động thì cho phép chọn start/end station */}
+          {!selectedTicket.ticketType?.isStatic && (
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  label="Ga bắt đầu"
+                  name="startStationId"
+                  rules={[{ required: true, message: 'Vui lòng chọn ga bắt đầu' }]}
+                  initialValue={selectedTicket.startStation?.id}
+                >
+                  <Select
+                    showSearch
+                    placeholder="Chọn ga bắt đầu"
+                    optionFilterProp="children"
+                    disabled={readOnly}
+                  >
+                    {(stations.length > 0 ? stations : stationsProp).map(station => (
+                      <Select.Option key={station.id} value={station.id}>
+                        {station.name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="Ga kết thúc"
+                  name="endStationId"
+                  rules={[{ required: true, message: 'Vui lòng chọn ga kết thúc' }]}
+                  initialValue={selectedTicket.endStation?.id}
+                >
+                  <Select
+                    showSearch
+                    placeholder="Chọn ga kết thúc"
+                    optionFilterProp="children"
+                    disabled={readOnly}
+                  >
+                    {(stations.length > 0 ? stations : stationsProp).map(station => (
+                      <Select.Option key={station.id} value={station.id}>
+                        {station.name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+          )}
 
           <Row gutter={16}>
             <Col span={12}>
