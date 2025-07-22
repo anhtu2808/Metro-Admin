@@ -8,6 +8,7 @@ import {
 } from "react-pro-sidebar";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  FaUserCheck ,
   FaUser,
   FaTrain,
   FaBus,
@@ -124,6 +125,12 @@ const Sidebar = ({ collapsed, toggled, handleToggleSidebar }) => {
               <Link to={"/role-management"} />
             </MenuItem>
           </Tooltip>
+          <Tooltip placement="right" title={collapsed ? "Xác minh sinh viên" : ""}>
+  <MenuItem icon={<FaUserCheck />} className="pro-menu-item">
+    Xác minh sinh viên
+    <Link to={"/student-verification"} />
+  </MenuItem>
+</Tooltip>
           {/* <Tooltip placement="right" title={collapsed ? "Tạo mã QR" : ""}>
             <MenuItem icon={<QrcodeOutlined />} className="pro-menu-item">
               QR Generator

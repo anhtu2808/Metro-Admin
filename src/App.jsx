@@ -20,6 +20,7 @@ import DevPage from "./pages/DevPage/DevPage";
 import TicketManagement from "./pages/TicketManagement/TicketManagement";
 import QRGenerator from "./pages/QRGenerator/QRGenerator";
 import MetroGatewayScanner from "./pages/MetroGatewayScanner/MetroGatewayScanner";
+import StudentVerificationManagement from "./pages/StudentVerificationManagement/StudentVerificationManagement";
 
 
 const route = createBrowserRouter([
@@ -57,6 +58,8 @@ const route = createBrowserRouter([
       
       // ✅ Thêm route cho Metro Gateway Scanner
       { path: "metro-gateway-scanner", element: <MetroGatewayScanner /> },
+      { path: "student-verification", element: <StudentVerificationManagement /> },
+
     ],
   },
   { path: "/login", element: <Login /> },
