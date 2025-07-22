@@ -84,7 +84,7 @@ const LineSegmentModal = ({
 
   return (
     <Modal
-      title="Chỉnh sửa Line Segment"
+      title="Chỉnh sửa khoảng cách"
       open={visible}
       onCancel={handleCancel}
       footer={

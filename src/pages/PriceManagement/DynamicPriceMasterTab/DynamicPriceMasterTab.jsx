@@ -28,6 +28,7 @@ import {
 } from '../../../apis';
 import PrimaryButton from '../../../components/PrimaryButton/PrimaryButton';
 import Preloader from '../../../components/Preloader/Preloader';
+import { usePermission } from '../../../hooks/usePermission';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -46,6 +47,9 @@ const DynamicPriceMasterTab = () => {
   const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
   const [confirmText, setConfirmText] = useState('');
   const [recordToCalculate, setRecordToCalculate] = useState(null);
+  const isCanCreatePrice = usePermission("DYNAMIC_PRICE_MASTER_CREATE");
+  const isCanUpdatePrice = usePermission("DYNAMIC_PRICE_MASTER_UPDATE");
+  const isCanDeletePrice = usePermission("DYNAMIC_PRICE_MASTER_DELETE");
 
   // Load list + master data
   const fetchData = async () => {
@@ -108,7 +112,7 @@ const DynamicPriceMasterTab = () => {
   const handleCalculate = async (record) => {
     setLoading(true);
     try {
-       await calculateDynamicPriceAPI(record.lineId);
+      await calculateDynamicPriceAPI(record.lineId);
       message.success('Đã tính lại bảng giá vé lượt cho tuyến ' + lines.find(l => l.id === record.lineId).name);
       fetchData();
     } catch (error) {
@@ -170,22 +174,22 @@ const DynamicPriceMasterTab = () => {
       key: 'actions',
       render: (_, record) => (
         <Space>
-          <Tooltip title="Cập nhật">
+          {isCanUpdatePrice && <Tooltip title="Cập nhật">
             <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} />
-          </Tooltip>
-          <Tooltip title="Tính lại bảng giá vé lượt">
+          </Tooltip>}
+          {isCanUpdatePrice && <Tooltip title="Tính lại bảng giá vé lượt">
             <Button
               icon={<CalculatorOutlined />}
               onClick={() => showRecalculateModal(record)}
             />
-          </Tooltip>
-          <Tooltip title="Xóa">
+          </Tooltip>}
+          {isCanDeletePrice && <Tooltip title="Xóa">
             <Button
               danger
               icon={<DeleteOutlined />}
               onClick={() => handleDelete(record)}
             />
-          </Tooltip>
+          </Tooltip>}
         </Space>
       )
     }
@@ -193,117 +197,117 @@ const DynamicPriceMasterTab = () => {
 
   return (
     <>
-    {loading && <Preloader fullscreen={true} />}
-    <div style={{ marginTop: 20, padding: 24 }}>
-      <Title level={3} style={{ textAlign: 'center' }}>
-        Quy định giá vé
-      </Title>
+      {loading && <Preloader fullscreen={true} />}
+      <div style={{ marginTop: 20, padding: 24 }}>
+        <Title level={3} style={{ textAlign: 'center' }}>
+          Quy định giá vé
+        </Title>
 
-      <PrimaryButton
-        icon={<PlusOutlined />}
-        onClick={handleAddNew}
-        style={{ marginBottom: 16 }}
-      >
-        Thêm mới
-      </PrimaryButton>
+        {isCanCreatePrice && <PrimaryButton
+          icon={<PlusOutlined />}
+          onClick={handleAddNew}
+          style={{ marginBottom: 16 }}
+        >
+          Thêm mới
+        </PrimaryButton>}
 
-      <Table
-        rowKey="id"
-        bordered
-        pagination={false}
-        loading={loading}
-        dataSource={data}
-        columns={columns}
-      />
-
-      <Modal
-        open={modalOpen}
-        onCancel={() => setModalOpen(false)}
-        onOk={onSubmit}
-        title={editing ? 'Cập nhật giá vé' : 'Thêm giá vé'}
-        okText={editing ? 'Cập nhật' : 'Thêm mới'}
-        destroyOnClose
-      >
-        <Form layout="vertical" form={form}>
-          <Form.Item
-            name="lineId"
-            label="Tuyến"
-            rules={[{ required: true, message: 'Chọn tuyến' }]}
-          >
-            <Select placeholder="Chọn tuyến" disabled={!!editing}>
-              {lines.map((line) => (
-                <Option key={line.id} value={line.id}>
-                  {line.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            name="startPrice"
-            label="Giá khởi điểm (VNĐ)"
-            rules={[{ required: true, message: 'Nhập giá khởi điểm' }]}
-            extra="Nhập giá khởi điểm. Ví dụ: 7000 VNĐ"
-          >
-            <InputNumber
-              min={0}
-              step={1000}
-              style={{ width: '100%' }}
-              placeholder="Nhập 7000"
-              formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              parser={value => value.replace(/\$\s?|(,*)/g, '')}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="startRange"
-            label="Khoảng bắt đầu tính giá (km)"
-            rules={[{ required: true, message: 'Nhập khoảng' }]}
-          >
-            <InputNumber
-              min={0}
-              step={0.1}
-              style={{ width: '100%' }}
-              placeholder="Nhập số km"
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="pricePerKm"
-            label="Giá mỗi km sau khởi điểm (VNĐ/km)"
-            rules={[{ required: true, message: 'Nhập giá mỗi km' }]}
-            extra="Nhập giá mỗi km. Ví dụ: 1000 VNĐ/km"
-          >
-            <InputNumber
-              min={0}
-              step={100}
-              style={{ width: '100%' }}
-              placeholder="Nhập 1000"
-              formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              parser={value => value.replace(/\$\s?|(,*)/g, '')}
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
-
-      <Modal
-        title="Xác nhận tính lại bảng giá"
-        open={isConfirmModalVisible}
-        onOk={handleConfirmModalOk}
-        onCancel={handleConfirmModalCancel}
-        okText="Xác nhận"
-        cancelText="Hủy"
-      >
-        <p>Bạn có chắc chắn muốn tính lại bảng giá cho tuyến <strong>{recordToCalculate && lines.find(l => l.id === recordToCalculate.lineId)?.name}</strong>?</p>
-        <p>Điều này sẽ ghi đè lên bảng giá hiện tại.</p>
-        <p>Để xác nhận, vui lòng gõ chữ <strong>"ok"</strong> vào ô bên dưới:</p>
-        <Input
-          value={confirmText}
-          onChange={(e) => setConfirmText(e.target.value)}
-          placeholder="Gõ 'ok' để xác nhận"
-          style={{ marginTop: 8 }}
+        <Table
+          rowKey="id"
+          bordered
+          pagination={false}
+          loading={loading}
+          dataSource={data}
+          columns={columns.filter((column) => column.key !== 'actions' || (isCanUpdatePrice || isCanDeletePrice))}
         />
-      </Modal>
+
+        <Modal
+          open={modalOpen}
+          onCancel={() => setModalOpen(false)}
+          onOk={onSubmit}
+          title={editing ? 'Cập nhật giá vé' : 'Thêm giá vé'}
+          okText={editing ? 'Cập nhật' : 'Thêm mới'}
+          destroyOnClose
+        >
+          <Form layout="vertical" form={form}>
+            <Form.Item
+              name="lineId"
+              label="Tuyến"
+              rules={[{ required: true, message: 'Chọn tuyến' }]}
+            >
+              <Select placeholder="Chọn tuyến" disabled={!!editing}>
+                {lines.map((line) => (
+                  <Option key={line.id} value={line.id}>
+                    {line.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              name="startPrice"
+              label="Giá khởi điểm (VNĐ)"
+              rules={[{ required: true, message: 'Nhập giá khởi điểm' }]}
+              extra="Nhập giá khởi điểm. Ví dụ: 7000 VNĐ"
+            >
+              <InputNumber
+                min={0}
+                step={1000}
+                style={{ width: '100%' }}
+                placeholder="Nhập 7000"
+                formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="startRange"
+              label="Khoảng bắt đầu tính giá (km)"
+              rules={[{ required: true, message: 'Nhập khoảng' }]}
+            >
+              <InputNumber
+                min={0}
+                step={0.1}
+                style={{ width: '100%' }}
+                placeholder="Nhập số km"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="pricePerKm"
+              label="Giá mỗi km sau khởi điểm (VNĐ/km)"
+              rules={[{ required: true, message: 'Nhập giá mỗi km' }]}
+              extra="Nhập giá mỗi km. Ví dụ: 1000 VNĐ/km"
+            >
+              <InputNumber
+                min={0}
+                step={100}
+                style={{ width: '100%' }}
+                placeholder="Nhập 1000"
+                formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+              />
+            </Form.Item>
+          </Form>
+        </Modal>
+
+        <Modal
+          title="Xác nhận tính lại bảng giá"
+          open={isConfirmModalVisible}
+          onOk={handleConfirmModalOk}
+          onCancel={handleConfirmModalCancel}
+          okText="Xác nhận"
+          cancelText="Hủy"
+        >
+          <p>Bạn có chắc chắn muốn tính lại bảng giá cho tuyến <strong>{recordToCalculate && lines.find(l => l.id === recordToCalculate.lineId)?.name}</strong>?</p>
+          <p>Điều này sẽ ghi đè lên bảng giá hiện tại.</p>
+          <p>Để xác nhận, vui lòng gõ chữ <strong>"ok"</strong> vào ô bên dưới:</p>
+          <Input
+            value={confirmText}
+            onChange={(e) => setConfirmText(e.target.value)}
+            placeholder="Gõ 'ok' để xác nhận"
+            style={{ marginTop: 8 }}
+          />
+        </Modal>
       </div>
     </>
   );

@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Modal, Space, Table, Tooltip } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-const TicketTypeTable = ({ ticketData, loading = false, handleOpenModal, handleDelete }) => {
+const TicketTypeTable = ({ ticketData, loading = false, handleOpenModal, handleDelete, isCanUpdatePrice, isCanDeletePrice }) => {
   const onDelete = (record) => {
     Modal.confirm({
       title: "Xác nhận xóa",
@@ -69,27 +69,27 @@ const TicketTypeTable = ({ ticketData, loading = false, handleOpenModal, handleD
         align="center"
         render={(days) => days === 0 ? "1 lượt" : `${days} ngày`}
       />
-      <Table.Column
+      {(isCanUpdatePrice || isCanDeletePrice) && <Table.Column
         title="Action"
         key="action"
         width={120}
         align="center"
         render={(_, record) => (
           <Space>
-            <Tooltip title="Cập nhật">
+            {isCanUpdatePrice && <Tooltip title="Cập nhật">
               <Button icon={<EditOutlined />} onClick={() => handleOpenModal(record)} />
-            </Tooltip>
-            <Tooltip title={isSingleUseTicket(record) ? "Không thể xóa vé lượt" : "Xóa"}>
+            </Tooltip>}
+            {isCanDeletePrice && <Tooltip title={isSingleUseTicket(record) ? "Không thể xóa vé lượt" : "Xóa"}>
               <Button 
                 danger 
                 icon={<DeleteOutlined />} 
                 onClick={() => onDelete(record)}
                 disabled={isSingleUseTicket(record)}
               />
-            </Tooltip>
+            </Tooltip>}
           </Space>
         )}
-      />
+      />}
     </Table>
   );
 };

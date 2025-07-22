@@ -4,14 +4,10 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
 }
 
-.line-segment-modal .ant-modal-header {
-  background: #1890ff;
-  border-bottom: none;
-  padding: 16px 24px;
-}
+
 
 .line-segment-modal .ant-modal-title {
-  color: white !important;
+  color: var(--primary-color) !important;
   font-size: 16px;
   font-weight: 600;
 }
@@ -19,7 +15,7 @@
 
 
 .line-segment-modal .ant-modal-close {
-  color: white;
+  color: var(--primary-color);
 }
 
 .line-segment-modal .ant-modal-close:hover {
@@ -139,35 +135,13 @@
   font-weight: 500;
 }
 
-/* Footer */
+
+
 .line-segment-modal-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: end;
   gap: 12px;
-  padding: 16px 24px;
-  background: #fafafa;
-  border-top: 1px solid #f0f0f0;
-  margin: 0 -24px -24px;
-}
 
-.line-segment-modal-footer .ant-btn {
-  min-width: 100px;
-  height: 36px;
-  border-radius: 8px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.line-segment-modal-footer .ant-btn-primary {
-  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
-  border: none;
-  box-shadow: 0 2px 4px rgba(24, 144, 255, 0.3);
-}
-
-.line-segment-modal-footer .ant-btn-primary:hover {
-  background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(24, 144, 255, 0.4);
 }
 
 .line-segment-modal-footer .ant-btn:not(.ant-btn-primary) {

@@ -1,55 +1,36 @@
-  import {
-  Button,
-  Col,
-  Form,
-  Input,
-  message,
-  Modal,
-  Row,
-  Spin,
-  Tabs,
-  Select,
-  Space,
-} from "antd";
-  import { useCallback, useEffect, useState } from "react";
-  import { FaUser, FaUserPlus, FaSearch } from "react-icons/fa";
-  import TableUser from "./TableUser";
-  import {
-  getUserByRoleAPI,
-  getAllUsersAPI,
-  createUserAPI,
-  updateUserAPI,
-  deleteUserAPI,
-  unBanUserAPI,
-} from "../../apis/";
-  import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
-  import "./UserManagement.css";
-  import { useDispatch } from "react-redux";
-  import { setLayoutData } from "../../redux/layoutSlice";
-  import ModalFormUser from "./ModalFormUser";
-import Preloader from "../../components/Preloader/Preloader";
+import { Col, Form, Input, message, Modal, Row, Spin, Tabs, Select } from "antd";
+import { useCallback, useEffect, useState } from "react";
+import { FaUser, FaUserPlus } from "react-icons/fa";
+import TableUser from "./TableUser";
+import { getAllUsersAPI, createUserAPI, updateUserAPI, deleteUserAPI, unBanUserAPI } from "../../apis/";
+import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
+import "./UserManagement.css";
+import { useDispatch } from "react-redux";
+import { setLayoutData } from "../../redux/layoutSlice";
+import ModalFormUser from "./ModalFormUser";
+import { usePermission } from "../../hooks/usePermission";
 
-  const ROLE_TYPES = ["CUSTOMER", "STAFF", "MANAGER"];
 
-  const UserManagement = () => {
-    const dispatch = useDispatch();
-    const [usersByRole, setUsersByRole] = useState({
-      CUSTOMER: [],
-      STAFF: [],
-      MANAGER: [],
-    });
-    const [filteredUsersByRole, setFilteredUsersByRole] = useState({
-      CUSTOMER: [],
-      STAFF: [],
-      MANAGER: [],
-    });
-    const [loading, setLoading] = useState(false);
-    const [initialLoading, setInitialLoading] = useState(true);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-      const [editingUser, setEditingUser] = useState(null);
+const ROLE_TYPES = ["CUSTOMER", "STAFF", "MANAGER"];
+
+const UserManagement = () => {
+  const dispatch = useDispatch();
+
+  const isCanManageCustomer = usePermission("CUSTOMER_MANAGE");
+  const isCanManageStaff = usePermission("STAFF_MANAGE");
+  const isCanManageManager = usePermission("MANAGER_MANAGE");
+  const [filteredUsersByRole, setFilteredUsersByRole] = useState({
+    CUSTOMER: [],
+    STAFF: [],
+    MANAGER: [],
+  });
+  const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
   const [activeRoleTab, setActiveRoleTab] = useState("CUSTOMER");
   const [form] = Form.useForm();
-  
+
   // Filter states
   const [filters, setFilters] = useState({
     search: '',
@@ -57,18 +38,16 @@ import Preloader from "../../components/Preloader/Preloader";
     username: '',
     email: ''
   });
-  
+
   // Pagination states
   const [paginationByRole, setPaginationByRole] = useState({
     CUSTOMER: { current: 1, pageSize: 10, total: 0 },
     STAFF: { current: 1, pageSize: 10, total: 0 },
     MANAGER: { current: 1, pageSize: 10, total: 0 },
   });
-    const onChange = (key) => {
-      console.log("Đã chọn tab:", key);
-    };
 
-      const mapUserResponse = (user) => ({
+
+  const mapUserResponse = (user) => ({
     id: user.id,
     firstName: user.firstName || "Chưa có tên",
     lastName: user.lastName || "Chưa có họ",
@@ -86,19 +65,19 @@ import Preloader from "../../components/Preloader/Preloader";
     avatarUrl: user.avatarUrl || "",
   });
 
-      const loadUsersByRole = async (
-    roleType = "CUSTOMER", 
-    isInitial = false, 
+  const loadUsersByRole = async (
+    roleType = "CUSTOMER",
+    isInitial = false,
     customFilters = null,
     customPagination = null
   ) => {
     try {
       isInitial ? setInitialLoading(true) : setLoading(true);
-      
+
       // Use custom filters or current filters
       const currentFilters = customFilters || filters;
       const currentPagination = customPagination || paginationByRole[roleType];
-      
+
       // Build API parameters
       const apiParams = {
         page: currentPagination.current,
@@ -110,16 +89,16 @@ import Preloader from "../../components/Preloader/Preloader";
         ...(currentFilters.username && { username: currentFilters.username }),
         ...(currentFilters.email && { email: currentFilters.email })
       };
-      
+
       const response = await getAllUsersAPI(apiParams);
       if (response.code === 200 && response.result) {
         const { data, currentPage, pageSize, totalElements } = response.result;
-        
+
         if (Array.isArray(data)) {
           const users = data.map(mapUserResponse);
-          setUsersByRole((prev) => ({ ...prev, [roleType]: users }));
+        
           setFilteredUsersByRole((prev) => ({ ...prev, [roleType]: users }));
-          
+
           // Update pagination state
           setPaginationByRole((prev) => ({
             ...prev,
@@ -143,50 +122,51 @@ import Preloader from "../../components/Preloader/Preloader";
     }
   };
 
-    const handleCreateOrUpdateUser = async (formValues) => {
-      try {
-        const isEdit = !!editingUser;
-        const payload = {
-          ...formValues,
-          avatarUrl: formValues.avatarUrl || null,
-        };
-        delete payload.confirm;
+  const handleCreateOrUpdateUser = async (formValues) => {
+    try {
+      const isEdit = !!editingUser;
+      const payload = {
+        ...formValues,
+        avatarUrl: formValues.avatarUrl || null,
+      };
+      delete payload.confirm;
 
-        const response = isEdit
-          ? await updateUserAPI(editingUser.id, payload)
-          : await createUserAPI(payload);
+      const response = isEdit
+        ? await updateUserAPI(editingUser.id, payload)
+        : await createUserAPI(payload);
 
-        if ([200, 201].includes(response?.code)) {
-          message.success(`${isEdit ? "Cập nhật" : "Tạo"} người dùng thành công`);
-          
-          // Reload data with current pagination
-          const targetRole = payload.roleType;
-          const targetPagination = isEdit 
-            ? paginationByRole[targetRole] // Stay on current page for edit
-            : { current: 1, pageSize: paginationByRole[targetRole].pageSize, total: 0 }; // Go to first page for new user
-          
-          await loadUsersByRole(targetRole, false, filters, targetPagination);
-          
-          // If the target role is not current tab, also update current tab
-          if (targetRole !== activeRoleTab) {
-            await loadUsersByRole(activeRoleTab, false, filters, paginationByRole[activeRoleTab]);
-          }
-        } else {
-          throw new Error(response?.message || "Lỗi không xác định");
+      if ([200, 201].includes(response?.code)) {
+        message.success(`${isEdit ? "Cập nhật" : "Tạo"} người dùng thành công`);
+
+        // Reload data with current pagination
+        const targetRole = payload.roleType;
+        const targetPagination = isEdit
+          ? paginationByRole[targetRole] // Stay on current page for edit
+          : { current: 1, pageSize: paginationByRole[targetRole].pageSize, total: 0 }; // Go to first page for new user
+
+        await loadUsersByRole(targetRole, false, filters, targetPagination);
+
+        // If the target role is not current tab, also update current tab
+        if (targetRole !== activeRoleTab) {
+          await loadUsersByRole(activeRoleTab, false, filters, paginationByRole[activeRoleTab]);
         }
-      } catch (error) {
-        message.error(
-          error?.response?.data?.message || "Không thể tạo/cập nhật người dùng"
-        );
-      } finally {
         handleModalCancel();
+      } else {
+        throw new Error(response?.message || "Lỗi không xác định");
       }
-    };
+    } catch (error) {
+      message.error(
+        error?.response?.data?.message || "Không thể tạo/cập nhật người dùng"
+      );
+    } finally {
 
-      const handleStatusChange = async (user, newStatus) => {
+    }
+  };
+
+  const handleStatusChange = async (user, newStatus) => {
     const isActivating = newStatus === 0;
     const actionText = isActivating ? "kích hoạt" : "vô hiệu hóa";
-    
+
     Modal.confirm({
       title: `Xác nhận ${actionText} tài khoản`,
       content: `Bạn có chắc chắn muốn ${actionText} tài khoản "${user.username}"?`,
@@ -211,29 +191,29 @@ import Preloader from "../../components/Preloader/Preloader";
     });
   };
 
-    const handleAdd = useCallback(() => {
-      setEditingUser(null);
-      setIsModalVisible(true);
-    }, []);
+  const handleAdd = useCallback(() => {
+    setEditingUser(null);
+    setIsModalVisible(true);
+  }, []);
 
-    const handleEdit = useCallback((user) => {
-      setEditingUser(user);
-      setIsModalVisible(true);
-    }, []);
+  const handleEdit = useCallback((user) => {
+    setEditingUser(user);
+    setIsModalVisible(true);
+  }, []);
 
-    const handleModalCancel = useCallback(() => {
-      setIsModalVisible(false);
-      setEditingUser(null);
-    }, []);
+  const handleModalCancel = useCallback(() => {
+    setIsModalVisible(false);
+    setEditingUser(null);
+  }, []);
 
-      const handleSearch = async (formValues) => {
+  const handleSearch = async (formValues) => {
     const newFilters = {
       search: formValues.search || '',
       deleted: formValues.deleted || 'all',
       username: formValues.username || '',
       email: formValues.email || ''
     };
-    
+
     setFilters(newFilters);
     await loadUsersByRole(activeRoleTab, false, newFilters);
   };
@@ -243,16 +223,16 @@ import Preloader from "../../components/Preloader/Preloader";
       ...filters,
       [filterType]: value
     };
-    
+
     setFilters(newFilters);
-    
+
     // Reset to page 1 when filtering
     const resetPagination = {
       current: 1,
       pageSize: paginationByRole[activeRoleTab].pageSize,
       total: 0
     };
-    
+
     // For dropdown selections, call API immediately
     // For text inputs, let debounce effect handle it
     if (filterType === 'deleted') {
@@ -260,7 +240,8 @@ import Preloader from "../../components/Preloader/Preloader";
     }
   };
 
-      const handleTabChange = async (key) => {
+
+  const handleTabChange = async (key) => {
     setActiveRoleTab(key);
     await loadUsersByRole(key, false, filters);
   };
@@ -271,11 +252,11 @@ import Preloader from "../../components/Preloader/Preloader";
       pageSize: pagination.pageSize,
       total: paginationByRole[activeRoleTab].total
     };
-    
+
     await loadUsersByRole(activeRoleTab, false, filters, newPagination);
   };
 
-      // Set title và icon cho trang
+  // Set title và icon cho trang
   useEffect(() => {
     dispatch(setLayoutData({ title: "Quản lý người dùng", icon: <FaUser /> }));
     // Load data for all roles with default filters and pagination
@@ -300,7 +281,7 @@ import Preloader from "../../components/Preloader/Preloader";
         pageSize: paginationByRole[activeRoleTab].pageSize,
         total: 0
       };
-      
+
       // Load data when any text filter changes (including when cleared)
       loadUsersByRole(activeRoleTab, false, filters, resetPagination);
     }, 500);
@@ -308,14 +289,14 @@ import Preloader from "../../components/Preloader/Preloader";
     return () => clearTimeout(timeoutId);
   }, [filters.search, filters.username, filters.email, activeRoleTab]);
 
-      const items = ROLE_TYPES.map((role, index) => ({
+  const items = ROLE_TYPES.filter((role) =>( isCanManageCustomer && role === "CUSTOMER") || (isCanManageStaff && role === "STAFF" )|| (isCanManageManager && role === "MANAGER")).map((role, index) => ({
     key: role,
     label:
       role === "CUSTOMER"
         ? "Khách hàng"
         : role === "STAFF"
-        ? "Nhân viên"
-        : "Quản lý",
+          ? "Nhân viên"
+          : "Quản lý",
     children: (
       <TableUser
         handleEdit={handleEdit}
@@ -329,8 +310,8 @@ import Preloader from "../../components/Preloader/Preloader";
     ),
   }));
 
-    return (
-      <>
+  return (
+    <>
       <div className="manage-user-container">
         <div className="users-content" style={{ marginTop: "20px" }}>
           <Row justify="space-between" align="middle" gutter={[16, 16]}>
@@ -342,34 +323,34 @@ import Preloader from "../../components/Preloader/Preloader";
                 onFinish={handleSearch}
                 initialValues={filters}
               >
-                
+
                 <Form.Item name="search" style={{ minWidth: 200 }}>
-                  <Input 
-                    placeholder="Tìm kiếm chung..." 
-                    allowClear 
+                  <Input
+                    placeholder="Tìm kiếm chung..."
+                    allowClear
                     value={filters.search}
                     onChange={(e) => handleFilterChange('search', e.target.value)}
                   />
                 </Form.Item>
-                
+
                 <Form.Item name="username" style={{ minWidth: 150 }}>
-                  <Input 
-                    placeholder="Tên đăng nhập..." 
-                    allowClear 
+                  <Input
+                    placeholder="Tên đăng nhập..."
+                    allowClear
                     value={filters.username}
                     onChange={(e) => handleFilterChange('username', e.target.value)}
                   />
                 </Form.Item>
-                
+
                 <Form.Item name="email" style={{ minWidth: 150 }}>
-                  <Input 
-                    placeholder="Email..." 
-                    allowClear 
+                  <Input
+                    placeholder="Email..."
+                    allowClear
                     value={filters.email}
                     onChange={(e) => handleFilterChange('email', e.target.value)}
                   />
                 </Form.Item>
-                
+
                 <Form.Item name="deleted" style={{ minWidth: 120 }}>
                   <Select
                     placeholder="Trạng thái"
@@ -418,6 +399,9 @@ import Preloader from "../../components/Preloader/Preloader";
           </div>
 
           <ModalFormUser
+            isCanManageCustomer={isCanManageCustomer}
+            isCanManageStaff={isCanManageStaff}
+            isCanManageManager={isCanManageManager}
             onSubmit={handleCreateOrUpdateUser}
             visible={isModalVisible}
             onCancel={handleModalCancel}
@@ -426,8 +410,8 @@ import Preloader from "../../components/Preloader/Preloader";
           />
         </div>
       </div>
-      </>
-    );
-  };
+    </>
+  );
+};
 
-  export default UserManagement;
+export default UserManagement;

@@ -1,4 +1,4 @@
-import { Form, Input, Select, Modal, InputNumber } from "antd";
+import { Form, Input, Select, Modal, InputNumber, Row, Col } from "antd";
 import { useEffect, useState } from "react";
 
 const { Option } = Select;
@@ -20,23 +20,13 @@ const ModalBusRouteForm = ({
 
     try {
       const values = await form.validateFields();
+      console.log(values);
 
-      const selectedStation = stations.find(
-        (s) => s.value === values.metroStationId
-      );
-
-      if (!selectedStation) {
-        Modal.error({
-          title: "Lỗi",
-          content: "Không tìm thấy ga Metro đã chọn.",
-        });
-        return;
-      }
 
       const payload = {
         id: editingRoute?.id,
-        stationId: values.metroStationId,
-        busStationName: selectedStation.label,
+        stationId: values.stationId,
+        busStationName: values.busStationName,
         busCode: values.busRouteCode.trim(),
         startLocation: values.startLocation.trim(),
         endLocation: values.endLocation.trim(),
@@ -67,8 +57,9 @@ const ModalBusRouteForm = ({
   useEffect(() => {
     if (editingRoute) {
       form.setFieldsValue({
-        metroStationId: editingRoute.stationId,
+        stationId: editingRoute.station.id,
         busRouteCode: editingRoute.busCode,
+        busStationName: editingRoute.busStationName,
         startLocation: editingRoute.startLocation,
         endLocation: editingRoute.endLocation,
         headwayMinutes: editingRoute.headwayMinutes,
@@ -96,63 +87,101 @@ const ModalBusRouteForm = ({
         layout="vertical"
         form={form}
         name="formCreateBusRoute"
-        style={{ maxWidth: 600 }}
+        style={{ maxWidth: 900 }}
         scrollToFirstError
       >
-        <Form.Item
-          name="metroStationId"
-          label="Ga Metro kết nối"
-          rules={[{ required: true, message: "Vui lòng chọn ga Metro!" }]}
-        >
-          <Select placeholder="Chọn một ga">
-            {stations.map((station) => (
-              <Option key={station.value} value={station.value}>
-                {station.label}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name="busStationName"
+              label="Tên trạm xe buýt"
+              rules={[{ required: true, message: "Vui lòng nhập tên trạm xe buýt!" }]}
+            >
+              <Input placeholder="Nhập tên trạm xe buýt" />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="busRouteCode"
+              label="Mã tuyến xe buýt"
+              rules={[{ required: true, message: "Vui lòng nhập mã tuyến xe buýt!" }]}
+            >
+              <Input maxLength={50} placeholder="VD: B22, B35..." />
+            </Form.Item>
+          </Col>
+        </Row>
 
-        <Form.Item
-          name="busRouteCode"
-          label="Mã tuyến xe buýt"
-          rules={[{ required: true, message: "Vui lòng nhập mã tuyến!" }]}
-        >
-          <Input maxLength={50} placeholder="VD: B22, B35, ..." />
-        </Form.Item>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name="stationId"
+              label="Ga Metro kết nối"
+              rules={[{ required: true, message: "Vui lòng chọn ga Metro!" }]}
+            >
+              <Select placeholder="Chọn ga Metro">
+                {stations.map((station) => (
+                  <Option key={station.id} value={station.id}>
+                    {station.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="distanceToMetro"
+              label="Khoảng cách tới ga Metro (km)"
+              rules={[{ required: true, message: "Vui lòng nhập khoảng cách!" }]}
+            >
+              <InputNumber
+                min={0}
+                step={0.1}
+                style={{ width: '100%' }}
+                placeholder="Nhập khoảng cách km"
+              />
+            </Form.Item>
+          </Col>
+        </Row>
 
-        <Form.Item
-          name="startLocation"
-          label="Điểm bắt đầu"
-          rules={[{ required: true, message: "Vui lòng nhập điểm bắt đầu!" }]}
-        >
-          <Input placeholder="Nhập địa điểm bắt đầu" />
-        </Form.Item>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name="startLocation"
+              label="Điểm bắt đầu"
+              rules={[{ required: true, message: "Vui lòng nhập điểm bắt đầu!" }]}
+            >
+              <Input placeholder="Nhập điểm bắt đầu" />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="endLocation"
+              label="Điểm kết thúc"
+              rules={[{ required: true, message: "Vui lòng nhập điểm kết thúc!" }]}
+            >
+              <Input placeholder="Nhập điểm kết thúc" />
+            </Form.Item>
+          </Col>
+        </Row>
 
-        <Form.Item
-          name="endLocation"
-          label="Điểm kết thúc"
-          rules={[{ required: true, message: "Vui lòng nhập điểm kết thúc!" }]}
-        >
-          <Input placeholder="Nhập địa điểm kết thúc" />
-        </Form.Item>
-
-        <Form.Item
-          name="headwayMinutes"
-          label="Tần suất chạy (phút)"
-          rules={[{ required: true, message: "Vui lòng nhập tần suất chạy!" }]}
-        >
-          <InputNumber min={1} style={{ width: "100%" }} />
-        </Form.Item>
-
-        <Form.Item
-          name="distanceToMetro"
-          label="Khoảng cách đến ga Metro (km)"
-          rules={[{ required: true, message: "Vui lòng nhập khoảng cách!" }]}
-        >
-          <InputNumber min={0} step={0.1} style={{ width: "100%" }} />
-        </Form.Item>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name="headwayMinutes"
+              label="Tần suất chạy (phút)"
+              rules={[{ required: true, message: "Vui lòng nhập tần suất chạy!" }]}
+            >
+              <InputNumber
+                min={1}
+                style={{ width: '100%' }}
+                placeholder="Nhập số phút"
+              />
+            </Form.Item>
+          </Col>
+        </Row>
       </Form>
+
+
     </Modal>
   );
 };

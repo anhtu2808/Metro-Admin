@@ -41,3 +41,6 @@ code {
 .ant-tabs-tab-btn{
   color: var(--primary-color) !important;
 }
+.ant-btn-variant-solid:hover{
+  background-color: var(--primary-color-hover) !important;
+}

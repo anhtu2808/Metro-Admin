@@ -36,6 +36,13 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    if (
+      originalRequest.url.endsWith("/auth/login") ||
+      originalRequest.url.endsWith("/auth/refresh")
+    ) {
+      // Trả về Promise.reject để caller tự xử lý lỗi
+      return Promise.reject(error);
+    }
 
     // Trường hợp token hết hạn (401) và chưa thử refresh
     if (error.response?.status === 401 && !originalRequest._retry) {

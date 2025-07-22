@@ -148,6 +148,7 @@ const EditProfile = () => {
                 accept="image/*"
               >
                 <Button 
+                  style={{ color: "white" }}
                   icon={<CameraOutlined />} 
                   loading={uploadingImage}
                   className="upload-button"

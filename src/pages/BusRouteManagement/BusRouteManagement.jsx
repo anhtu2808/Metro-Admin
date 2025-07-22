@@ -1,7 +1,7 @@
-import { Col, Divider, Form, Input, message, Modal, Row } from "antd";
+import { Col, Divider, Form, Input, message, Modal, Row, Select } from "antd";
 import "./BusRouteManagement.css";
 import TableBus from "./TableBus";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { setLayoutData } from "../../redux/layoutSlice";
 import { FaBus, FaSearch } from "react-icons/fa";
@@ -18,12 +18,30 @@ import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
 const BusRouteManagement = () => {
   const dispatch = useDispatch();
   const [showModalBusRouteForm, setShowModalBusRouteForm] = useState(false);
-  const [busRoutes, setBusRoutes] = useState([]);
+  const [busRoute, setBusRoutes] = useState([]);
   const [filteredBusRoutes, setFilteredBusRoutes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [stations, setStations] = useState([]);
   const [editingRoute, setEditingRoute] = useState(null);
   const [form] = Form.useForm();
+
+  // paging state
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
+
+  // Debounce cho filter stationId
+  const debounceTimeout = useRef();
+  const handleStationChange = (value) => {
+    if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+    debounceTimeout.current = setTimeout(() => {
+      const query = form.getFieldValue("query")?.trim();
+      const params = {};
+      if (query) params.search = query;
+      if (value) params.stationId = value;
+      loadBusRoutes(params);
+    }, 400);
+  };
 
   const closeModal = () => {
     setShowModalBusRouteForm(false);
@@ -31,39 +49,38 @@ const BusRouteManagement = () => {
     form.resetFields();
   };
 
-  const loadBusRoutes = async () => {
+  const loadBusRoutes = async (searchParams = {}) => {
     try {
       setLoading(true);
-
+      const params = {
+        page,
+        size: pageSize,
+        sort: 'id',
+        ...searchParams,
+      };
       const [routesRes, stationsRes] = await Promise.all([
-        getAllBusRoutesAPI(),
+        getAllBusRoutesAPI(params),
         getAllStationsAPI(),
       ]);
-
       const rawRoutes = routesRes.result?.data || routesRes.data || [];
       const stationList = stationsRes.result?.data || stationsRes.data || [];
+      setTotal(routesRes.result?.total || routesRes.total || 0);
 
       const formattedStations = stationList.map((station) => ({
-        value: station.id,
-        label: station.name,
+        id: station.id,
+        name: station.name,
       }));
       setStations(formattedStations);
 
-      const normalize = (str) =>
-        (str || "")
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .trim()
-          .toLowerCase();
-
       const transformed = rawRoutes.map((route) => {
-        const matchedStation = formattedStations.find(
-          (s) => normalize(s.label) === normalize(route.busStationName)
-        );
+   
 
         return {
           id: route.id,
-          stationId: matchedStation?.value ?? null,
+          station: {
+            id: route.station.id,
+            name: route.station.name,
+          },
           busCode: route.busCode,
           busStationName: route.busStationName,
           startLocation: route.startLocation,
@@ -125,23 +142,12 @@ const BusRouteManagement = () => {
   };
 
   const handleSearch = () => {
-    const query = form.getFieldValue("query")?.toLowerCase().trim();
-    if (!query) {
-      setFilteredBusRoutes(busRoutes);
-      return;
-    }
-
-    const normalize = (text) => (text || "").toLowerCase();
-    const filtered = busRoutes.filter((route) =>
-      [
-        normalize(route.busCode),
-        normalize(route.busStationName),
-        normalize(route.startLocation),
-        normalize(route.endLocation),
-      ].some((field) => field.includes(query))
-    );
-
-    setFilteredBusRoutes(filtered);
+    const query = form.getFieldValue("query")?.trim();
+    const stationId = form.getFieldValue("stationId");
+    const params = {};
+    if (query) params.search = query;
+    if (stationId) params.stationId = stationId;
+    loadBusRoutes(params);
   };
 
   const handleDelete = async (route) => {
@@ -162,6 +168,19 @@ const BusRouteManagement = () => {
     });
   };
 
+  // Table pagination handler
+  const handleTableChange = (pagination) => {
+    setPage(pagination.current);
+    setPageSize(pagination.pageSize);
+    // giữ lại filter hiện tại
+    const query = form.getFieldValue("query")?.trim();
+    const stationId = form.getFieldValue("stationId");
+    const params = {};
+    if (query) params.search = query;
+    if (stationId) params.stationId = stationId;
+    loadBusRoutes({ ...params, page: pagination.current, size: pagination.pageSize });
+  };
+
   useEffect(() => {
     dispatch(
       setLayoutData({
@@ -171,6 +190,13 @@ const BusRouteManagement = () => {
     );
     loadBusRoutes();
   }, [dispatch]);
+
+  // Cleanup debounce on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+    };
+  }, []);
 
   return (
     <div className="bus-container">
@@ -186,6 +212,25 @@ const BusRouteManagement = () => {
               >
                 <Form.Item name="query" style={{ flex: 1 }}>
                   <Input placeholder="Nhập từ khóa tìm kiếm..." />
+                </Form.Item>
+                <Form.Item name="stationId" style={{ minWidth: 180 }}>
+                  <Select
+                    allowClear
+                    placeholder="Tất cả ga Metro"
+                    style={{ width: '100%' }}
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    onChange={handleStationChange}
+                  >
+                    {stations.map((station) => (
+                      <Select.Option key={station.id} value={station.id}>
+                        {station.name}
+                      </Select.Option>
+                    ))}
+                  </Select>
                 </Form.Item>
                 <Form.Item>
                   <PrimaryButton
@@ -218,6 +263,7 @@ const BusRouteManagement = () => {
                 Tạo tuyến bus
               </PrimaryButton>
             </Col>
+            
           </Row>
         </div>
         <Divider />
@@ -229,6 +275,12 @@ const BusRouteManagement = () => {
             onEdit={(route) => {
               setEditingRoute(route);
               setShowModalBusRouteForm(true);
+            }}
+            pagination={{
+              current: page,
+              pageSize: pageSize,
+              total: total,
+              onChange: (current, pageSize) => handleTableChange({ current, pageSize }),
             }}
           />
         </div>

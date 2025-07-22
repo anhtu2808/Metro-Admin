@@ -18,7 +18,23 @@ export const ListCard = ({
     showSortButtons = false,
     onSave,
     showAddButton = true
-}) => (
+}) => {
+    const handleWheel = (e) => {
+        const container = e.currentTarget;
+        const isScrollingUp = e.deltaY < 0;
+        const isScrollingDown = e.deltaY > 0;
+    
+        if (
+            (isScrollingUp && container.scrollTop === 0) ||
+            (isScrollingDown && container.scrollTop + container.clientHeight >= container.scrollHeight)
+        ) {
+            // Allow parent to scroll
+        } else {
+            e.stopPropagation();
+        }
+    };
+    
+    return (
     <Card
         className="line-management-card"
         title={
@@ -63,8 +79,10 @@ export const ListCard = ({
         />
         {droppableId === 'segments' ? (
             <List
+                onWheel={handleWheel}
                 className="line-management-list"
                 dataSource={data}
+                
                 renderItem={(item) => (
                     <List.Item
                         className="line-management-list-item"
@@ -85,6 +103,8 @@ export const ListCard = ({
             <Droppable droppableId={droppableId}>
                 {(provided) => (
                     <List
+                    
+                        onWheel={handleWheel}
                         className="line-management-list"
                         {...provided.droppableProps}
                         ref={provided.innerRef}
@@ -132,4 +152,5 @@ export const ListCard = ({
             </Droppable>
         )}
     </Card>
-);
+    );
+};

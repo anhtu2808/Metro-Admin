@@ -41,22 +41,17 @@ const route = createBrowserRouter([
       { path: "ticket-management", element: <TicketManagement /> },
       { path: "role-management", element: <RoleManagement /> },
 
-      // ✅ Thêm route cho Staff
-      { path: "staff/content", element: <ContentManagement /> },
+      { path: "/content", element: <ContentManagement /> },
       
-      // ✅ Thêm route cho Edit Profile
+     
       { path: "edit-profile", element: <EditProfile /> },
       
-      // ✅ Thêm route cho Change Password
       { path: "change-password", element: <ChangePassword /> },
       
-      // ✅ Thêm route cho Developer Tools
       { path: "dev", element: <DevPage /> },
       
-      // ✅ Thêm route cho QR Generator
       { path: "qr-generator", element: <QRGenerator /> },
       
-      // ✅ Thêm route cho Metro Gateway Scanner
       { path: "metro-gateway-scanner", element: <MetroGatewayScanner /> },
       { path: "student-verification", element: <StudentVerificationManagement /> },
 

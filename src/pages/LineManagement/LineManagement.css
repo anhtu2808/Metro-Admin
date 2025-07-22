@@ -8,12 +8,14 @@
   color: #1890ff;
 }
 
+
 .line-management-layout {
   min-height: calc(100vh - 64px);
   padding: 24px;
   display: flex;
   flex-direction: column;
 }
+
 
 .line-management-header {
   margin-bottom: 24px;
@@ -63,7 +65,7 @@
   gap: 8px;
   background: white;
   color: #8c8c8c;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */
 }
 
 .view-mode-toggle .ant-dropdown-trigger:hover {
@@ -276,11 +278,10 @@
 
 .line-management-list-item {
   padding: 12px 16px !important;
-  margin-bottom: 8px !important;
+    /* margin-bottom: 0px !important; */
   border-radius: 6px !important;
   background: white;
   border: 1px solid #e8e8e8 !important;
-  transition: all 0.2s ease;
 }
 
 .line-management-list-item:hover {
@@ -293,6 +294,7 @@
   background-color: #f0f7ff !important;
   border: 1px dashed #1890ff !important;
   opacity: 0.8;
+  transition: none;
 }
 
 /* List item actions */

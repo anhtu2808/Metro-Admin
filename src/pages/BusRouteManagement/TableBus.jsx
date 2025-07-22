@@ -11,7 +11,7 @@ const TableBus = ({ data, loading, onEdit, onDelete }) => {
       render: (text) => <span style={{ fontWeight: 500 }}>{text}</span>,
     },
     {
-      title: "Trạm",
+      title: "Tên trạm xe buýt",
       dataIndex: "busStationName",
       key: "busStationName",
       width: 200,
@@ -43,11 +43,11 @@ const TableBus = ({ data, loading, onEdit, onDelete }) => {
       render: (value) => `${value} km`,
     },
     {
-      title: "Ngày tạo",
-      dataIndex: "createdAt",
-      key: "createdAt",
-      width: 120,
-      render: (date) => <span style={{ fontSize: "12px" }}>{date}</span>,
+      title: "Ga Metro kết nối",
+      dataIndex: "station",
+      key: "station",
+      width: 200,
+      render: (text) => <span>{text?.name}</span>,
     },
     {
       title: "Thao tác",
