@@ -142,7 +142,7 @@ const FixPriceTab = () => {
             size="medium"
             onClick={() => handleOpenModal(null)}
           >
-            Thêm giá vé
+            Thêm loại vé
           </PrimaryButton>}
         </Col>}
       </Row>

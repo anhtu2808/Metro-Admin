@@ -14,6 +14,9 @@ const DynamicPriceTableTab = () => {
     const [prices, setPrices] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [startStation, setStartStation] = useState(null);
+    const [endStation, setEndStation] = useState(null);
+    const [quickPrice, setQuickPrice] = useState(null);
     const [confirmText, setConfirmText] = useState('');
     const isCanCalculate = usePermission("dynamicPrice:calculate");
 
@@ -62,12 +65,12 @@ const DynamicPriceTableTab = () => {
         fetchPrices();
     }, [selectedLine]);
 
-        const handleCalculate = async (lineId) => {
+    const handleCalculate = async (lineId) => {
         setLoading(true);
         try {
-          const res = await calculateDynamicPriceAPI(lineId);
-          message.success('Đã tính lại bảng giá vé lượt cho tuyến ' + lines.find(l => l.id === lineId).name);
-          setPrices(res.result || []);
+            const res = await calculateDynamicPriceAPI(lineId);
+            message.success('Đã tính lại bảng giá vé lượt cho tuyến ' + lines.find(l => l.id === lineId).name);
+            setPrices(res.result || []);
         } catch (error) {
             if (error.response?.status === 404) {
                 message.error('Tuyến này hiện chưa có quy định tính giá.');
@@ -75,9 +78,33 @@ const DynamicPriceTableTab = () => {
                 message.error(error.response.data.message);
             }
         } finally {
-          setLoading(false);
+            setLoading(false);
         }
-       };
+    };
+
+    const handleQuickCheck = () => {
+        if (!startStation || !endStation) {
+            message.warning('Vui lòng chọn cả điểm bắt đầu và kết thúc');
+            return;
+        }
+
+        if (startStation === endStation) {
+            message.info('Điểm bắt đầu và kết thúc phải khác nhau');
+            return;
+        }
+
+        const priceObj = prices.find(p =>
+            p.startStationId === startStation &&
+            p.endStationId === endStation
+        );
+
+        if (priceObj) {
+            setQuickPrice(Number(priceObj.price));
+        } else {
+            setQuickPrice(null);
+            message.info('Không tìm thấy giá cho tuyến đã chọn');
+        }
+    };
 
     const showRecalculateModal = () => {
         if (!selectedLine) {
@@ -148,7 +175,7 @@ const DynamicPriceTableTab = () => {
                 scroll={{ x: 'max-content', scrollToFirstRowOnChange: true }}
                 bordered
                 size="small"
-                style={{ 
+                style={{
                     margin: '0 auto',
                     maxWidth: '100%'
                 }}
@@ -160,23 +187,73 @@ const DynamicPriceTableTab = () => {
         <div style={{ padding: 24 }}>
             <Title level={4}>Bảng giá theo tuyến</Title>
 
-            <div style={{ display: 'flex', gap: 12, marginBottom: 20, alignItems: 'center' }}>
-                <Select
-                    value={selectedLine}
-                    onChange={setSelectedLine}
-                    placeholder="Chọn tuyến"
-                    style={{ width: 250 }}
-                >
-                    {lines.map(line => (
-                        <Option key={line.id} value={line.id}>
-                            {line.name}
-                        </Option>
-                    ))}
-                </Select>
-                {isCanCalculate && <PrimaryButton onClick={showRecalculateModal}>
-                    Tính lại
-                </PrimaryButton>}
+            <div style={{ display: 'flex', gap: 40, marginBottom: 20, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+
+                {/* Chọn tuyến */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <span style={{ fontWeight: 500 }}>Chọn tuyến</span>
+                    <Select
+                        value={selectedLine}
+                        onChange={setSelectedLine}
+                        placeholder="Chọn tuyến"
+                        style={{ width: 250 }}
+                    >
+                        {lines.map(line => (
+                            <Option key={line.id} value={line.id}>
+                                {line.name}
+                            </Option>
+                        ))}
+                    </Select>
+                </div>
+
+                {/* Tra cứu nhanh giá vé */}
+                {selectedLine && prices !== null && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        <span style={{ fontWeight: 500 }}>Tra cứu giá nhanh</span>
+                        <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+                            <Select
+                                value={startStation}
+                                onChange={setStartStation}
+                                placeholder="Ga bắt đầu"
+                                style={{ width: 180 }}
+                            >
+                                {stations.map(st => (
+                                    <Option key={st.id} value={st.id}>{st.name}</Option>
+                                ))}
+                            </Select>
+
+                            <Select
+                                value={endStation}
+                                onChange={setEndStation}
+                                placeholder="Ga kết thúc"
+                                style={{ width: 180 }}
+                            >
+                                {stations.map(st => (
+                                    <Option key={st.id} value={st.id}>{st.name}</Option>
+                                ))}
+                            </Select>
+
+                            <PrimaryButton onClick={handleQuickCheck}>Tra cứu</PrimaryButton>
+                            {quickPrice !== null && (
+                                <span>
+                                    {quickPrice.toLocaleString()} VNĐ
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {/* Nút tính lại */}
+                {isCanCalculate && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        <span style={{ fontWeight: 500 }}>&nbsp;</span>
+                        <PrimaryButton onClick={showRecalculateModal}>
+                            Tính lại
+                        </PrimaryButton>
+                    </div>
+                )}
             </div>
+
 
             {selectedLine && (
                 prices === null ? (

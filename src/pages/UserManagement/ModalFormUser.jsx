@@ -197,7 +197,7 @@ const ModalFormUser = ({
           </Row>
         )}
 
-        <Row gutter={16}>
+        {!isEdit && <Row gutter={16}>
           <Col xs={24} md={12}>
             <Form.Item
               name="roleType"
@@ -212,7 +212,7 @@ const ModalFormUser = ({
               </Select>
             </Form.Item>
           </Col>
-        </Row>
+        </Row>}
 
         <Form.Item label="Hình ảnh người dùng">
           <div className="user-image-upload">

@@ -7,7 +7,7 @@ import { setLayoutData } from '../../redux/layoutSlice';
 import { getTicketOrderByIdAPI } from '../../apis';
 import './QRGenerator.css';
 
-const { Title, Text, Paragraph } = Typography;
+const { Text, Paragraph } = Typography;
 const { TextArea } = Input;
 
 const QRGenerator = () => {
