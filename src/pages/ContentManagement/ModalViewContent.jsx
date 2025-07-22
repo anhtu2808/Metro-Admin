@@ -2,8 +2,8 @@ import React from "react";
 import { Modal, Typography, Divider, Button } from "antd";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
-
-const { Title, Paragraph, Text } = Typography;
+import "./ModalViewContent.css";
+const { Title, Text } = Typography;
 
 const getTypeLabel = (type) => {
   switch (type) {
@@ -24,6 +24,7 @@ const ContentViewModal = ({
 }) => {
   const type = viewingContent?.type;
   const label = getTypeLabel(type);
+
   return (
     <Modal
       title={`Chi tiết ${label}`}
@@ -44,9 +45,10 @@ const ContentViewModal = ({
             {moment(viewingContent.date).format("HH:mm:ss - DD/MM/YYYY")}
           </Text>
           <Divider />
-          <Paragraph className="content-content-detail">
-            {viewingContent.content}
-          </Paragraph>
+          <div
+            className="content-content-detail"
+            dangerouslySetInnerHTML={{ __html: viewingContent.content }}
+          />
         </div>
       )}
     </Modal>

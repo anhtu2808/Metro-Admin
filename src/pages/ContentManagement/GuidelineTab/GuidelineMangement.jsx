@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Typography,
   Spin,
@@ -17,6 +17,8 @@ import {
   DeleteOutlined,
   ExclamationCircleOutlined,
   EyeOutlined,
+  DiffOutlined,
+  CloseSquareOutlined,
 } from "@ant-design/icons";
 import "./GuidelineManagement.css";
 import ModalFormContent from "../ModalFormContent";
@@ -32,6 +34,7 @@ const GuidelineManagement = ({ data = [], type, loading, handlers, modal }) => {
     showViewModal,
     handleCancel,
     showEditModal,
+    handlePublish,
   } = handlers;
   const {
     isModalVisible,
@@ -39,14 +42,23 @@ const GuidelineManagement = ({ data = [], type, loading, handlers, modal }) => {
     viewModalVisible,
     viewingContent,
     form,
+    imageUrl,
+    setImageUrl,
   } = modal;
 
   const [error, setError] = useState(null);
 
-  const handlePublish = async (item) => {
-    const result = await handlers.handlePublish(item, type);
+  const handleToggleStatus = async (item) => {
+    const newStatus = item.status === "DRAFT" ? "PUBLISHED" : "DRAFT";
+    const payload = {
+      ...item,
+      status: newStatus,
+      publishAt:
+        newStatus === "PUBLISHED" ? new Date().toISOString() : item.publishAt,
+    };
+    const result = await handlePublish(payload, type);
     if (!result.success) {
-      message.error(result.message || "Đăng thất bại!");
+      message.error(result.message || "Cập nhật trạng thái thất bại!");
     }
   };
 
@@ -115,20 +127,31 @@ const GuidelineManagement = ({ data = [], type, loading, handlers, modal }) => {
                       Xóa
                     </Button>
                   </Popconfirm>,
-                  item.status === "DRAFT" && (
-                    <Popconfirm
-                      title="Bạn có chắc chắn muốn đăng hướng dẫn này không?"
-                      onConfirm={() => handlePublish(item)}
-                      okText="Đồng ý"
-                      cancelText="Hủy"
+                  <Popconfirm
+                    title={`Bạn có chắc chắn muốn ${
+                      item.status === "DRAFT" ? "đăng" : "chuyển về bản nháp"
+                    } hướng dẫn này không?`}
+                    onConfirm={() => handleToggleStatus(item)}
+                    okText="Đồng ý"
+                    cancelText="Hủy"
+                    icon={
+                      <ExclamationCircleOutlined style={{ color: "green" }} />
+                    }
+                  >
+                    <Button
                       icon={
-                        <ExclamationCircleOutlined style={{ color: "green" }} />
+                        item.status === "DRAFT" ? (
+                          <DiffOutlined />
+                        ) : (
+                          <CloseSquareOutlined />
+                        )
                       }
+                      type={item.status === "DRAFT" ? "primary" : "default"}
                     >
-                      <Button type="primary">Đăng</Button>,
-                    </Popconfirm>
-                  ),
-                ].filter(Boolean)}
+                      {item.status === "DRAFT" ? "Đăng" : "Nháp"}
+                    </Button>
+                  </Popconfirm>,
+                ]}
               >
                 <div className="guideline-card-content">
                   <Title level={4}>{item.title}</Title>
@@ -136,6 +159,13 @@ const GuidelineManagement = ({ data = [], type, loading, handlers, modal }) => {
                     <ClockCircleOutlined />{" "}
                     {new Date(item.date).toLocaleString()}
                   </Text>
+                  <div className="guideline-image-container">
+                    {item.imageUrls?.[0] ? (
+                      <img src={item.imageUrls[0]} alt={item.title} />
+                    ) : (
+                      <span style={{ color: "#999" }}>No Image</span>
+                    )}
+                  </div>
                   <Paragraph
                     ellipsis={{ rows: 2 }}
                     className="guideline-excerpt"
@@ -152,13 +182,15 @@ const GuidelineManagement = ({ data = [], type, loading, handlers, modal }) => {
         </div>
       )}
 
-      {/* Modal thêm/sửa hướng dẫn */}
+      {/* Modal chỉnh sửa hoặc thêm hướng dẫn */}
       <ModalFormContent
         type="GUIDELINE"
         currentContent={currentContent}
         isModalVisible={isModalVisible}
         handleCancel={handleCancel}
         form={form}
+        imageUrl={imageUrl}
+        setImageUrl={setImageUrl}
         handleSubmit={(values) => handleSubmit(values, "GUIDELINE")}
       />
       {/* Modal xem chi tiết hướng dẫn */}
