@@ -3,15 +3,11 @@ import {
   Modal,
   Form,
   Input,
-  TextArea,
   Select,
   Button,
   message,
-  Space,
-  Typography,
   Row,
-  Col,
-  Card
+  Col
 } from 'antd';
 import {
   SaveOutlined,
@@ -22,7 +18,6 @@ import {
 import { createLineAPI, updateLineAPI } from '../../../apis';
 import './LineModal.css';
 
-const { Text, Title } = Typography;
 const { Option } = Select;
 
 const LineModal = ({
@@ -43,8 +38,8 @@ const LineModal = ({
         name: editingLine.name || '',
         lineCode: editingLine.lineCode || '',
         description: editingLine.description || '',
-        startStationId: editingLine.startStationId || undefined,
-        finalStationId: editingLine.finalStationId || undefined
+        startStationId: editingLine.startStation.id || undefined,
+        finalStationId: editingLine.finalStation.id || undefined
       });
     } else if (visible) {
       // Create mode - reset form
@@ -94,7 +89,7 @@ const LineModal = ({
     onCancel();
   };
 
-  const getStationDisplayName = (station) => {
+  const getStationDisplayName = (station,) => {
     return `${station.code || station.stationCode || 'N/A'} - ${station.name}`;
   };
 
@@ -145,25 +140,8 @@ const LineModal = ({
       className="line-modal"
     >
       <div className="line-modal-content">
-        {/* Line Info Card */}
-        {editingLine && (
-          <Card className="line-info-card" size="small">
-            <Row gutter={16}>
-              <Col span={12}>
-                <Space direction="vertical" size={4}>
-                  <Text type="secondary">Line Code hiện tại:</Text>
-                  <Text strong>{editingLine.lineCode}</Text>
-                </Space>
-              </Col>
-              <Col span={12}>
-                <Space direction="vertical" size={4}>
-                  <Text type="secondary">Tên tuyến hiện tại:</Text>
-                  <Text strong>{editingLine.name}</Text>
-                </Space>
-              </Col>
-            </Row>
-          </Card>
-        )}
+      
+        
 
         <Form
           form={form}
@@ -224,6 +202,7 @@ const LineModal = ({
               <Form.Item
                 name="startStationId"
                 label="Ga đầu"
+                disabled={editingLine}
                 rules={[
                   { required: true, message: 'Vui lòng chọn ga đầu!' }
                 ]}
@@ -249,6 +228,7 @@ const LineModal = ({
               <Form.Item
                 name="finalStationId"
                 label="Ga cuối"
+                disabled={editingLine}
                 rules={[
                   { required: true, message: 'Vui lòng chọn ga cuối!' }
                 ]}

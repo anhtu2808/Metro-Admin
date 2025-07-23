@@ -331,13 +331,20 @@ const TicketManagement = () => {
     try {
       setLoading(true);
       const response = await updateTicketOrderAPI(selectedTicket.id, values);
-
+      console.log(response);
       if (response.code === 200) {
         message.success("Cập nhật vé thành công!");
         setIsEditModalVisible(false);
         setSelectedTicket(null);
         editForm.resetFields();
-        handleRefresh(); // Refresh data
+        if (response.result) {
+          setTicketData(prev => ({
+            ...prev,
+            data: prev.data.map(ticket => ticket.id === response.result.id ? response.result : ticket)
+          }));
+        }else{
+          fetchTicketData();
+        }
       } else {
         message.error("Cập nhật vé thất bại.");
       }
@@ -494,7 +501,7 @@ const TicketManagement = () => {
       <ModalTicketDetail
         visible={isViewDetailModalVisible}
         onCancel={handleCloseViewDetailModal}
-        onSubmit={() => {}} // No submit for view mode
+        onSubmit={handleEditTicket} 
         loading={false}
         selectedTicket={selectedTicket}
         form={viewForm}

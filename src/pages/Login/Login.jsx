@@ -5,7 +5,7 @@ import {
   Col,
   message,
 } from "antd";
-
+import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { loginAPI } from "../../apis";
 import { useDispatch } from "react-redux";
@@ -36,8 +36,17 @@ const Login = () => {
       if (res.code === 200) {
         localStorage.setItem("accessToken", res.result.token);
         dispatch(setIsAuthorized(true));
+        // Decode token để lấy scope
+      const decoded = jwtDecode(res.result.token);
+      const scope = decoded.scope || "";
         message.success("Đăng nhập thành công");
-        navigate("/");
+        if (scope.includes("ROLE_MANAGER")) {
+          navigate("/");
+        } else if (scope.includes("ROLE_STAFF")) {
+          navigate("/ticket-management");
+        } else {
+          message.warning("Bạn không có quyền hợp lệ");
+        }
       }
     } catch (error) {
       if (error.response?.status === 401) {
@@ -67,7 +76,7 @@ const Login = () => {
         <Col xs={24} md={12} className="login-right">
           <div className="login-form-wrapper">
             <img src="/Metro_Logo.png" alt="Metro Logo" className="login-logo" />
-            <Form form={form} layout="vertical" className="login-form" validateTrigger="onSubmit">
+            <Form form={form} layout="vertical" className="login-form" onFinish={handleLogin}>
               <Form.Item
                 name="username"
                 className="username-input"
@@ -83,7 +92,7 @@ const Login = () => {
                 <Input.Password size="large" placeholder="Mật khẩu" />
               </Form.Item>
               <Form.Item>
-                <PrimaryButton className="login-button" onClick={handleLogin} size="login">Đăng nhập</PrimaryButton>
+                <PrimaryButton className="login-button" type="primary" htmlType="submit" size="login">Đăng nhập</PrimaryButton>
               </Form.Item>
             </Form>
           </div>

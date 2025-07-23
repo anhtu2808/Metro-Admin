@@ -37,28 +37,29 @@ export const getUserByRoleAPI = async (role) => {
 };
 
 export const getAllUsersAPI = async (params = {}) => {
-  const { 
-    page = 1, 
-    size = 10, 
-    sort = 'id', 
-    role, 
-    deleted, 
-    username, 
-    email, 
-    search 
+  const {
+    page = 1,
+    size = 10,
+    sort = "id",
+    role,
+    deleted,
+    username,
+    email,
+    search,
   } = params;
-  
+
   const queryParams = new URLSearchParams({
     page: page.toString(),
     size: size.toString(),
-    sort: sort.toString()
+    sort: sort.toString(),
   });
-  
-  if (role) queryParams.append('role', role);
-  if (deleted !== undefined && deleted !== 'all') queryParams.append('deleted', deleted);
-  if (username) queryParams.append('username', username);
-  if (email) queryParams.append('email', email);
-  if (search) queryParams.append('search', search);
+
+  if (role) queryParams.append("role", role);
+  if (deleted !== undefined && deleted !== "all")
+    queryParams.append("deleted", deleted);
+  if (username) queryParams.append("username", username);
+  if (email) queryParams.append("email", email);
+  if (search) queryParams.append("search", search);
 
   const res = await api.get(`/v1/users?${queryParams}`);
   return res.data;
@@ -182,17 +183,17 @@ export const getAllContentAPI = async () => {
 
 export const createContentAPI = async (payload) => {
   const res = await api.post("/v1/contents", payload);
-  return res.data;
+  return res;
 };
 
 export const updateContentAPI = async (id, payload) => {
   const res = await api.put(`/v1/contents/${id}`, payload);
-  return res.data;
+  return res;
 };
 
 export const deleteContentAPI = async (id) => {
   const res = await api.delete(`/v1/contents/${id}`);
-  return res.data;
+  return res;
 };
 //  - Image API -
 export const uploadProfileImageAPI = async (image) => {
@@ -211,8 +212,11 @@ export const uploadContentImageAPI = async (image) => {
 };
 
 // - Bus API -
-export const getAllBusRoutesAPI = async () => {
-  const res = await api.get("/v1/bus-routes");
+export const getAllBusRoutesAPI = async (params = {}) => {
+  const { stationId, ...rest } = params;
+  const queryParams = new URLSearchParams({ ...rest });
+  if (stationId) queryParams.append('stationId', stationId);
+  const res = await api.get(`/v1/bus-routes${queryParams.toString() ? `?${queryParams}` : ''}`);
   return res.data;
 };
 
@@ -331,7 +335,14 @@ export const createTicketOrderAPI = async (payload) => {
   return res.data;
 };
 export const updateTicketOrderAPI = async (id, payload) => {
-  const res = await api.put(`/v1/ticket-orders/${id}`, payload);
+  const body = {};
+  if (payload.status !== undefined) body.status = payload.status;
+  if (payload.validUntil !== undefined) body.validUntil = payload.validUntil;
+  if (payload.ticketTypeId !== undefined) body.ticketTypeId = payload.ticketTypeId;
+  if (payload.startStationId !== undefined) body.startStationId = payload.startStationId;
+  if (payload.endStationId !== undefined) body.endStationId = payload.endStationId;
+  if (payload.lineId !== undefined) body.lineId = payload.lineId;
+  const res = await api.put(`/v1/ticket-orders/${id}`, body);
   return res.data;
 };
 export const deleteTicketOrderAPI = async (id) => {
@@ -344,8 +355,36 @@ export const getTicketOrderByTokenAPI = async (token) => {
   return res.data;
 };
 
+
+
 // - Scanner API -
 export const validateTicketAPI = async (payload) => {
   const res = await api.post(`/v1/scanner/validate`, payload);
   return res.data;
 };
+// - Student Verification API -
+export const getAllStudentVerificationsAPI = async () => {
+  const res = await api.get("/v1/student-verifications");
+  return res.data;
+};
+
+export const getStudentVerificationByIdAPI = async (id) => {
+  const res= await api.get(`/v1/student-verifications/${id}`);
+  return res.data;
+};
+
+export const updateStudentVerificationStatusAPI = async (id, data) => {
+  const res = await api.put(`/v1/student-verifications/${id}`, data);
+  return res.data;
+};
+
+export const createStudentVerificationAPI = async (payload) => {
+  const res= await api.post(`/v1/student-verifications`, payload);
+  return res.data;
+};
+
+export const deleteStudentVerificationAPI = async (id) => {
+  const res = await api.delete(`/v1/student-verifications/${id}`);
+  return res.data;
+};
+
