@@ -240,13 +240,14 @@ const EditProfile = () => {
 
               <Form.Item className="form-buttons">
                 <Button 
-                  onClick={() => navigate("/change-password")} 
-                  size="large"
-                  style={{ marginRight: 16 }}
-                  ghost
-                >
-                  Đổi mật khẩu
-                </Button>
+  onClick={() => navigate("/change-password")} 
+  size="large"
+  style={{ marginRight: 16 }}
+>
+  Đổi mật khẩu
+</Button>
+
+
                 <Button 
                   onClick={() => navigate(-1)} 
                   size="large"
