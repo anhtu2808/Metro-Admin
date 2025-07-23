@@ -398,3 +398,14 @@ export const resetPasswordAPI = async (data) => {
   const res = await api.post("/v1/auth/reset-password", data);
   return res.data;
 };
+
+// - Dashboard API -
+export const getDashboardAPI = async (fromDate, toDate) => {
+  const queryParams = new URLSearchParams({
+    fromDate: fromDate,
+    toDate: toDate,
+  });
+
+  const res = await api.get(`/v1/ticket-orders/dashboard?${queryParams}`);
+  return res.data;
+};
