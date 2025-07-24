@@ -47,7 +47,11 @@ const MapView = ({ selectedLine, segments, onSegmentUpdate, onStationUpdate }) =
   const defaultZoom = 11;
 
   const handleStationEdit = (station) => {
-    setEditingStation(station);
+    const stationData = {
+      ...station,
+      code : station.stationCode
+    }
+    setEditingStation(stationData);
     setIsStationModalVisible(true);
   };
 
