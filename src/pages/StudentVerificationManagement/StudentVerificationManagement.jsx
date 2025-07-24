@@ -12,6 +12,7 @@ import {
   message,
   Modal,
   Descriptions,
+  Tooltip,
 } from "antd";
 import {
   SearchOutlined,
@@ -95,19 +96,22 @@ const StudentVerificationManagement = () => {
 
   const columns = [
     {
+      title: "Ảnh giấy tờ",
+      dataIndex: "imageUrl",
+      width: 100,
+      render: (imageUrl) => (
+        <Image
+          src={imageUrl || "https://via.placeholder.com/40"}
+          width={40}
+          height={40}
+          style={{ objectFit: "cover", borderRadius: 4 }}
+        />
+      ),
+    },
+    {
       title: "Trường",
       dataIndex: "schoolName",
-      render: (text, record) => (
-        <Space>
-          <Image
-            src={record.imageUrl || "https://via.placeholder.com/40"}
-            width={40}
-            height={40}
-            style={{ objectFit: "cover", borderRadius: 4 }}
-          />
-          <span>{text}</span>
-        </Space>
-      ),
+      width: 250,
     },
     {
       title: "Ngày tốt nghiệp",
@@ -123,26 +127,32 @@ const StudentVerificationManagement = () => {
             : status === "APPROVED"
             ? "green"
             : "red";
-        return <Tag color={color}>{status}</Tag>;
+        const text =
+          status === "PENDING"
+            ? "Chờ duyệt"
+            : status === "APPROVED"
+            ? "Đã duyệt"
+            : "Từ chối";
+        return <Tag color={color}>{text}</Tag>;
       },
     },
     {
       title: "Hành động",
+      width: 150,
       render: (_, record) => (
         <Space>
-          <Button
-            icon={<EyeOutlined />}
-            onClick={() => showDetails(record)}
-            size="small"
-          >
-            Xem
-          </Button>
+          <Tooltip title="Xem chi tiết">
+            <Button
+              type="text"
+              icon={<EyeOutlined />}
+              onClick={() => showDetails(record)}
+            />
+          </Tooltip>
           {record.status === "PENDING" ? (
             <>
               <Button
                 icon={<CheckOutlined />}
                 type="primary"
-                size="small"
                 onClick={() => handleUpdateStatus(record.id, "APPROVED")}
               >
                 Duyệt
@@ -150,7 +160,6 @@ const StudentVerificationManagement = () => {
               <Button
                 icon={<CloseOutlined />}
                 danger
-                size="small"
                 onClick={() => handleUpdateStatus(record.id, "REJECTED")}
               >
                 Từ chối
@@ -207,7 +216,19 @@ const StudentVerificationManagement = () => {
               {selectedRecord.graduateDate}
             </Descriptions.Item>
             <Descriptions.Item label="Trạng thái">
-              <Tag>{selectedRecord.status}</Tag>
+              <Tag color={
+                selectedRecord.status === "PENDING"
+                  ? "orange"
+                  : selectedRecord.status === "APPROVED"
+                  ? "green"
+                  : "red"
+              }>
+                {selectedRecord.status === "PENDING"
+                  ? "Chờ duyệt"
+                  : selectedRecord.status === "APPROVED"
+                  ? "Đã duyệt"
+                  : "Từ chối"}
+              </Tag>
             </Descriptions.Item>
             <Descriptions.Item label="Ảnh giấy tờ">
               <Image
@@ -232,9 +253,6 @@ const StudentVerificationManagement = () => {
             </Descriptions.Item>
             <Descriptions.Item label="Đã xác thực?">
               {selectedRecord.user?.isStudentVerified ? "✔️" : "❌"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Quyền">
-              {(selectedRecord.user?.permissions || []).join(", ")}
             </Descriptions.Item>
             <Descriptions.Item label="Ảnh đại diện" span={2}>
               <Image
