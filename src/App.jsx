@@ -21,7 +21,8 @@ import TicketManagement from "./pages/TicketManagement/TicketManagement";
 import QRGenerator from "./pages/QRGenerator/QRGenerator";
 import MetroGatewayScanner from "./pages/MetroGatewayScanner/MetroGatewayScanner";
 import StudentVerificationManagement from "./pages/StudentVerificationManagement/StudentVerificationManagement";
-
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import ResetPassword from "./pages/ForgotPassword/ResetPassword";
 
 const route = createBrowserRouter([
   {
@@ -58,6 +59,9 @@ const route = createBrowserRouter([
     ],
   },
   { path: "/login", element: <Login /> },
+  { path: "/forgot-password", element: <ForgotPassword /> },
+{ path: "/reset-password", element: <ResetPassword /> },
+
 ]);
 
 const App = () => {

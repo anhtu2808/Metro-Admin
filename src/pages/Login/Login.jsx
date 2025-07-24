@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import "./Login.css";
 import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
 import Preloader from "../../components/Preloader/Preloader";
-
+import { Link } from "react-router-dom";
 const Login = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -94,6 +94,11 @@ const Login = () => {
               <Form.Item>
                 <PrimaryButton className="login-button" type="primary" htmlType="submit" size="login">Đăng nhập</PrimaryButton>
               </Form.Item>
+              <Form.Item>
+              <div div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <Link to="/forgot-password">Quên mật khẩu?</Link>
+              </div>
+</Form.Item>
             </Form>
           </div>
         </Col>
