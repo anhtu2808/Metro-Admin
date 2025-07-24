@@ -3,7 +3,6 @@ import {
   Row,
   Col,
   DatePicker,
-  Button,
   message,
   Statistic,
   Skeleton,
@@ -15,9 +14,9 @@ import {
   MdAttachMoney,
 } from "react-icons/md";
 import { useDispatch } from "react-redux";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { setLayoutData } from "../../redux/layoutSlice";
-import { getDashboardAPI } from "../../apis";
+import { getDashboardAPI, getRevenueStatisticsAPI } from "../../apis";
 import dayjs from "dayjs";
 import Barchart from "./BarChart/BarChart";
 import "./Dashboard.css";
@@ -29,6 +28,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState([]);
   const [chartData, setChartData] = useState(null);
+  const [revenueStats, setRevenueStats] = useState([]);
+  const [periodType, setPeriodType] = useState("DAY");
   const [dateRange, setDateRange] = useState([
     dayjs().subtract(30, "day"),
     dayjs(),
@@ -41,8 +42,22 @@ const Dashboard = () => {
         icon: <MdOutlineAnalytics />,
       })
     );
-    fetchDashboardData();
+    // Initial data fetch
+    if (dateRange && dateRange.length === 2) {
+      fetchDashboardData();
+    }
   }, []);
+
+  // Debounced fetch data effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (dateRange && dateRange.length === 2) {
+        fetchDashboardData();
+      }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [dateRange, periodType]);
 
   const formatCurrency = (value) =>
     new Intl.NumberFormat("vi-VN", {
@@ -51,7 +66,7 @@ const Dashboard = () => {
       minimumFractionDigits: 0,
     }).format(value);
 
-  const fetchDashboardData = useCallback(async () => {
+  const fetchDashboardData = async () => {
     if (!dateRange || dateRange.length !== 2) {
       message.warning("Vui lòng chọn khoảng thời gian");
       return;
@@ -60,29 +75,34 @@ const Dashboard = () => {
     try {
       setLoading(true);
       const [from, to] = dateRange;
-      const res = await getDashboardAPI(
+      const dashboardRes = await getDashboardAPI(
         from.startOf("day").toISOString(),
         to.endOf("day").toISOString()
       );
+      const revenueRes = await getRevenueStatisticsAPI(
+        from.startOf("day").toISOString(),
+        to.endOf("day").toISOString(),
+        periodType
+      );
 
-      if (res.code === 200) {
-        const result = res.result;
+      if (dashboardRes.code === 200) {
+        const result = dashboardRes.result;
 
         setStats([
           {
-            label: "Số lượng người dùng",
+            label: "Tổng số người dùng",
             value: result.totalUsers,
             icon: <MdPeople />,
-            color: "#1890ff",
+            color: "#333333",
           },
           {
-            label: "Số lượng vé",
+            label: "Tổng số vé",
             value: result.totalOrders,
             icon: <MdConfirmationNumber />,
             color: "#52c41a",
           },
           {
-            label: "Doanh thu",
+            label: "Tổng Doanh thu",
             value: formatCurrency(result.totalRevenue),
             icon: <MdAttachMoney />,
             color: "#faad14",
@@ -91,7 +111,13 @@ const Dashboard = () => {
 
         setChartData(result);
       } else {
-        message.error(res.message || "Không lấy được dữ liệu");
+        message.error(dashboardRes.message || "Không lấy được dữ liệu");
+      }
+
+      if (revenueRes.code === 200) {
+        setRevenueStats(revenueRes.result);
+      } else {
+        message.error(revenueRes.message || "Không lấy được dữ liệu thống kê doanh thu");
       }
     } catch (err) {
       console.error("Dashboard fetch error:", err);
@@ -99,7 +125,7 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  }, [dateRange]);
+  };
 
   return (
     <div className="dashboard-main-container">
@@ -108,11 +134,8 @@ const Dashboard = () => {
         <RangePicker
           value={dateRange}
           onChange={setDateRange}
-          style={{ marginRight: 8 }}
+          placeholder={["Từ ngày", "Đến ngày"]}
         />
-        <Button type="primary" onClick={fetchDashboardData} loading={loading}>
-          Lấy dữ liệu
-        </Button>
       </div>
 
       {/* Stats */}
@@ -124,19 +147,19 @@ const Dashboard = () => {
                 <div className="dashboard-stat-icon" style={{ color }}>
                   {icon}
                 </div>
-                <div className="dashboard-stat-info">
-                  <div className="dashboard-stat-label">{label}</div>
-                  <div className="dashboard-stat-value">
-                    <Statistic
-                      value={value}
-                      valueStyle={{
-                        fontSize: "28px",
-                        fontWeight: "600",
-                        color: "#1a1a1a",
-                      }}
-                    />
+                                  <div className="dashboard-stat-info">
+                    <div className="dashboard-stat-label">{label}</div>
+                    <div className="dashboard-stat-value">
+                      <Statistic
+                        value={value}
+                        valueStyle={{
+                          fontSize: "20px",
+                          fontWeight: "600",
+                          color: "#1a1a1a",
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
               </div>
             </Card>
           </Col>
@@ -148,7 +171,13 @@ const Dashboard = () => {
         {loading ? (
           <Skeleton active />
         ) : (
-          <Barchart data={chartData} loading={loading} />
+          <Barchart 
+            data={chartData} 
+            revenueStats={revenueStats} 
+            loading={loading}
+            periodType={periodType}
+            setPeriodType={setPeriodType}
+          />
         )}
       </div>
     </div>
